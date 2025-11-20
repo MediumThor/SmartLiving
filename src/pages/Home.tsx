@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import ContactForm from '../components/ContactForm';
 import './Home.css';
 
@@ -32,11 +33,20 @@ const Home = () => {
           >
             <div className="image-overlay">
               <div className="hero-content">
+                <p className="hero-eyebrow">Smart Living • Sailing • Leadership • Wellness</p>
                 <h1>WELCOME</h1>
                 <p className="hero-description">
-                  We are happy you found us, through our site you will find the details about the facets 
-                  that make up Smart Living. We hope you're educated, inspired, and drawn to our philosophy.
+                  Intentional living on and off the water. Explore charters, leadership coaching, and 
+                  wellness experiences designed to help you live fully and thoughtfully.
                 </p>
+                <div className="hero-actions">
+                  <Link to="/charters" className="hero-button primary">
+                    Explore Charters
+                  </Link>
+                  <Link to="/about" className="hero-button secondary">
+                    Meet Brian
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
@@ -44,6 +54,45 @@ const Home = () => {
       </section>
 
     
+
+      {/* CTA Cards Section */}
+      <section className="cta-section">
+        <div className="cta-container">
+          <div className="cta-card">
+            <span className="cta-icon">⛵</span>
+            <h2>Sailing Experiences</h2>
+            <p>
+              Join us on the water for hands-on sailing adventures, private instruction, and immersive 
+              charters tailored to your crew.
+            </p>
+            <Link to="/sailing" className="cta-button">
+              Discover Sailing
+            </Link>
+          </div>
+          <div className="cta-card">
+            <span className="cta-icon">👥</span>
+            <h2>Leadership & Teams</h2>
+            <p>
+              Translate lessons from the helm into the boardroom. Build resilient teams and practical, 
+              values-based leadership.
+            </p>
+            <Link to="/leadership" className="cta-button">
+              Explore Leadership
+            </Link>
+          </div>
+          <div className="cta-card">
+            <span className="cta-icon">🌿</span>
+            <h2>Wellness & Growth</h2>
+            <p>
+              Align your health, relationships, and finances with what matters most so you can live 
+              healthy, wealthy, and wise.
+            </p>
+            <Link to="/wellness" className="cta-button">
+              Visit Wellness
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Social Links Section */}
       <section className="social-section">
