@@ -34,9 +34,8 @@ const Footer = () => {
         </div>
         <div className="footer-bottom">
           <p>
-            <Link to="/admin/login" className="admin-link" aria-label="Admin">•</Link>
-            {' '}
-            &copy; {new Date().getFullYear()} by Smart Living. Proudly created with React & Vite.
+            &copy; {new Date().getFullYear()} by Smart Living.{' '}
+            <Link to="/admin/login" className="admin-link">Proudly</Link> created with React & Vite.
           </p>
         </div>
       </div>
