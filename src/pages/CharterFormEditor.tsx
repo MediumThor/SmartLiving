@@ -294,9 +294,21 @@ const CharterFormEditor = () => {
       const lockedData: { [key: string]: any } = {};
       lockedFields.forEach(field => {
         const value = formData[field as keyof CharterFormData];
-        // Only include field if it has a value (not undefined, null, or empty string)
-        if (value !== undefined && value !== null && value !== '') {
-          lockedData[field] = value;
+        // Only include field if it has a valid value
+        // Check for undefined, null, empty string, and also handle 0 for numbers
+        if (value !== undefined && value !== null) {
+          // For strings, check if not empty
+          if (typeof value === 'string' && value.trim() !== '') {
+            lockedData[field] = value.trim();
+          }
+          // For numbers, include even if 0 (but not undefined)
+          else if (typeof value === 'number') {
+            lockedData[field] = value;
+          }
+          // For booleans, include them
+          else if (typeof value === 'boolean') {
+            lockedData[field] = value;
+          }
         }
       });
 
@@ -379,44 +391,8 @@ const CharterFormEditor = () => {
       
       const customerLink = `${window.location.origin}/charter-form/${formId}`;
       
-      // Send email to customer
-      const emailSent = await sendCharterFormEmail({
-        to_email: formData.email.trim(),
-        to_name: formData.fullName || formData.chartererName || 'Guest',
-        form_link: customerLink,
-        charter_date: formData.charterFromDate || formData.charterDate || undefined,
-        yacht_name: formData.yachtName || undefined,
-        charter_type: formData.charterType || undefined,
-      });
-
-      // Optionally send SMS if phone number is available
-      let smsSent = false;
-      if (formData.phone && formData.phone.trim()) {
-        smsSent = await sendCharterFormSMS({
-          to_phone: formData.phone.trim(),
-          form_link: customerLink,
-          charter_date: formData.charterFromDate || formData.charterDate || undefined,
-          customer_name: formData.fullName || formData.chartererName || undefined,
-        });
-      }
-
-      // Show results
-      let message = `✅ Form saved successfully!\n\n`;
-      if (emailSent) {
-        message += `✅ Email sent to ${formData.email}\n`;
-      } else {
-        message += `⚠️ Email failed (check EmailJS config)\n`;
-      }
-      if (formData.phone) {
-        if (smsSent) {
-          message += `✅ SMS sent to ${formData.phone}\n`;
-        } else {
-          message += `⚠️ SMS failed (check Twilio backend setup)\n`;
-        }
-      }
-      message += `\nCustomer link: ${customerLink}`;
-      
-      alert(message);
+      // Show customer link for manual sending
+      alert(`✅ Form saved successfully!\n\nCustomer Link:\n${customerLink}\n\nCopy this link and send it to the customer manually.`);
     } catch (error) {
       console.error('Error sending form:', error);
       alert('Failed to save form. Please try again.');
