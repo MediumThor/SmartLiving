@@ -1,4 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import ImageSlideshow from '../components/ImageSlideshow';
 import CharterInquiryForm from '../components/CharterInquiryForm';
 import './Charters.css';
@@ -19,7 +21,7 @@ const Charters = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const slideshowImages = [
+  const defaultSlideshowImages = [
     'https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
@@ -27,6 +29,35 @@ const Charters = () => {
     'https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1505142468610-359e7d316be0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
   ];
+
+  const [slideshowImages, setSlideshowImages] = useState<string[]>(defaultSlideshowImages);
+  const [loadingSlides, setLoadingSlides] = useState(true);
+
+  useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        const slidesRef = collection(db, 'slideshowImages');
+        const slidesQuery = query(slidesRef, orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(slidesQuery);
+        const urls = snapshot.docs
+          .map(doc => (doc.data().url as string) || '')
+          .filter(url => !!url.trim());
+
+        if (urls.length > 0) {
+          setSlideshowImages(urls);
+        } else {
+          setSlideshowImages(defaultSlideshowImages);
+        }
+      } catch (error) {
+        console.error('Error loading slideshow images:', error);
+        setSlideshowImages(defaultSlideshowImages);
+      } finally {
+        setLoadingSlides(false);
+      }
+    };
+
+    fetchSlides();
+  }, []);
 
   const itinerary = [
     {
@@ -208,7 +239,9 @@ const Charters = () => {
         {/* Image Slideshow */}
         <section className="charters-section">
           <div className="section-container">
-            <ImageSlideshow images={slideshowImages} title="Sailing Adventure Gallery" />
+            {slideshowImages.length > 0 && (
+              <ImageSlideshow images={slideshowImages} title="Sailing Adventure Gallery" />
+            )}
           </div>
         </section>
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, orderBy } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import './ImageLibrary.css';
 
@@ -11,6 +11,13 @@ interface ImageItem {
   uploadedBy: string;
 }
 
+interface SlideshowImage {
+  id: string;
+  url: string;
+  name: string;
+  createdAt: any;
+}
+
 const ImageLibrary = () => {
   const [images, setImages] = useState<ImageItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -19,8 +26,15 @@ const ImageLibrary = () => {
   const [uploading, setUploading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  const [slideshowImages, setSlideshowImages] = useState<SlideshowImage[]>([]);
+  const [loadingSlides, setLoadingSlides] = useState(true);
+  const [newSlideUrl, setNewSlideUrl] = useState('');
+  const [newSlideName, setNewSlideName] = useState('');
+  const [uploadingSlide, setUploadingSlide] = useState(false);
+
   useEffect(() => {
     fetchImages();
+    fetchSlideshowImages();
   }, []);
 
   const fetchImages = async () => {
@@ -40,6 +54,25 @@ const ImageLibrary = () => {
       console.error('Error fetching images:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchSlideshowImages = async () => {
+    try {
+      const slidesRef = collection(db, 'slideshowImages');
+      const slidesQuery = query(slidesRef, orderBy('createdAt', 'desc'));
+      const querySnapshot = await getDocs(slidesQuery);
+
+      const slidesData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as SlideshowImage[];
+
+      setSlideshowImages(slidesData);
+    } catch (error) {
+      console.error('Error fetching slideshow images:', error);
+    } finally {
+      setLoadingSlides(false);
     }
   };
 
@@ -79,6 +112,43 @@ const ImageLibrary = () => {
     }
   };
 
+  const handleSlideUpload = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!newSlideUrl.trim() || !newSlideName.trim()) {
+      alert('Please provide both slideshow image URL and name');
+      return;
+    }
+
+    setUploadingSlide(true);
+    try {
+      const docRef = await addDoc(collection(db, 'slideshowImages'), {
+        url: newSlideUrl.trim(),
+        name: newSlideName.trim(),
+        createdAt: serverTimestamp()
+      });
+
+      setSlideshowImages([
+        {
+          id: docRef.id,
+          url: newSlideUrl.trim(),
+          name: newSlideName.trim(),
+          createdAt: new Date()
+        },
+        ...slideshowImages
+      ]);
+
+      setNewSlideUrl('');
+      setNewSlideName('');
+      alert('Slideshow image added successfully!');
+    } catch (error) {
+      console.error('Error uploading slideshow image:', error);
+      alert('Failed to upload slideshow image');
+    } finally {
+      setUploadingSlide(false);
+    }
+  };
+
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this image?')) {
       return;
@@ -90,6 +160,20 @@ const ImageLibrary = () => {
     } catch (error) {
       console.error('Error deleting image:', error);
       alert('Failed to delete image');
+    }
+  };
+
+  const handleDeleteSlide = async (id: string) => {
+    if (!window.confirm('Are you sure you want to remove this image from the slideshow?')) {
+      return;
+    }
+
+    try {
+      await deleteDoc(doc(db, 'slideshowImages', id));
+      setSlideshowImages(slideshowImages.filter(img => img.id !== id));
+    } catch (error) {
+      console.error('Error deleting slideshow image:', error);
+      alert('Failed to delete slideshow image');
     }
   };
 
@@ -172,6 +256,82 @@ const ImageLibrary = () => {
                   className="btn-delete-img"
                 >
                   Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="section-header" style={{ marginTop: '3rem' }}>
+        <h2>Charters Slideshow Images</h2>
+        <p className="section-description">
+          Manage the images used in the Charters page slideshow. These images are loaded from Firestore.
+        </p>
+      </div>
+
+      <form onSubmit={handleSlideUpload} className="upload-form">
+        <div className="form-group">
+          <label htmlFor="slideName">Slideshow Image Name</label>
+          <input
+            type="text"
+            id="slideName"
+            value={newSlideName}
+            onChange={(e) => setNewSlideName(e.target.value)}
+            placeholder="e.g., BVI Sunset Run"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="slideUrl">Slideshow Image URL</label>
+          <input
+            type="url"
+            id="slideUrl"
+            value={newSlideUrl}
+            onChange={(e) => setNewSlideUrl(e.target.value)}
+            placeholder="https://images.unsplash.com/..."
+            required
+          />
+        </div>
+        <button type="submit" className="btn-upload" disabled={uploadingSlide}>
+          {uploadingSlide ? 'Adding...' : '+ Add Slideshow Image'}
+        </button>
+      </form>
+
+      {loadingSlides ? (
+        <div className="loading">Loading slideshow images...</div>
+      ) : slideshowImages.length === 0 ? (
+        <div className="empty-state">
+          <p>No slideshow images yet. Add your first slideshow image!</p>
+        </div>
+      ) : (
+        <div className="images-grid">
+          {slideshowImages.map(image => (
+            <div key={image.id} className="image-card">
+              <div className="image-preview">
+                <img src={image.url} alt={image.name} />
+              </div>
+              <div className="image-info">
+                <h3>{image.name}</h3>
+                <div className="image-url">
+                  <input 
+                    type="text" 
+                    value={image.url} 
+                    readOnly 
+                    onClick={(e) => (e.target as HTMLInputElement).select()}
+                  />
+                  <button 
+                    onClick={() => copyToClipboard(image.url, image.id)}
+                    className="btn-copy"
+                  >
+                    {copiedId === image.id ? '✓ Copied' : 'Copy'}
+                  </button>
+                </div>
+                <button 
+                  onClick={() => handleDeleteSlide(image.id)}
+                  className="btn-delete-img"
+                >
+                  Remove from Slideshow
                 </button>
               </div>
             </div>
