@@ -1,0 +1,264 @@
+.page-container {
+  min-height: calc(100vh - 200px);
+  background-color: #ffffff;
+}
+
+.parallax-hero {
+  position: relative;
+  width: 100%;
+  height: 50vh;
+  min-height: 400px;
+  overflow: hidden;
+  margin-bottom: 4rem;
+}
+
+.parallax-hero-image {
+  width: 100%;
+  height: 120%;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+  will-change: transform;
+}
+
+@media (max-width: 968px) {
+  .parallax-hero-image {
+    background-attachment: scroll;
+  }
+}
+
+.parallax-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.parallax-overlay h1 {
+  color: white;
+  font-size: 4rem;
+  font-weight: 800;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+  margin: 0;
+}
+
+.three-column-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+  margin: 4rem 0;
+}
+
+.column-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid #e8e8e8;
+}
+
+.column-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.column-image {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  position: relative;
+}
+
+.column-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.column-card:hover .column-image img {
+  transform: scale(1.1);
+}
+
+.column-card h2 {
+  padding: 1.5rem 1.5rem 0.5rem;
+  margin: 0;
+  font-size: 1.5rem;
+  color: #1a1a1a;
+}
+
+.column-card p {
+  padding: 0 1.5rem 1.5rem;
+  margin: 0;
+  color: #4a4a4a;
+  line-height: 1.7;
+}
+
+.page-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem 5rem;
+}
+
+.page-content h1 {
+  font-size: 3.5rem;
+  color: #1a1a1a;
+  margin-bottom: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.content-section {
+  margin-bottom: 3rem;
+}
+
+.content-section:last-child {
+  margin-bottom: 0;
+}
+
+.page-content .lead {
+  font-size: 1.3rem;
+  line-height: 1.8;
+  color: #4a4a4a;
+  font-weight: 400;
+  margin-bottom: 2rem;
+}
+
+.page-content h2 {
+  font-size: 2rem;
+  color: #1a1a1a;
+  margin-bottom: 1.25rem;
+  margin-top: 2.5rem;
+  font-weight: 700;
+}
+
+.page-content h2:first-of-type {
+  margin-top: 0;
+}
+
+.page-content p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #4a4a4a;
+  margin-bottom: 1.5rem;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.feature-list li {
+  padding: 1rem 0;
+  padding-left: 2rem;
+  position: relative;
+  line-height: 1.7;
+  color: #4a4a4a;
+  font-size: 1.05rem;
+}
+
+.feature-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #1a73e8;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.feature-list li strong {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.blog-placeholder {
+  padding: 3rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+  text-align: center;
+}
+
+.blog-placeholder p {
+  margin-bottom: 1rem;
+  color: #666;
+}
+
+.blog-placeholder p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 968px) {
+  .page-container {
+    padding: 3rem 1.5rem;
+  }
+
+  .page-content h1 {
+    font-size: 2.75rem;
+  }
+
+  .page-content h2 {
+    font-size: 1.75rem;
+  }
+
+  .content-section .lead {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 968px) {
+  .three-column-section {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .parallax-hero {
+    height: 40vh;
+    min-height: 300px;
+  }
+
+  .parallax-overlay h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-content {
+    padding: 0 1rem 3rem;
+  }
+
+  .page-content h1 {
+    font-size: 2.25rem;
+  }
+
+  .page-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .content-section {
+    margin-bottom: 2rem;
+  }
+
+  .parallax-hero {
+    height: 35vh;
+    min-height: 250px;
+    margin-bottom: 2rem;
+  }
+
+  .parallax-overlay h1 {
+    font-size: 2.5rem;
+  }
+
+  .three-column-section {
+    margin: 2rem 0;
+  }
+}
+
