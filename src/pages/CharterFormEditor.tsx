@@ -278,9 +278,8 @@ const CharterFormEditor = () => {
       if (isEditing && id) {
         await setDoc(doc(db, 'charterRegistrations', id), formDoc);
       } else {
-        const newDoc = doc(db, 'charterRegistrations', '');
-        await setDoc(newDoc, formDoc);
-        navigate(`/admin/charter-form/${newDoc.id}`);
+        const newDocRef = await addDoc(collection(db, 'charterRegistrations'), formDoc);
+        navigate(`/admin/charter-form/${newDocRef.id}`);
       }
 
       alert('Form saved successfully!');

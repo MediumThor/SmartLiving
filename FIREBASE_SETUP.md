@@ -26,12 +26,37 @@ Go to **Firestore Database** > **Rules** and paste the following rules:
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Blog posts collection
+    // Blog posts - public read for published, admin write
     match /blogPosts/{postId} {
-      // Anyone can read published posts, authenticated users can read all
       allow read: if resource.data.published == true || request.auth != null;
-      // Only authenticated users can create, update, or delete posts
-      allow create, update, delete: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+    
+    // Images - public read, admin write
+    match /images/{imageId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Page content - public read, admin write
+    match /pageContent/{pageId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Charter inquiries - public create, admin read/write
+    match /charterInquiries/{inquiryId} {
+      allow create: if true;
+      allow read, write: if request.auth != null;
+    }
+    
+    // Charter registrations - public read/write for guestData, admin full access
+    match /charterRegistrations/{registrationId} {
+      allow read: if true; // Anyone can read (needed for customer form)
+      allow create: if request.auth != null; // Only admin can create
+      allow update: if request.auth != null || 
+                     (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['guestData', 'status', 'updatedAt'])); // Customer can only update guestData
+      allow delete: if request.auth != null;
     }
   }
 }
@@ -81,9 +106,21 @@ npm install
 - ✅ Input validation
 - ✅ Only published posts visible to public
 
+## Collections Structure
+
+- `blogPosts` - Blog posts (title, content, excerpt, published, etc.)
+- `images` - Image library (url, name, uploadedAt, etc.)
+- `pageContent` - Page text content (heroTitle, section1Title, etc.)
+- `charterInquiries` - Public charter inquiries from customers
+- `charterRegistrations` - Charter registration forms (lockedFields, guestData, status)
+
 ## Access Admin Panel
 
 1. Navigate to `/admin/login`
 2. Sign in with your admin credentials
-3. Create and manage blog posts from the dashboard
+3. Access the dashboard with tabs for:
+   - Blog Posts management
+   - Image Library
+   - Page Content editing
+   - Charter Management (inquiries and registration forms)
 
