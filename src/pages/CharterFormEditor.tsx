@@ -3,6 +3,7 @@ import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { doc, getDoc, setDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { sendCharterFormEmail } from '../services/emailService';
+import { sendCharterFormSMS } from '../services/smsService';
 import './CharterFormEditor.css';
 
 interface CharterFormData {
@@ -347,11 +348,34 @@ const CharterFormEditor = () => {
         charter_type: formData.charterType || undefined,
       });
 
-      if (emailSent) {
-        alert(`✅ Form saved and email sent successfully to ${formData.email}!\n\nCustomer link: ${customerLink}`);
-      } else {
-        alert(`⚠️ Form saved, but email failed to send.\n\nPlease manually send this link to the customer:\n${customerLink}\n\nCheck EmailJS configuration in .env file.`);
+      // Optionally send SMS if phone number is available
+      let smsSent = false;
+      if (formData.phone && formData.phone.trim()) {
+        smsSent = await sendCharterFormSMS({
+          to_phone: formData.phone.trim(),
+          form_link: customerLink,
+          charter_date: formData.charterFromDate || formData.charterDate || undefined,
+          customer_name: formData.fullName || formData.chartererName || undefined,
+        });
       }
+
+      // Show results
+      let message = `✅ Form saved successfully!\n\n`;
+      if (emailSent) {
+        message += `✅ Email sent to ${formData.email}\n`;
+      } else {
+        message += `⚠️ Email failed (check EmailJS config)\n`;
+      }
+      if (formData.phone) {
+        if (smsSent) {
+          message += `✅ SMS sent to ${formData.phone}\n`;
+        } else {
+          message += `⚠️ SMS failed (check Twilio backend setup)\n`;
+        }
+      }
+      message += `\nCustomer link: ${customerLink}`;
+      
+      alert(message);
     } catch (error) {
       console.error('Error sending form:', error);
       alert('Failed to save form. Please try again.');
