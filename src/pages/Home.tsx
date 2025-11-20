@@ -26,7 +26,7 @@ const Home = () => {
         <div className="hero-image-container">
           <div 
             className="hero-image parallax" 
-            data-speed="0.3"
+            data-speed="0.15"
             style={{
               backgroundImage: 'url(/welcome.avif)'
             }}
