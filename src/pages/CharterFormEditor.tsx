@@ -297,6 +297,17 @@ const CharterFormEditor = () => {
       return;
     }
 
+    if (!formData.email || !formData.email.trim()) {
+      alert('Please enter the customer email address before sending.');
+      return;
+    }
+
+    const confirmSend = window.confirm(
+      `Send charter registration form to ${formData.email}?\n\nThis will save the form and send an email with a link to complete it.`
+    );
+
+    if (!confirmSend) return;
+
     setSaving(true);
     try {
       const lockedData: { [key: string]: any } = {};
@@ -306,7 +317,7 @@ const CharterFormEditor = () => {
 
       const formDoc = {
         inquiryId: inquiryId || null,
-        guestEmail: formData.email,
+        guestEmail: formData.email.trim(),
         lockedFields: lockedData,
         guestData: {},
         status: 'sent',
@@ -322,12 +333,27 @@ const CharterFormEditor = () => {
         formId = newDocRef.id;
         navigate(`/admin/charter-form/${formId}`);
       }
+      
       const customerLink = `${window.location.origin}/charter-form/${formId}`;
       
-      alert(`Form saved and ready to send! Customer link: ${customerLink}\n\nCopy this link and send it to the customer.`);
+      // Send email to customer
+      const emailSent = await sendCharterFormEmail({
+        to_email: formData.email.trim(),
+        to_name: formData.fullName || formData.chartererName || 'Guest',
+        form_link: customerLink,
+        charter_date: formData.charterFromDate || formData.charterDate || undefined,
+        yacht_name: formData.yachtName || undefined,
+        charter_type: formData.charterType || undefined,
+      });
+
+      if (emailSent) {
+        alert(`✅ Form saved and email sent successfully to ${formData.email}!\n\nCustomer link: ${customerLink}`);
+      } else {
+        alert(`⚠️ Form saved, but email failed to send.\n\nPlease manually send this link to the customer:\n${customerLink}\n\nCheck EmailJS configuration in .env file.`);
+      }
     } catch (error) {
       console.error('Error sending form:', error);
-      alert('Failed to send form');
+      alert('Failed to save form. Please try again.');
     } finally {
       setSaving(false);
     }
