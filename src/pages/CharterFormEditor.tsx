@@ -622,198 +622,90 @@ const CharterFormEditor = () => {
 
         {/* Charter Agreement Section - Captain Fields */}
         <fieldset className="form-section captain-section">
-          <legend>Charter Agreement (Captain Fields - Can Be Locked)</legend>
+          <legend>Charter Agreement (Captain Fields)</legend>
           <div className="form-grid">
             <div className="form-group">
-              <label>
-                Agreement Date *
-                {CAPTAIN_LOCKED_FIELDS.includes('agreementDateText') && (
-                  <button
-                    type="button"
-                    onClick={() => toggleLock('agreementDateText')}
-                    className={`lock-btn ${lockedFields.includes('agreementDateText') ? 'locked' : ''}`}
-                  >
-                    {lockedFields.includes('agreementDateText') ? '🔒' : '🔓'}
-                  </button>
-                )}
-              </label>
+              <label>Agreement Date *</label>
               <input
                 type="text"
                 value={formData.agreementDateText}
                 onChange={(e) => handleChange('agreementDateText', e.target.value)}
                 placeholder="e.g., 1st May 2025"
-                disabled={lockedFields.includes('agreementDateText')}
                 required
               />
             </div>
             <div className="form-group">
-              <label>
-                Charterer Name *
-                {CAPTAIN_LOCKED_FIELDS.includes('chartererName') && (
-                  <button
-                    type="button"
-                    onClick={() => toggleLock('chartererName')}
-                    className={`lock-btn ${lockedFields.includes('chartererName') ? 'locked' : ''}`}
-                  >
-                    {lockedFields.includes('chartererName') ? '🔒' : '🔓'}
-                  </button>
-                )}
-              </label>
+              <label>Charterer Name *</label>
               <input
                 type="text"
                 value={formData.chartererName}
                 onChange={(e) => handleChange('chartererName', e.target.value)}
-                disabled={lockedFields.includes('chartererName')}
                 required
               />
             </div>
             <div className="form-group">
-              <label>
-                Company *
-                {CAPTAIN_LOCKED_FIELDS.includes('companyName') && (
-                  <button
-                    type="button"
-                    onClick={() => toggleLock('companyName')}
-                    className={`lock-btn ${lockedFields.includes('companyName') ? 'locked' : ''}`}
-                  >
-                    {lockedFields.includes('companyName') ? '🔒' : '🔓'}
-                  </button>
-                )}
-              </label>
+              <label>Company *</label>
               <input
                 type="text"
                 value={formData.companyName}
                 onChange={(e) => handleChange('companyName', e.target.value)}
-                disabled={lockedFields.includes('companyName')}
                 required
               />
             </div>
             <div className="form-group">
-              <label>
-                Yacht Model *
-                {CAPTAIN_LOCKED_FIELDS.includes('yachtModel') && (
-                  <button
-                    type="button"
-                    onClick={() => toggleLock('yachtModel')}
-                    className={`lock-btn ${lockedFields.includes('yachtModel') ? 'locked' : ''}`}
-                  >
-                    {lockedFields.includes('yachtModel') ? '🔒' : '🔓'}
-                  </button>
-                )}
-              </label>
+              <label>Yacht Model *</label>
               <input
                 type="text"
                 value={formData.yachtModel}
                 onChange={(e) => handleChange('yachtModel', e.target.value)}
                 placeholder="e.g., Isla 40"
-                disabled={lockedFields.includes('yachtModel')}
                 required
               />
             </div>
             <div className="form-group">
-              <label>
-                Yacht Name *
-                {CAPTAIN_LOCKED_FIELDS.includes('yachtName') && (
-                  <button
-                    type="button"
-                    onClick={() => toggleLock('yachtName')}
-                    className={`lock-btn ${lockedFields.includes('yachtName') ? 'locked' : ''}`}
-                  >
-                    {lockedFields.includes('yachtName') ? '🔒' : '🔓'}
-                  </button>
-                )}
-              </label>
+              <label>Yacht Name *</label>
               <input
                 type="text"
                 value={formData.yachtName}
                 onChange={(e) => handleChange('yachtName', e.target.value)}
                 placeholder="e.g., Paire De Jaques"
-                disabled={lockedFields.includes('yachtName')}
                 required
               />
             </div>
             <div className="form-group">
-              <label>
-                Charter From Date *
-                {CAPTAIN_LOCKED_FIELDS.includes('charterFromDate') && (
-                  <button
-                    type="button"
-                    onClick={() => toggleLock('charterFromDate')}
-                    className={`lock-btn ${lockedFields.includes('charterFromDate') ? 'locked' : ''}`}
-                  >
-                    {lockedFields.includes('charterFromDate') ? '🔒' : '🔓'}
-                  </button>
-                )}
-              </label>
+              <label>Charter From Date *</label>
               <input
                 type="date"
                 value={formData.charterFromDate}
                 onChange={(e) => handleChange('charterFromDate', e.target.value)}
-                disabled={lockedFields.includes('charterFromDate')}
                 required
               />
             </div>
             <div className="form-group">
-              <label>
-                Charter To Date *
-                {CAPTAIN_LOCKED_FIELDS.includes('charterToDate') && (
-                  <button
-                    type="button"
-                    onClick={() => toggleLock('charterToDate')}
-                    className={`lock-btn ${lockedFields.includes('charterToDate') ? 'locked' : ''}`}
-                  >
-                    {lockedFields.includes('charterToDate') ? '🔒' : '🔓'}
-                  </button>
-                )}
-              </label>
+              <label>Charter To Date *</label>
               <input
                 type="date"
                 value={formData.charterToDate}
                 onChange={(e) => handleChange('charterToDate', e.target.value)}
-                disabled={lockedFields.includes('charterToDate')}
                 required
               />
             </div>
             <div className="form-group">
-              <label>
-                Charter Fee
-                {CAPTAIN_LOCKED_FIELDS.includes('charterFee') && (
-                  <button
-                    type="button"
-                    onClick={() => toggleLock('charterFee')}
-                    className={`lock-btn ${lockedFields.includes('charterFee') ? 'locked' : ''}`}
-                  >
-                    {lockedFields.includes('charterFee') ? '🔒' : '🔓'}
-                  </button>
-                )}
-              </label>
+              <label>Charter Fee</label>
               <input
                 type="number"
                 step="0.01"
                 value={formData.charterFee || ''}
                 onChange={(e) => handleNumberChange('charterFee', e.target.value)}
-                disabled={lockedFields.includes('charterFee')}
               />
             </div>
             <div className="form-group">
-              <label>
-                Deposit Due
-                {CAPTAIN_LOCKED_FIELDS.includes('depositDue') && (
-                  <button
-                    type="button"
-                    onClick={() => toggleLock('depositDue')}
-                    className={`lock-btn ${lockedFields.includes('depositDue') ? 'locked' : ''}`}
-                  >
-                    {lockedFields.includes('depositDue') ? '🔒' : '🔓'}
-                  </button>
-                )}
-              </label>
+              <label>Deposit Due</label>
               <input
                 type="number"
                 step="0.01"
                 value={formData.depositDue || ''}
                 onChange={(e) => handleNumberChange('depositDue', e.target.value)}
-                disabled={lockedFields.includes('depositDue')}
               />
             </div>
             <div className="form-group">
