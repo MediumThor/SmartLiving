@@ -84,7 +84,14 @@ const Blog = () => {
       const beforeFilter = postsData.length;
       postsData = postsData.filter(post => post.published === true);
       console.log(`Filtered posts: ${beforeFilter} -> ${postsData.length} published posts`);
-      
+
+      // Ensure newest posts appear first, even if Firestore query didn't sort
+      postsData.sort((a, b) => {
+        const aTime = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+        const bTime = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+        return bTime - aTime; // descending: newest first
+      });
+
       setPosts(postsData);
     } catch (error) {
       console.error('Error fetching posts:', error);
