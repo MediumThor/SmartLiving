@@ -50,10 +50,9 @@ const CharterManagement = () => {
         ...doc.data()
       })) as CharterInquiry[];
 
-      // Fetch registrations
+      // Fetch registrations (include all docs, even if they don't have createdAt yet)
       const registrationsRef = collection(db, 'charterRegistrations');
-      const registrationsQuery = query(registrationsRef, orderBy('createdAt', 'desc'));
-      const registrationsSnapshot = await getDocs(registrationsQuery);
+      const registrationsSnapshot = await getDocs(registrationsRef);
       const registrationsData = registrationsSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
