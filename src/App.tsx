@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
-import ChatWidget from './components/ChatWidget';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -82,7 +81,6 @@ function App() {
             </Routes>
           </main>
           <Footer />
-          <ChatWidget />
         </div>
       </Router>
     </AuthProvider>
