@@ -76,7 +76,7 @@ const Home = () => {
               Translate lessons from the helm into the boardroom. Build resilient teams and practical, 
               values-based leadership.
             </p>
-            <Link to="/leadership" className="cta-button">
+            <Link to="/leadership" className="cta-button cta-button-small">
               Explore Leadership
             </Link>
           </div>
@@ -87,7 +87,7 @@ const Home = () => {
               Align your health, relationships, and finances with what matters most so you can live 
               healthy, wealthy, and wise.
             </p>
-            <Link to="/wellness" className="cta-button">
+            <Link to="/wellness" className="cta-button cta-button-small">
               Visit Wellness
             </Link>
           </div>
