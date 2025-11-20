@@ -151,6 +151,8 @@ const CharterFormEditor = () => {
   const [lockedFields, setLockedFields] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [formStatus, setFormStatus] = useState<'draft' | 'sent' | 'completed'>('draft');
+  const [guestData, setGuestData] = useState<any>({});
 
   useEffect(() => {
     if (isEditing && id) {
@@ -431,12 +433,48 @@ const CharterFormEditor = () => {
     <div className="charter-form-editor">
       <div className="editor-header">
         <h1>{isEditing ? 'Edit Charter Registration Form' : 'Create Charter Registration Form'}</h1>
+        {formStatus === 'completed' && (
+          <div className="completed-badge" style={{
+            background: '#4CAF50',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '4px',
+            fontSize: '14px',
+            fontWeight: 'bold',
+            marginLeft: '16px'
+          }}>
+            ✅ Form Completed by Guest
+          </div>
+        )}
         <div className="header-actions">
           <button onClick={() => navigate('/admin/dashboard')} className="btn-secondary">
             Back to Dashboard
           </button>
         </div>
       </div>
+      
+      {formStatus === 'completed' && Object.keys(guestData).length > 0 && (
+        <div className="guest-data-summary" style={{
+          background: '#f0f7ff',
+          border: '2px solid #4CAF50',
+          borderRadius: '8px',
+          padding: '20px',
+          marginBottom: '20px'
+        }}>
+          <h3 style={{ marginTop: 0, color: '#4CAF50' }}>✅ Guest Submission Summary</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px' }}>
+            {guestData.fullName && <p><strong>Full Name:</strong> {guestData.fullName}</p>}
+            {guestData.phone && <p><strong>Phone:</strong> {guestData.phone}</p>}
+            {guestData.email && <p><strong>Email:</strong> {guestData.email}</p>}
+            {guestData.experience && <p><strong>Sailing Experience:</strong> {guestData.experience}</p>}
+            {guestData.lifejackets && <p><strong>Life Jacket Sizes:</strong> {guestData.lifejackets}</p>}
+            {guestData.allergies && <p><strong>Allergies:</strong> {guestData.allergies}</p>}
+            {guestData.medical && <p><strong>Medical Notes:</strong> {guestData.medical}</p>}
+            {guestData.emgName && <p><strong>Emergency Contact:</strong> {guestData.emgName} ({guestData.emgPhone})</p>}
+            {guestData.notes && <p><strong>Special Requests:</strong> {guestData.notes}</p>}
+          </div>
+        </div>
+      )}
 
       <div className="editor-controls">
         <div className="lock-controls">
