@@ -198,7 +198,14 @@ const CharterFormEditor = () => {
       const formDoc = await getDoc(doc(db, 'charterRegistrations', id!));
       if (formDoc.exists()) {
         const data = formDoc.data();
-        setFormData(data.lockedFields || {});
+        // Load locked fields into formData (these are the captain's pre-filled fields)
+        const lockedData = data.lockedFields || {};
+        // Merge locked fields and guest data (guest data takes precedence for editable fields)
+        setFormData(prev => ({
+          ...prev,
+          ...lockedData,
+          ...(data.guestData || {}) // Guest data overrides locked fields where applicable
+        }));
         setLockedFields(data.lockedFields ? Object.keys(data.lockedFields) : []);
       }
     } catch (error) {

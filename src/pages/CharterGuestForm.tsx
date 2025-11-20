@@ -106,17 +106,28 @@ const CharterGuestForm = () => {
               <label>Charter Date *</label>
               <input
                 type="date"
-                value={lockedFields.charterDate || formData.charterDate || ''}
+                value={lockedFields.charterDate || lockedFields.charterFromDate || formData.charterDate || ''}
                 onChange={(e) => handleChange('charterDate', e.target.value)}
-                disabled={!!lockedFields.charterDate}
+                disabled={!!(lockedFields.charterDate || lockedFields.charterFromDate)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Start Time *</label>
+              <input
+                type="time"
+                value={lockedFields.startTime || lockedFields.charterFromTime || formData.startTime || ''}
+                onChange={(e) => handleChange('startTime', e.target.value)}
+                disabled={!!(lockedFields.startTime || lockedFields.charterFromTime)}
                 required
               />
             </div>
             <div className="form-group">
               <label>Charter Type *</label>
               <select
-                value={formData.charterType || ''}
+                value={lockedFields.charterType || formData.charterType || ''}
                 onChange={(e) => handleChange('charterType', e.target.value)}
+                disabled={!!lockedFields.charterType}
                 required
               >
                 <option value="">Select...</option>

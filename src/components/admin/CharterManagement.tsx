@@ -209,12 +209,37 @@ const CharterManagement = () => {
                       </p>
                     )}
                   </div>
+                  <div className="registration-details">
+                    {reg.lockedFields && (
+                      <div className="locked-fields-preview">
+                        <p><strong>Charter Date:</strong> {reg.lockedFields.charterDate || reg.lockedFields.charterFromDate || 'Not set'}</p>
+                        <p><strong>Start Time:</strong> {reg.lockedFields.startTime || reg.lockedFields.charterFromTime || 'Not set'}</p>
+                        {reg.lockedFields.chartererName && (
+                          <p><strong>Guest:</strong> {reg.lockedFields.chartererName}</p>
+                        )}
+                      </div>
+                    )}
+                    {reg.status === 'completed' && reg.guestData && (
+                      <div className="completed-form-preview">
+                        <p><strong>✅ Form Completed</strong></p>
+                        {reg.guestData.fullName && (
+                          <p><strong>Guest Name:</strong> {reg.guestData.fullName}</p>
+                        )}
+                        {reg.guestData.phone && (
+                          <p><strong>Phone:</strong> {reg.guestData.phone}</p>
+                        )}
+                        {reg.guestData.experience && (
+                          <p><strong>Sailing Experience:</strong> {reg.guestData.experience}</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
                   <div className="registration-actions">
                     <button 
                       onClick={() => handleEditForm(reg.id)}
                       className="btn-edit"
                     >
-                      Edit Form
+                      {reg.status === 'completed' ? 'View Details' : 'Edit Form'}
                     </button>
                     <a
                       href={`/charter-form/${reg.id}`}
