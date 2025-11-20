@@ -25,8 +25,7 @@ const Home = () => {
       <section className="hero-section">
         <div className="hero-image-container">
           <div 
-            className="hero-image parallax" 
-            data-speed="0.15"
+            className="hero-image"
             style={{
               backgroundImage: 'url(/welcome.avif)'
             }}
