@@ -254,6 +254,18 @@ const CharterGuestForm = () => {
                   <input type="number" value={lockedFields.balanceDue} disabled />
                 </div>
               )}
+              {lockedFields.depositDue && (
+                <div className="form-group">
+                  <label>Deposit Due</label>
+                  <input type="number" step="0.01" value={lockedFields.depositDue} disabled />
+                </div>
+              )}
+              {lockedFields.totalAmount && (
+                <div className="form-group">
+                  <label>Total Amount</label>
+                  <input type="number" step="0.01" value={lockedFields.totalAmount} disabled />
+                </div>
+              )}
             </div>
           </fieldset>
         )}
