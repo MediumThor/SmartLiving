@@ -188,88 +188,95 @@ const CharterManagement = () => {
             </div>
           ) : (
             <div className="registrations-list">
-              {registrations.map(reg => (
-                <div key={reg.id} className="registration-card">
-                  <div className="registration-header">
-                    <div>
-                      <h3>Registration Form</h3>
-                      <p className="registration-email">{reg.guestEmail || 'No email set'}</p>
-                    </div>
-                    {getStatusBadge(reg.status)}
-                  </div>
-                  <div className="registration-details">
-                    <p>
-                      <strong>Created:</strong> {reg.createdAt?.toDate ? 
-                        new Date(reg.createdAt.toDate()).toLocaleString() : 'N/A'}
-                    </p>
-                    {reg.updatedAt && (
-                      <p>
-                        <strong>Updated:</strong> {reg.updatedAt?.toDate ? 
-                          new Date(reg.updatedAt.toDate()).toLocaleString() : 'N/A'}
-                      </p>
-                    )}
-                  </div>
-                  <div className="registration-details">
-                    {reg.lockedFields && (
-                      <div className="locked-fields-preview">
-                        <p><strong>Charter Date:</strong> {reg.lockedFields.charterDate || reg.lockedFields.charterFromDate || 'Not set'}</p>
-                        <p><strong>Start Time:</strong> {reg.lockedFields.startTime || reg.lockedFields.charterFromTime || 'Not set'}</p>
-                        {reg.lockedFields.chartererName && (
-                          <p><strong>Guest:</strong> {reg.lockedFields.chartererName}</p>
-                        )}
+              {registrations.map(reg => {
+                // Treat any registration with guestData as completed, even if status didn't update
+                const hasGuestData = reg.guestData && Object.keys(reg.guestData).length > 0;
+                const effectiveStatus: CharterRegistration['status'] =
+                  (reg.status as CharterRegistration['status']) || (hasGuestData ? 'completed' : 'draft');
+
+                return (
+                  <div key={reg.id} className="registration-card">
+                    <div className="registration-header">
+                      <div>
+                        <h3>Registration Form</h3>
+                        <p className="registration-email">{reg.guestEmail || 'No email set'}</p>
                       </div>
-                    )}
-                    {reg.status === 'completed' && reg.guestData && (
-                      <div className="completed-form-preview" style={{
-                        background: '#f0f7ff',
-                        border: '2px solid #4CAF50',
-                        borderRadius: '8px',
-                        padding: '12px',
-                        marginTop: '12px'
-                      }}>
-                        <p style={{ marginTop: 0, color: '#4CAF50', fontWeight: 'bold' }}>
-                          ✅ Form Completed - Click "View Full Details" to see all guest information
+                      {getStatusBadge(effectiveStatus)}
+                    </div>
+                    <div className="registration-details">
+                      <p>
+                        <strong>Created:</strong> {reg.createdAt?.toDate ? 
+                          new Date(reg.createdAt.toDate()).toLocaleString() : 'N/A'}
+                      </p>
+                      {reg.updatedAt && (
+                        <p>
+                          <strong>Updated:</strong> {reg.updatedAt?.toDate ? 
+                            new Date(reg.updatedAt.toDate()).toLocaleString() : 'N/A'}
                         </p>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px' }}>
-                          {reg.guestData.fullName && (
-                            <p><strong>Guest Name:</strong> {reg.guestData.fullName}</p>
-                          )}
-                          {reg.guestData.phone && (
-                            <p><strong>Phone:</strong> {reg.guestData.phone}</p>
-                          )}
-                          {reg.guestData.experience && (
-                            <p><strong>Sailing Experience:</strong> {reg.guestData.experience}</p>
-                          )}
-                          {reg.guestData.allergies && (
-                            <p><strong>Allergies:</strong> {reg.guestData.allergies}</p>
+                      )}
+                    </div>
+                    <div className="registration-details">
+                      {reg.lockedFields && (
+                        <div className="locked-fields-preview">
+                          <p><strong>Charter Date:</strong> {reg.lockedFields.charterDate || reg.lockedFields.charterFromDate || 'Not set'}</p>
+                          <p><strong>Start Time:</strong> {reg.lockedFields.startTime || reg.lockedFields.charterFromTime || 'Not set'}</p>
+                          {reg.lockedFields.chartererName && (
+                            <p><strong>Guest:</strong> {reg.lockedFields.chartererName}</p>
                           )}
                         </div>
-                      </div>
-                    )}
+                      )}
+                      {hasGuestData && (
+                        <div className="completed-form-preview" style={{
+                          background: '#f0f7ff',
+                          border: '2px solid #4CAF50',
+                          borderRadius: '8px',
+                          padding: '12px',
+                          marginTop: '12px'
+                        }}>
+                          <p style={{ marginTop: 0, color: '#4CAF50', fontWeight: 'bold' }}>
+                            ✅ Form Completed - Click "View Full Details" to see all guest information
+                          </p>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px' }}>
+                            {reg.guestData.fullName && (
+                              <p><strong>Guest Name:</strong> {reg.guestData.fullName}</p>
+                            )}
+                            {reg.guestData.phone && (
+                              <p><strong>Phone:</strong> {reg.guestData.phone}</p>
+                            )}
+                            {reg.guestData.experience && (
+                              <p><strong>Sailing Experience:</strong> {reg.guestData.experience}</p>
+                            )}
+                            {reg.guestData.allergies && (
+                              <p><strong>Allergies:</strong> {reg.guestData.allergies}</p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="registration-actions">
+                      <button 
+                        onClick={() => handleEditForm(reg.id)}
+                        className="btn-edit"
+                        style={effectiveStatus === 'completed' ? {
+                          background: '#4CAF50',
+                          color: 'white',
+                          fontWeight: 'bold'
+                        } : {}}
+                      >
+                        {effectiveStatus === 'completed' ? '✅ View Full Details' : 'Edit Form'}
+                      </button>
+                      <a
+                        href={`/charter-form/${reg.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-view"
+                      >
+                        View Customer Form
+                      </a>
+                    </div>
                   </div>
-                  <div className="registration-actions">
-                    <button 
-                      onClick={() => handleEditForm(reg.id)}
-                      className="btn-edit"
-                      style={reg.status === 'completed' ? {
-                        background: '#4CAF50',
-                        color: 'white',
-                        fontWeight: 'bold'
-                      } : {}}
-                    >
-                      {reg.status === 'completed' ? '✅ View Full Details' : 'Edit Form'}
-                    </button>
-                    <a
-                      href={`/charter-form/${reg.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-view"
-                    >
-                      View Customer Form
-                    </a>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
