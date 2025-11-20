@@ -76,13 +76,55 @@ interface CharterFormData {
   notes: string;
 }
 
+// Fields the owner (captain) controls that should be immutable on the customer form.
+// These are stored in lockedFields and rendered read-only on the guest side.
 const CAPTAIN_LOCKED_FIELDS = [
-  'agreementDateText', 'companyName', 'yachtModel', 'yachtName', 'sleepAboard',
-  'sleepFromTime', 'sleepFromDate', 'charterFromTime', 'charterFromDate',
-  'charterToTime', 'charterToDate', 'totalNights', 'numInParty', 'paxNotes',
-  'charterFee', 'provisioning', 'nationalParksFee', 'cruisingPermit', 'fuelSurcharge',
-  'visarDonation', 'hotel', 'instructorFee', 'depositDue', 'totalAmount', 'balanceDue',
-  'refundableDamageDeposit', 'paymentNotes'
+  // Charter details
+  'charterDate',
+  'startTime',
+  'duration',
+  'charterType',
+  'partySize',
+  'pickupLocation',
+
+  // Lead guest / contract header (as set by the owner)
+  'fullName',
+  'preferredName',
+  'email',
+  'phone',
+  'address',
+
+  // Agreement / company / boat
+  'agreementDateText',
+  'chartererName',
+  'companyName',
+  'yachtModel',
+  'yachtName',
+  'sleepAboard',
+  'sleepFromTime',
+  'sleepFromDate',
+  'charterFromTime',
+  'charterFromDate',
+  'charterToTime',
+  'charterToDate',
+  'totalNights',
+  'numInParty',
+  'paxNotes',
+
+  // Pricing and payments
+  'charterFee',
+  'provisioning',
+  'nationalParksFee',
+  'cruisingPermit',
+  'fuelSurcharge',
+  'visarDonation',
+  'hotel',
+  'instructorFee',
+  'depositDue',
+  'totalAmount',
+  'balanceDue',
+  'refundableDamageDeposit',
+  'paymentNotes'
 ];
 
 const CharterFormEditor = () => {
