@@ -87,6 +87,7 @@
   color: #888;
   font-size: 0.9rem;
   position: relative;
+  z-index: 1000;
 }
 
 .footer-bottom p {
@@ -96,10 +97,14 @@
 .admin-link {
   color: inherit;
   text-decoration: none;
-  opacity: 0.3;
+  opacity: 0.5;
   margin-left: 0.5rem;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, color 0.3s ease;
   font-size: 1.2rem;
+  position: relative;
+  z-index: 1001;
+  display: inline-block;
+  cursor: pointer;
 }
 
 .admin-link:hover {

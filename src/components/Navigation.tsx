@@ -31,7 +31,7 @@ const Navigation = () => {
       <nav className="navigation">
         <div className="nav-container">
           <Link to="/" className="logo" onClick={closeMenu}>
-            <img src="/logo.png" alt="Smart Living Logo" className="logo-img" />
+            <img src="/logo.avif" alt="Smart Living Logo" className="logo-img" />
           </Link>
           <button 
             className={`hamburger ${isMenuOpen ? 'active' : ''}`}
