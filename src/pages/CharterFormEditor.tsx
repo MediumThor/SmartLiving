@@ -300,15 +300,19 @@ const CharterFormEditor = () => {
         }
       });
 
-      const formDoc = {
+      const formDoc: { [key: string]: any } = {
         inquiryId: inquiryId || null,
-        guestEmail: formData.email,
+        guestEmail: formData.email || '',
         lockedFields: lockedData,
         guestData: {},
         status: 'draft',
-        createdAt: isEditing ? undefined : serverTimestamp(),
         updatedAt: serverTimestamp()
       };
+
+      // Only add createdAt if creating new document
+      if (!isEditing) {
+        formDoc.createdAt = serverTimestamp();
+      }
 
       if (isEditing && id) {
         await setDoc(doc(db, 'charterRegistrations', id), formDoc);
