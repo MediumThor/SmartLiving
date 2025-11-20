@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import ImageSlideshow from '../components/ImageSlideshow';
+import CharterInquiryForm from '../components/CharterInquiryForm';
 import './Charters.css';
 
 const Charters = () => {
@@ -280,18 +281,14 @@ const Charters = () => {
           </div>
         </section>
 
-        {/* Call to Action */}
+        {/* Inquiry Form Section */}
         <section className="charters-section cta-section">
           <div className="section-container">
-            <h2 className="section-title">JOIN THE ADVENTURE</h2>
+            <h2 className="section-title">INQUIRE ABOUT A CHARTER</h2>
             <p className="section-description">
-              Experience world-class sailing, learn from professional sailors, and create memories 
-              that will last a lifetime.
+              Fill out the form below to inquire about availability and pricing for your sailing adventure.
             </p>
-            <p className="section-description">
-              <strong>Spots are limited to 14 sailors — reserve your berth now.</strong>
-            </p>
-            <button className="cta-button">Book Your Adventure</button>
+            <CharterInquiryForm />
           </div>
         </section>
       </div>

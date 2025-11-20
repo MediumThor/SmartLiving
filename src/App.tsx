@@ -16,6 +16,8 @@ import Resources from './pages/Resources';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import BlogPostEditor from './pages/BlogPostEditor';
+import CharterFormEditor from './pages/CharterFormEditor';
+import CharterGuestForm from './pages/CharterGuestForm';
 import './App.css';
 
 function App() {
@@ -60,6 +62,23 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/admin/charter-form/:id"
+                element={
+                  <ProtectedRoute>
+                    <CharterFormEditor />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/charter-form/new"
+                element={
+                  <ProtectedRoute>
+                    <CharterFormEditor />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/charter-form/:id" element={<CharterGuestForm />} />
             </Routes>
           </main>
           <Footer />
