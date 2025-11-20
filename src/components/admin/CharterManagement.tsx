@@ -25,6 +25,7 @@ interface CharterRegistration {
   status: 'draft' | 'sent' | 'completed';
   createdAt: any;
   updatedAt: any;
+  customerLinkPath?: string;
 }
 
 interface CustomerSummary {
@@ -295,6 +296,11 @@ const CharterManagement = () => {
                           {reg.lockedFields.chartererName && (
                             <p><strong>Guest:</strong> {reg.lockedFields.chartererName}</p>
                           )}
+                          {reg.customerLinkPath && (
+                            <p style={{ fontSize: '0.85rem', color: '#555' }}>
+                              <strong>Customer Link:</strong> {reg.customerLinkPath}
+                            </p>
+                          )}
                         </div>
                       )}
                       {hasGuestData && (
@@ -477,6 +483,9 @@ const CharterManagement = () => {
                         <p><strong>Start Time:</strong> {reg.lockedFields?.startTime || reg.lockedFields?.charterFromTime || 'Not set'}</p>
                         {hasGuestData && reg.guestData.fullName && (
                           <p><strong>Guest Name (submitted):</strong> {reg.guestData.fullName}</p>
+                        )}
+                        {reg.customerLinkPath && (
+                          <p><strong>Customer Link Path:</strong> {reg.customerLinkPath}</p>
                         )}
                         <div className="cm-modal-actions">
                           <button

@@ -421,10 +421,25 @@ const CharterFormEditor = () => {
         navigate(`/admin/charter-form/${formId}`);
       }
       
-      const customerLink = `${window.location.origin}/charter-form/${formId}`;
+      // Build and log the customer link so it's stored in Firestore for later reference
+      if (formId) {
+        const customerPath = `/charter-form/${formId}`;
+        const customerLink = `${window.location.origin}${customerPath}`;
+
+        // Persist the link path on the registration document for admin reference
+        await setDoc(
+          doc(db, 'charterRegistrations', formId),
+          { customerLinkPath: customerPath },
+          { merge: true }
+        );
       
-      // Show customer link for manual sending
-      alert(`✅ Form saved successfully!\n\nCustomer Link:\n${customerLink}\n\nCopy this link and send it to the customer manually.`);
+        // Show customer link for manual sending
+        alert(
+          `✅ Form saved successfully!\n\nCustomer Link:\n${customerLink}\n\nThis link is now logged on the registration and can be accessed later from the admin dashboard.`
+        );
+      } else {
+        alert('Form saved, but could not determine form ID to generate customer link.');
+      }
     } catch (error) {
       console.error('Error sending form:', error);
       alert('Failed to save form. Please try again.');
