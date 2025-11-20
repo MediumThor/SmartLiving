@@ -3,6 +3,8 @@
   margin: 0 auto;
   padding: 2rem;
   min-height: calc(100vh - 200px);
+  position: relative;
+  z-index: 1;
 }
 
 .form-header {
@@ -27,6 +29,9 @@
   padding: 2rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid #e8e8e8;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
 }
 
 .form-section {
@@ -102,6 +107,9 @@
   font-size: 1rem;
   font-family: inherit;
   transition: border-color 0.2s;
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .form-group input:focus,

@@ -2,6 +2,8 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .editor-header {
@@ -81,6 +83,9 @@
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
 }
 
 .form-section {
@@ -148,6 +153,9 @@
   border-radius: 4px;
   font-size: 1rem;
   font-family: inherit;
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .form-group input:focus,
