@@ -293,7 +293,11 @@ const CharterFormEditor = () => {
     try {
       const lockedData: { [key: string]: any } = {};
       lockedFields.forEach(field => {
-        lockedData[field] = formData[field as keyof CharterFormData];
+        const value = formData[field as keyof CharterFormData];
+        // Only include field if it has a value (not undefined, null, or empty string)
+        if (value !== undefined && value !== null && value !== '') {
+          lockedData[field] = value;
+        }
       });
 
       const formDoc = {
