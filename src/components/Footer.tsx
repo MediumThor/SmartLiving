@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './Footer.css';
 
 const Footer = () => {
@@ -32,7 +33,11 @@ const Footer = () => {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} by Smart Living. Proudly created with React & Vite.</p>
+          <p>
+            &copy; {new Date().getFullYear()} by Smart Living. Proudly created with React & Vite.
+            {' '}
+            <Link to="/admin/login" className="admin-link" aria-label="Admin">•</Link>
+          </p>
         </div>
       </div>
     </footer>

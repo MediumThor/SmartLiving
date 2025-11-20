@@ -1,7 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import ChatWidget from './components/ChatWidget';
+import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import About from './pages/About';
 import Sailing from './pages/Sailing';
@@ -11,30 +13,60 @@ import Wellness from './pages/Wellness';
 import Connect from './pages/Connect';
 import Blog from './pages/Blog';
 import Resources from './pages/Resources';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import BlogPostEditor from './pages/BlogPostEditor';
 import './App.css';
 
 function App() {
   return (
-    <Router>
-      <div className="app">
-        <Navigation />
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/sailing" element={<Sailing />} />
-            <Route path="/charters" element={<Charters />} />
-            <Route path="/leadership" element={<Leadership />} />
-            <Route path="/wellness" element={<Wellness />} />
-            <Route path="/connect" element={<Connect />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/resources" element={<Resources />} />
-          </Routes>
-        </main>
-        <Footer />
-        <ChatWidget />
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="app">
+          <Navigation />
+          <main className="main-content">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/sailing" element={<Sailing />} />
+              <Route path="/charters" element={<Charters />} />
+              <Route path="/leadership" element={<Leadership />} />
+              <Route path="/wellness" element={<Wellness />} />
+              <Route path="/connect" element={<Connect />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/resources" element={<Resources />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/new-post"
+                element={
+                  <ProtectedRoute>
+                    <BlogPostEditor />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/edit-post/:id"
+                element={
+                  <ProtectedRoute>
+                    <BlogPostEditor />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </main>
+          <Footer />
+          <ChatWidget />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

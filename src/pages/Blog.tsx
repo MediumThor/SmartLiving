@@ -1,7 +1,24 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import './Page.css';
+import './Blog.css';
+
+interface BlogPost {
+  id: string;
+  title: string;
+  content: string;
+  excerpt?: string;
+  author: string;
+  createdAt: any;
+  published: boolean;
+  imageUrl?: string;
+}
 
 const Blog = () => {
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const handleScroll = () => {
       const scrolled = window.pageYOffset;
@@ -14,8 +31,78 @@ const Blog = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
+    fetchPosts();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const postsRef = collection(db, 'blogPosts');
+      
+      // Try query with published filter first
+      let q = query(
+        postsRef, 
+        where('published', '==', true),
+        orderBy('createdAt', 'desc')
+      );
+      
+      let querySnapshot;
+      try {
+        querySnapshot = await getDocs(q);
+        console.log('Fetched posts with published filter:', querySnapshot.docs.length);
+      } catch (error: any) {
+        // If composite index is needed, fetch all and filter client-side
+        if (error?.code === 'failed-precondition' || error?.message?.includes('index')) {
+          console.warn('Composite index needed. Fetching all posts and filtering client-side...');
+          console.warn('Error details:', error);
+          // Try without orderBy first
+          try {
+            q = query(postsRef, where('published', '==', true));
+            querySnapshot = await getDocs(q);
+            console.log('Fetched posts without orderBy:', querySnapshot.docs.length);
+          } catch (err2: any) {
+            console.warn('Still failed, fetching all posts:', err2);
+            q = query(postsRef);
+            querySnapshot = await getDocs(q);
+            console.log('Fetched all posts:', querySnapshot.docs.length);
+          }
+        } else {
+          throw error;
+        }
+      }
+      
+      let postsData = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        console.log('Post data:', { id: doc.id, published: data.published, title: data.title });
+        return {
+          id: doc.id,
+          ...data
+        };
+      }) as BlogPost[];
+      
+      // Filter for published posts if we fetched all
+      const beforeFilter = postsData.length;
+      postsData = postsData.filter(post => post.published === true);
+      console.log(`Filtered posts: ${beforeFilter} -> ${postsData.length} published posts`);
+      
+      setPosts(postsData);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      setPosts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatDate = (timestamp: any) => {
+    if (!timestamp) return 'No date';
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   return (
     <div className="page-container">
@@ -41,57 +128,47 @@ const Blog = () => {
           </p>
         </div>
 
-        <div className="three-column-section">
-          <div className="column-card">
-            <div className="column-image">
-              <img 
-                src="https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                alt="Sailing Stories" 
-              />
+        {loading ? (
+          <div className="blog-loading">
+            <p>Loading posts...</p>
+          </div>
+        ) : posts.length === 0 ? (
+          <div className="content-section">
+            <div className="blog-placeholder">
+              <p>Blog posts coming soon! Check back regularly for new content.</p>
+              <p>
+                In the meantime, feel free to explore the other sections of the site or 
+                reach out through the contact form if you'd like to connect.
+              </p>
             </div>
-            <h2>Sailing Adventures</h2>
-            <p>
-              Stories from the water, lessons learned, and the freedom that comes from 
-              harnessing the wind and navigating by skill.
-            </p>
           </div>
-          <div className="column-card">
-            <div className="column-image">
-              <img 
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                alt="Leadership Insights" 
-              />
-            </div>
-            <h2>Leadership Insights</h2>
-            <p>
-              Principles, experiences, and reflections on what it means to lead effectively 
-              and inspire growth in others.
-            </p>
+        ) : (
+          <div className="blog-posts-container">
+            {posts.map((post) => (
+              <article key={post.id} className="blog-post-card">
+                {post.imageUrl && (
+                  <div className="blog-post-image">
+                    <img src={post.imageUrl} alt={post.title} />
+                  </div>
+                )}
+                <div className="blog-post-content">
+                  <h2>{post.title}</h2>
+                  <div className="blog-post-meta">
+                    <span className="blog-post-date">{formatDate(post.createdAt)}</span>
+                    <span className="blog-post-author">By {post.author}</span>
+                  </div>
+                  {post.excerpt && (
+                    <p className="blog-post-excerpt">{post.excerpt}</p>
+                  )}
+                  <div 
+                    className="blog-post-body"
+                    dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }}
+                  />
+                </div>
+              </article>
+            ))}
           </div>
-          <div className="column-card">
-            <div className="column-image">
-              <img 
-                src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                alt="Wellness Tips" 
-              />
-            </div>
-            <h2>Wellness Tips</h2>
-            <p>
-              Resources, strategies, and insights for living a healthier, more balanced life 
-              through intentional choices.
-            </p>
-          </div>
-        </div>
-
-        <div className="content-section">
-          <div className="blog-placeholder">
-            <p>Blog posts coming soon! Check back regularly for new content.</p>
-            <p>
-              In the meantime, feel free to explore the other sections of the site or 
-              reach out through the contact form if you'd like to connect.
-            </p>
-          </div>
-        </div>
+        )}
 
         <div className="content-section">
           <h2>Stay Connected</h2>
