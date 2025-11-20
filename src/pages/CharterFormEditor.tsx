@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { doc, getDoc, setDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
-import { sendCharterFormEmail } from '../services/emailService';
-import { sendCharterFormSMS } from '../services/smsService';
+// Email and SMS services removed - using manual link sharing for now
 import './CharterFormEditor.css';
 
 interface CharterFormData {
