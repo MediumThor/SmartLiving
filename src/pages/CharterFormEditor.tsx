@@ -362,12 +362,28 @@ const CharterFormEditor = () => {
     try {
       const lockedData: { [key: string]: any } = {};
       lockedFields.forEach(field => {
-        lockedData[field] = formData[field as keyof CharterFormData];
+        const value = formData[field as keyof CharterFormData];
+        // Only include field if it has a valid value
+        // Check for undefined, null, empty string, and also handle 0 for numbers
+        if (value !== undefined && value !== null) {
+          // For strings, check if not empty
+          if (typeof value === 'string' && value.trim() !== '') {
+            lockedData[field] = value.trim();
+          }
+          // For numbers, include even if 0 (but not undefined)
+          else if (typeof value === 'number') {
+            lockedData[field] = value;
+          }
+          // For booleans, include them
+          else if (typeof value === 'boolean') {
+            lockedData[field] = value;
+          }
+        }
       });
 
       const formDoc: { [key: string]: any } = {
         inquiryId: inquiryId || null,
-        guestEmail: formData.email.trim(),
+        guestEmail: formData.email.trim() || '',
         lockedFields: lockedData,
         guestData: {},
         status: 'sent',
