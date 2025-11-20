@@ -350,15 +350,19 @@ const CharterFormEditor = () => {
         lockedData[field] = formData[field as keyof CharterFormData];
       });
 
-      const formDoc = {
+      const formDoc: { [key: string]: any } = {
         inquiryId: inquiryId || null,
         guestEmail: formData.email.trim(),
         lockedFields: lockedData,
         guestData: {},
         status: 'sent',
-        createdAt: isEditing ? undefined : serverTimestamp(),
         updatedAt: serverTimestamp()
       };
+
+      // Only add createdAt if creating new document
+      if (!isEditing) {
+        formDoc.createdAt = serverTimestamp();
+      }
 
       let formId = id;
       if (isEditing && id) {
