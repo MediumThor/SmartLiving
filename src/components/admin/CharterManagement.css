@@ -17,6 +17,7 @@
   font-size: 1rem;
   font-weight: 500;
   transition: all 0.2s;
+  color: #555555; /* darker gray for inactive tabs */
 }
 
 .view-tab:hover {
