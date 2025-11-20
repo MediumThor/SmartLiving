@@ -94,12 +94,13 @@
 }
 
 .admin-link {
+  position: absolute;
+  left: 2rem;
   color: #3a3a3a;
   text-decoration: none;
-  opacity: 0.4;
+  opacity: 0.5;
   transition: opacity 0.2s ease, color 0.2s ease;
-  margin-left: 0.5rem;
-  font-size: 1.2rem;
+  font-size: 1.8rem;
 }
 
 .admin-link:hover {
