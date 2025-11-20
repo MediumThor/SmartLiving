@@ -220,17 +220,30 @@ const CharterManagement = () => {
                       </div>
                     )}
                     {reg.status === 'completed' && reg.guestData && (
-                      <div className="completed-form-preview">
-                        <p><strong>✅ Form Completed</strong></p>
-                        {reg.guestData.fullName && (
-                          <p><strong>Guest Name:</strong> {reg.guestData.fullName}</p>
-                        )}
-                        {reg.guestData.phone && (
-                          <p><strong>Phone:</strong> {reg.guestData.phone}</p>
-                        )}
-                        {reg.guestData.experience && (
-                          <p><strong>Sailing Experience:</strong> {reg.guestData.experience}</p>
-                        )}
+                      <div className="completed-form-preview" style={{
+                        background: '#f0f7ff',
+                        border: '2px solid #4CAF50',
+                        borderRadius: '8px',
+                        padding: '12px',
+                        marginTop: '12px'
+                      }}>
+                        <p style={{ marginTop: 0, color: '#4CAF50', fontWeight: 'bold' }}>
+                          ✅ Form Completed - Click "View Full Details" to see all guest information
+                        </p>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px' }}>
+                          {reg.guestData.fullName && (
+                            <p><strong>Guest Name:</strong> {reg.guestData.fullName}</p>
+                          )}
+                          {reg.guestData.phone && (
+                            <p><strong>Phone:</strong> {reg.guestData.phone}</p>
+                          )}
+                          {reg.guestData.experience && (
+                            <p><strong>Sailing Experience:</strong> {reg.guestData.experience}</p>
+                          )}
+                          {reg.guestData.allergies && (
+                            <p><strong>Allergies:</strong> {reg.guestData.allergies}</p>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -238,8 +251,13 @@ const CharterManagement = () => {
                     <button 
                       onClick={() => handleEditForm(reg.id)}
                       className="btn-edit"
+                      style={reg.status === 'completed' ? {
+                        background: '#4CAF50',
+                        color: 'white',
+                        fontWeight: 'bold'
+                      } : {}}
                     >
-                      {reg.status === 'completed' ? 'View Details' : 'Edit Form'}
+                      {reg.status === 'completed' ? '✅ View Full Details' : 'Edit Form'}
                     </button>
                     <a
                       href={`/charter-form/${reg.id}`}
