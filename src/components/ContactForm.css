@@ -138,3 +138,41 @@
   text-decoration: underline;
 }
 
+@media (max-width: 768px) {
+  .contact-form-container {
+    padding: 2rem 1.5rem;
+    margin: 0 1rem;
+  }
+
+  .contact-form-container h2 {
+    font-size: 1.75rem;
+  }
+
+  .form-description {
+    font-size: 1rem;
+  }
+
+  .submit-button {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .contact-form-container {
+    padding: 1.5rem 1rem;
+    margin: 0 0.5rem;
+  }
+
+  .contact-form-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .contact-info-top {
+    padding: 1rem;
+  }
+
+  .contact-info-top p {
+    font-size: 0.9rem;
+  }
+}
+

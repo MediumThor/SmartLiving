@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Navigation.css';
 
 const Navigation = () => {
   const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
     { path: '/', label: 'Welcome' },
@@ -16,26 +18,49 @@ const Navigation = () => {
     { path: '/resources', label: 'Resources' },
   ];
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
-    <nav className="navigation">
-      <div className="nav-container">
-        <Link to="/" className="logo">
-          <img src="/logo.png" alt="Smart Living Logo" className="logo-img" />
-        </Link>
-        <ul className="nav-menu">
-          {navItems.map((item) => (
-            <li key={item.path}>
-              <Link
-                to={item.path}
-                className={location.pathname === item.path ? 'active' : ''}
-              >
-                {item.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </nav>
+    <>
+      <nav className="navigation">
+        <div className="nav-container">
+          <Link to="/" className="logo" onClick={closeMenu}>
+            <img src="/logo.png" alt="Smart Living Logo" className="logo-img" />
+          </Link>
+          <button 
+            className={`hamburger ${isMenuOpen ? 'active' : ''}`}
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <ul className={`nav-menu ${isMenuOpen ? 'open' : ''}`}>
+            {navItems.map((item) => (
+              <li key={item.path}>
+                <Link
+                  to={item.path}
+                  className={location.pathname === item.path ? 'active' : ''}
+                  onClick={closeMenu}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
+      {isMenuOpen && (
+        <div className="menu-backdrop" onClick={closeMenu}></div>
+      )}
+    </>
   );
 };
 
