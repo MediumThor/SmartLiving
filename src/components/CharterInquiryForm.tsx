@@ -28,11 +28,20 @@ const CharterInquiryForm = () => {
     setSubmitting(true);
 
     try {
-      await addDoc(collection(db, 'charterInquiries'), {
-        ...formData,
+      const inquiryData = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        charterDate: formData.charterDate,
+        partySize: formData.partySize,
+        message: formData.message.trim(),
         status: 'new',
         createdAt: serverTimestamp()
-      });
+      };
+
+      console.log('Submitting inquiry:', inquiryData);
+      const docRef = await addDoc(collection(db, 'charterInquiries'), inquiryData);
+      console.log('Inquiry submitted successfully with ID:', docRef.id);
 
       setSubmitted(true);
       setFormData({
@@ -43,9 +52,19 @@ const CharterInquiryForm = () => {
         partySize: 1,
         message: ''
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting inquiry:', error);
-      alert('Failed to submit inquiry. Please try again.');
+      console.error('Error code:', error.code);
+      console.error('Error message:', error.message);
+      
+      let errorMessage = 'Failed to submit inquiry. Please try again.';
+      if (error.code === 'permission-denied') {
+        errorMessage = 'Permission denied. Please check Firestore security rules allow public writes to charterInquiries collection.';
+      } else if (error.message) {
+        errorMessage = `Error: ${error.message}`;
+      }
+      
+      alert(errorMessage);
     } finally {
       setSubmitting(false);
     }
