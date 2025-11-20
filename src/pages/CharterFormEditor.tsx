@@ -176,11 +176,13 @@ const CharterFormEditor = () => {
       const inquiryDoc = await getDoc(doc(db, 'charterInquiries', inquiryId!));
       if (inquiryDoc.exists()) {
         const data = inquiryDoc.data();
+        const customerName = data.name || '';
         setFormData(prev => ({
           ...prev,
           email: data.email || '',
           phone: data.phone || '',
-          fullName: data.name || '',
+          fullName: customerName,
+          chartererName: customerName, // Auto-populate charterer name from inquiry
           charterDate: data.charterDate || '',
           partySize: data.partySize || 1
         }));
@@ -240,7 +242,34 @@ const CharterFormEditor = () => {
   };
 
   const handleChange = (field: keyof CharterFormData, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      const updated = { ...prev, [field]: value };
+      
+      // Auto-sync customer name to charterer name
+      if (field === 'fullName' && value) {
+        updated.chartererName = value;
+      }
+      
+      return updated;
+    });
+  };
+
+  const handleNumberChange = (field: keyof CharterFormData, value: string) => {
+    // Handle empty string
+    if (value === '' || value === null || value === undefined) {
+      handleChange(field, 0);
+      return;
+    }
+    
+    // Remove leading zeros (but keep single 0 if that's all there is)
+    let cleanedValue = value.replace(/^0+(?=\d)/, '');
+    if (cleanedValue === '') cleanedValue = '0';
+    
+    // Convert to number
+    const numValue = parseFloat(cleanedValue);
+    if (!isNaN(numValue)) {
+      handleChange(field, numValue);
+    }
   };
 
   const toggleLock = (field: string) => {
@@ -703,8 +732,8 @@ const CharterFormEditor = () => {
               <input
                 type="number"
                 step="0.01"
-                value={formData.charterFee}
-                onChange={(e) => handleChange('charterFee', parseFloat(e.target.value) || 0)}
+                value={formData.charterFee || ''}
+                onChange={(e) => handleNumberChange('charterFee', e.target.value)}
                 disabled={lockedFields.includes('charterFee')}
               />
             </div>
@@ -724,8 +753,8 @@ const CharterFormEditor = () => {
               <input
                 type="number"
                 step="0.01"
-                value={formData.depositDue}
-                onChange={(e) => handleChange('depositDue', parseFloat(e.target.value) || 0)}
+                value={formData.depositDue || ''}
+                onChange={(e) => handleNumberChange('depositDue', e.target.value)}
                 disabled={lockedFields.includes('depositDue')}
               />
             </div>

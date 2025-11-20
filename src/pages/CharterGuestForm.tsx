@@ -29,6 +29,14 @@ const CharterGuestForm = () => {
         const data = formDoc.data();
         setLockedFields(data.lockedFields || {});
         setFormData(data.guestData || {});
+        
+        // Pre-fill customer name from locked fields if available
+        if (data.lockedFields?.chartererName && !data.guestData?.fullName) {
+          setFormData(prev => ({
+            ...prev,
+            fullName: data.lockedFields.chartererName
+          }));
+        }
       } else {
         alert('Form not found');
       }
