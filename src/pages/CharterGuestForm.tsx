@@ -233,25 +233,25 @@ const CharterGuestForm = () => {
               {lockedFields.charterFee && (
                 <div className="form-group">
                   <label>Charter Fee</label>
-                  <input type="number" value={lockedFields.charterFee} disabled />
-                </div>
-              )}
-              {lockedFields.depositDue && (
-                <div className="form-group">
-                  <label>Deposit Due</label>
-                  <input type="number" value={lockedFields.depositDue} disabled />
+                  <input type="number" step="0.01" value={lockedFields.charterFee} disabled />
                 </div>
               )}
               {lockedFields.totalAmount && (
                 <div className="form-group">
-                  <label>Total Amount</label>
-                  <input type="number" value={lockedFields.totalAmount} disabled />
+                  <label><strong>Total Amount</strong></label>
+                  <input type="number" step="0.01" value={lockedFields.totalAmount} disabled className="total-amount" />
+                </div>
+              )}
+              {lockedFields.depositDue && (
+                <div className="form-group">
+                  <label><strong>Deposit Due</strong></label>
+                  <input type="number" step="0.01" value={lockedFields.depositDue} disabled className="deposit-amount" />
                 </div>
               )}
               {lockedFields.balanceDue && (
                 <div className="form-group">
                   <label>Balance Due</label>
-                  <input type="number" value={lockedFields.balanceDue} disabled />
+                  <input type="number" step="0.01" value={lockedFields.balanceDue} disabled />
                 </div>
               )}
               {lockedFields.depositDue && (
