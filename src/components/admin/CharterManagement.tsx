@@ -27,11 +27,19 @@ interface CharterRegistration {
   updatedAt: any;
 }
 
+interface CustomerSummary {
+  email: string;
+  name?: string;
+  inquiries: CharterInquiry[];
+  registrations: CharterRegistration[];
+}
+
 const CharterManagement = () => {
   const [inquiries, setInquiries] = useState<CharterInquiry[]>([]);
   const [registrations, setRegistrations] = useState<CharterRegistration[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeView, setActiveView] = useState<'inquiries' | 'registrations'>('inquiries');
+  const [activeView, setActiveView] = useState<'inquiries' | 'registrations' | 'customers'>('inquiries');
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerSummary | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -86,6 +94,54 @@ const CharterManagement = () => {
     }
   };
 
+  // Build combined customer view keyed by email
+  const customerSummaries: CustomerSummary[] = (() => {
+    const map: { [email: string]: CustomerSummary } = {};
+
+    inquiries.forEach((inq) => {
+      const email = inq.email?.trim().toLowerCase();
+      if (!email) return;
+      if (!map[email]) {
+        map[email] = {
+          email,
+          name: inq.name,
+          inquiries: [],
+          registrations: [],
+        };
+      }
+      map[email].inquiries.push(inq);
+      // Prefer first non-empty name
+      if (!map[email].name && inq.name) {
+        map[email].name = inq.name;
+      }
+    });
+
+    registrations.forEach((reg) => {
+      const email =
+        reg.guestEmail?.trim().toLowerCase() ||
+        (reg.lockedFields?.email && String(reg.lockedFields.email).trim().toLowerCase());
+      if (!email) return;
+      if (!map[email]) {
+        map[email] = {
+          email,
+          name: reg.lockedFields?.chartererName || undefined,
+          inquiries: [],
+          registrations: [],
+        };
+      }
+      map[email].registrations.push(reg);
+      if (!map[email].name && reg.lockedFields?.chartererName) {
+        map[email].name = reg.lockedFields.chartererName;
+      }
+    });
+
+    return Object.values(map).sort((a, b) => {
+      const nameA = (a.name || a.email).toLowerCase();
+      const nameB = (b.name || b.email).toLowerCase();
+      return nameA.localeCompare(nameB);
+    });
+  })();
+
   const handleDeleteInquiry = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this inquiry?')) return;
     try {
@@ -130,6 +186,12 @@ const CharterManagement = () => {
             onClick={() => setActiveView('registrations')}
           >
             Registrations ({registrations.length})
+          </button>
+          <button
+            className={`view-tab ${activeView === 'customers' ? 'active' : ''}`}
+            onClick={() => setActiveView('customers')}
+          >
+            Customers ({customerSummaries.length})
           </button>
         </div>
       </div>
@@ -294,6 +356,159 @@ const CharterManagement = () => {
             </div>
           )}
         </div>
+      )}
+
+      {activeView === 'customers' && (
+        <div className="registrations-section">
+          {customerSummaries.length === 0 ? (
+            <div className="empty-state">
+              <p>No customers yet. Customers will appear here once you receive inquiries or registrations.</p>
+            </div>
+          ) : (
+            <div className="registrations-list">
+              {customerSummaries.map((customer) => {
+                const totalInquiries = customer.inquiries.length;
+                const totalRegistrations = customer.registrations.length;
+                const completedRegistrations = customer.registrations.filter(
+                  (reg) => (reg.status === 'completed') || (reg.guestData && Object.keys(reg.guestData).length > 0)
+                );
+
+                return (
+                  <div key={customer.email} className="registration-card">
+                    <div className="registration-header">
+                      <div>
+                        <h3>{customer.name || 'Unknown Customer'}</h3>
+                        <p className="registration-email">{customer.email}</p>
+                      </div>
+                      <div>
+                        <p style={{ margin: 0, fontSize: '0.9rem' }}>
+                          <strong>Inquiries:</strong> {totalInquiries} &nbsp;|&nbsp;
+                          <strong>Registrations:</strong> {totalRegistrations} &nbsp;|&nbsp;
+                          <strong>Completed:</strong> {completedRegistrations.length}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="registration-details">
+                      {customer.inquiries[0] && (
+                        <p>
+                          <strong>Latest Inquiry Date:</strong>{' '}
+                          {customer.inquiries[0].createdAt?.toDate
+                            ? new Date(customer.inquiries[0].createdAt.toDate()).toLocaleString()
+                            : 'N/A'}
+                        </p>
+                      )}
+                      {customer.registrations[0] && (
+                        <p>
+                          <strong>Latest Registration Updated:</strong>{' '}
+                          {customer.registrations[0].updatedAt?.toDate
+                            ? new Date(customer.registrations[0].updatedAt.toDate()).toLocaleString()
+                            : 'N/A'}
+                        </p>
+                      )}
+                    </div>
+                    <div className="registration-actions">
+                      <button
+                        className="btn-primary"
+                        onClick={() => setSelectedCustomer(customer)}
+                      >
+                        View Customer Timeline
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {selectedCustomer && (
+        <>
+          <div className="cm-modal-backdrop" onClick={() => setSelectedCustomer(null)} />
+          <div className="cm-modal">
+            <div className="cm-modal-header">
+              <h3>Customer Details</h3>
+              <button
+                className="cm-modal-close"
+                onClick={() => setSelectedCustomer(null)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="cm-modal-body">
+              <div className="cm-modal-section">
+                <h4>Customer</h4>
+                <p><strong>Name:</strong> {selectedCustomer.name || 'Unknown'}</p>
+                <p><strong>Email:</strong> {selectedCustomer.email}</p>
+              </div>
+
+              <div className="cm-modal-section">
+                <h4>Inquiries ({selectedCustomer.inquiries.length})</h4>
+                {selectedCustomer.inquiries.length === 0 ? (
+                  <p>No inquiries for this customer.</p>
+                ) : (
+                  selectedCustomer.inquiries.map((inq) => (
+                    <div key={inq.id} className="cm-modal-card">
+                      <p><strong>Date:</strong> {inq.createdAt?.toDate
+                        ? new Date(inq.createdAt.toDate()).toLocaleString()
+                        : 'N/A'}</p>
+                      <p><strong>Charter Date:</strong> {inq.charterDate}</p>
+                      <p><strong>Party Size:</strong> {inq.partySize}</p>
+                      {inq.message && <p><strong>Message:</strong> {inq.message}</p>}
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <div className="cm-modal-section">
+                <h4>Registrations ({selectedCustomer.registrations.length})</h4>
+                {selectedCustomer.registrations.length === 0 ? (
+                  <p>No registrations for this customer.</p>
+                ) : (
+                  selectedCustomer.registrations.map((reg) => {
+                    const hasGuestData = reg.guestData && Object.keys(reg.guestData).length > 0;
+                    const effectiveStatus: CharterRegistration['status'] =
+                      (reg.status as CharterRegistration['status']) || (hasGuestData ? 'completed' : 'draft');
+
+                    return (
+                      <div key={reg.id} className="cm-modal-card">
+                        <p><strong>Status:</strong> {effectiveStatus}</p>
+                        <p><strong>Charter Date:</strong> {reg.lockedFields?.charterDate || reg.lockedFields?.charterFromDate || 'Not set'}</p>
+                        <p><strong>Start Time:</strong> {reg.lockedFields?.startTime || reg.lockedFields?.charterFromTime || 'Not set'}</p>
+                        {hasGuestData && reg.guestData.fullName && (
+                          <p><strong>Guest Name (submitted):</strong> {reg.guestData.fullName}</p>
+                        )}
+                        <div className="cm-modal-actions">
+                          <button
+                            className="btn-edit"
+                            onClick={() => {
+                              navigate(`/admin/charter-form/${reg.id}`);
+                              setSelectedCustomer(null);
+                            }}
+                          >
+                            View Registration (Admin)
+                          </button>
+                          <button
+                            className="btn-view"
+                            onClick={() => window.open(`/charter-form/${reg.id}?print=1`, '_blank')}
+                          >
+                            Open Customer / Print
+                          </button>
+                          <button
+                            className="btn-delete"
+                            onClick={() => handleDeleteRegistration(reg.id)}
+                          >
+                            Delete Registration
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
