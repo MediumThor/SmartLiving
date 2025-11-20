@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import './CharterGuestForm.css';
@@ -10,15 +10,26 @@ interface FormData {
 
 const CharterGuestForm = () => {
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
   const [lockedFields, setLockedFields] = useState<FormData>({});
   const [formData, setFormData] = useState<FormData>({});
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [hasPrinted, setHasPrinted] = useState(false);
 
   useEffect(() => {
     loadForm();
   }, [id]);
+
+  // If opened with ?print=1, auto-trigger browser print once the form is loaded
+  useEffect(() => {
+    const shouldPrint = searchParams.get('print') === '1';
+    if (!loading && !submitted && shouldPrint && !hasPrinted) {
+      setHasPrinted(true);
+      window.print();
+    }
+  }, [loading, submitted, searchParams, hasPrinted]);
 
   const loadForm = async () => {
     if (!id) return;

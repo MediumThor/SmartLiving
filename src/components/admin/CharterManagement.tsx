@@ -75,6 +75,17 @@ const CharterManagement = () => {
     navigate(`/admin/charter-form/${registrationId}`);
   };
 
+  const handleDeleteRegistration = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this registration form? This cannot be undone.')) return;
+    try {
+      await deleteDoc(doc(db, 'charterRegistrations', id));
+      setRegistrations(registrations.filter(r => r.id !== id));
+    } catch (error) {
+      console.error('Error deleting registration:', error);
+      alert('Failed to delete registration form');
+    }
+  };
+
   const handleDeleteInquiry = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this inquiry?')) return;
     try {
@@ -264,14 +275,18 @@ const CharterManagement = () => {
                       >
                         {effectiveStatus === 'completed' ? '✅ View Full Details' : 'Edit Form'}
                       </button>
-                      <a
-                        href={`/charter-form/${reg.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        onClick={() => window.open(`/charter-form/${reg.id}?print=1`, '_blank')}
                         className="btn-view"
                       >
-                        View Customer Form
-                      </a>
+                        Print PDF
+                      </button>
+                      <button
+                        onClick={() => handleDeleteRegistration(reg.id)}
+                        className="btn-delete"
+                      >
+                        Delete
+                      </button>
                     </div>
                   </div>
                 );
