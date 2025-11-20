@@ -34,9 +34,9 @@ const Footer = () => {
         </div>
         <div className="footer-bottom">
           <p>
-            &copy; {new Date().getFullYear()} by Smart Living. Proudly created with React & Vite.
-            {' '}
             <Link to="/admin/login" className="admin-link" aria-label="Admin">•</Link>
+            {' '}
+            &copy; {new Date().getFullYear()} by Smart Living. Proudly created with React & Vite.
           </p>
         </div>
       </div>
