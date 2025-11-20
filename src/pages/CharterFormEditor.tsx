@@ -148,7 +148,6 @@ const CharterFormEditor = () => {
     notes: ''
   });
 
-  const [lockedFields, setLockedFields] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [formStatus, setFormStatus] = useState<'draft' | 'sent' | 'completed'>('draft');
@@ -214,7 +213,6 @@ const CharterFormEditor = () => {
           ...lockedData,
           ...guestDataLoaded // Guest data overrides locked fields where applicable
         }));
-        setLockedFields(data.lockedFields ? Object.keys(data.lockedFields) : []);
         setFormStatus(data.status || 'draft');
         setGuestData(guestDataLoaded);
       }
@@ -288,27 +286,12 @@ const CharterFormEditor = () => {
     }
   };
 
-  const toggleLock = (field: string) => {
-    setLockedFields(prev => 
-      prev.includes(field) 
-        ? prev.filter(f => f !== field)
-        : [...prev, field]
-    );
-  };
-
-  const lockAllCaptainFields = () => {
-    setLockedFields(CAPTAIN_LOCKED_FIELDS);
-  };
-
-  const unlockAllCaptainFields = () => {
-    setLockedFields([]);
-  };
-
   const handleSave = async () => {
     setSaving(true);
     try {
       const lockedData: { [key: string]: any } = {};
-      lockedFields.forEach(field => {
+      // Automatically treat captain-defined fields as locked for the customer
+      CAPTAIN_LOCKED_FIELDS.forEach(field => {
         const value = formData[field as keyof CharterFormData];
         // Only include field if it has a valid value
         // Check for undefined, null, empty string, and also handle 0 for numbers
@@ -359,11 +342,6 @@ const CharterFormEditor = () => {
   };
 
   const handleSendToCustomer = async () => {
-    if (lockedFields.length === 0) {
-      alert('Please lock at least some fields before sending to customer.');
-      return;
-    }
-
     if (!formData.email || !formData.email.trim()) {
       alert('Please enter the customer email address before sending.');
       return;
@@ -378,7 +356,8 @@ const CharterFormEditor = () => {
     setSaving(true);
     try {
       const lockedData: { [key: string]: any } = {};
-      lockedFields.forEach(field => {
+      // Automatically lock captain fields for the customer copy
+      CAPTAIN_LOCKED_FIELDS.forEach(field => {
         const value = formData[field as keyof CharterFormData];
         // Only include field if it has a valid value
         // Check for undefined, null, empty string, and also handle 0 for numbers
@@ -516,16 +495,8 @@ const CharterFormEditor = () => {
       )}
 
       <div className="editor-controls">
-        <div className="lock-controls">
-          <button onClick={lockAllCaptainFields} className="btn-lock">
-            Lock All Captain Fields
-          </button>
-          <button onClick={unlockAllCaptainFields} className="btn-unlock">
-            Unlock All Captain Fields
-          </button>
-        </div>
         <p className="help-text">
-          Fill in the captain fields below, then lock them. Locked fields will be pre-filled and read-only for the customer.
+          Fill in the captain fields below. Anything you enter here will be pre-filled and read-only for the customer.
         </p>
       </div>
 
