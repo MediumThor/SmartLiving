@@ -49,10 +49,11 @@ const AdminDashboard = () => {
           🖼️ Image Library
         </button>
         <button
-          className={`tab-button ${activeTab === 'content' ? 'active' : ''}`}
-          onClick={() => setActiveTab('content')}
+          className={`tab-button tab-button-disabled`}
+          disabled
+          title="Page Content editor is temporarily disabled"
         >
-          ✏️ Page Content
+          ✏️ Page Content (disabled)
         </button>
         <button
           className={`tab-button ${activeTab === 'charters' ? 'active' : ''}`}
@@ -65,7 +66,7 @@ const AdminDashboard = () => {
       <div className="dashboard-content">
         {activeTab === 'blogs' && <BlogManagement />}
         {activeTab === 'images' && <ImageLibrary />}
-        {activeTab === 'content' && <PageContentEditor />}
+        {/* PageContentEditor kept for future use but not currently active */}
         {activeTab === 'charters' && <CharterManagement />}
       </div>
     </div>

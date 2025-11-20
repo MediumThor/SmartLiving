@@ -66,6 +66,16 @@
   top: 2px;
 }
 
+.tab-button-disabled {
+  color: #bbb;
+  cursor: not-allowed;
+}
+
+.tab-button-disabled:hover {
+  color: #bbb;
+  background-color: transparent;
+}
+
 .tab-button:hover {
   color: #1a73e8;
   background-color: #f8f9fa;

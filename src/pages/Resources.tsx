@@ -85,19 +85,30 @@ const Resources = () => {
         </div>
 
         <div className="content-section">
-          <h2>Get Started</h2>
-          <p>
-            <strong>Take our Survey</strong> to see if you qualify for $100 in free products 
-            that support your wellness journey.
-          </p>
-          <p>
-            <strong>Sign Up for a Webinar</strong> to learn more about Smart Living and get 
-            access to exclusive resources and information.
-          </p>
-          <p>
-            <strong>Explore Steps to Healthier Living</strong> for a comprehensive guide to 
-            improving your wellness and quality of life.
-          </p>
+          
+          {/* CTA Section */}
+      <section className="cta-section">
+        <div className="cta-container">
+          <div className="cta-card">
+            <div className="cta-icon">📋</div>
+            <h2>Take our Survey</h2>
+            <p>You may qualify for $100 in free products</p>
+            <button className="cta-button">Take Survey</button>
+          </div>
+          <div className="cta-card">
+            <div className="cta-icon">🎥</div>
+            <h2>Sign Up for Webinar</h2>
+            <p>SIGN UP FOR AN UPCOMING INFORMATIONAL WEBINAR</p>
+            <button className="cta-button">Sign Up</button>
+          </div>
+          <div className="cta-card">
+            <div className="cta-icon">🌱</div>
+            <h2>Steps to Healthier Living</h2>
+            <p>LOOK AT STEPS TO HEALTHIER LIVING HERE</p>
+            <button className="cta-button">Learn More</button>
+          </div>
+        </div>
+      </section>
         </div>
       </div>
     </div>

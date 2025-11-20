@@ -43,29 +43,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="cta-section">
-        <div className="cta-container">
-          <div className="cta-card">
-            <div className="cta-icon">📋</div>
-            <h2>Take our Survey</h2>
-            <p>You may qualify for $100 in free products</p>
-            <button className="cta-button">Take Survey</button>
-          </div>
-          <div className="cta-card">
-            <div className="cta-icon">🎥</div>
-            <h2>Sign Up for Webinar</h2>
-            <p>SIGN UP FOR AN UPCOMING INFORMATIONAL WEBINAR</p>
-            <button className="cta-button">Sign Up</button>
-          </div>
-          <div className="cta-card">
-            <div className="cta-icon">🌱</div>
-            <h2>Steps to Healthier Living</h2>
-            <p>LOOK AT STEPS TO HEALTHIER LIVING HERE</p>
-            <button className="cta-button">Learn More</button>
-          </div>
-        </div>
-      </section>
+    
 
       {/* Social Links Section */}
       <section className="social-section">
