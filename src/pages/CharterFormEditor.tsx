@@ -453,7 +453,7 @@ const CharterFormEditor = () => {
         </div>
       </div>
       
-      {formStatus === 'completed' && Object.keys(guestData).length > 0 && (
+      {formStatus === 'completed' && (
         <div className="guest-data-summary" style={{
           background: '#f0f7ff',
           border: '2px solid #4CAF50',
@@ -462,16 +462,32 @@ const CharterFormEditor = () => {
           marginBottom: '20px'
         }}>
           <h3 style={{ marginTop: 0, color: '#4CAF50' }}>✅ Guest Submission Summary</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px' }}>
-            {guestData.fullName && <p><strong>Full Name:</strong> {guestData.fullName}</p>}
-            {guestData.phone && <p><strong>Phone:</strong> {guestData.phone}</p>}
-            {guestData.email && <p><strong>Email:</strong> {guestData.email}</p>}
-            {guestData.experience && <p><strong>Sailing Experience:</strong> {guestData.experience}</p>}
-            {guestData.lifejackets && <p><strong>Life Jacket Sizes:</strong> {guestData.lifejackets}</p>}
-            {guestData.allergies && <p><strong>Allergies:</strong> {guestData.allergies}</p>}
-            {guestData.medical && <p><strong>Medical Notes:</strong> {guestData.medical}</p>}
-            {guestData.emgName && <p><strong>Emergency Contact:</strong> {guestData.emgName} ({guestData.emgPhone})</p>}
-            {guestData.notes && <p><strong>Special Requests:</strong> {guestData.notes}</p>}
+          {Object.keys(guestData).length === 0 ? (
+            <p style={{ color: '#ff6b6b' }}>⚠️ No guest data found. The form may not have been submitted correctly.</p>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px' }}>
+              {guestData.fullName && <p><strong>Full Name:</strong> {guestData.fullName}</p>}
+              {guestData.phone && <p><strong>Phone:</strong> {guestData.phone}</p>}
+              {guestData.email && <p><strong>Email:</strong> {guestData.email}</p>}
+              {guestData.address && <p><strong>Address:</strong> {guestData.address}</p>}
+              {guestData.charterType && <p><strong>Charter Type:</strong> {guestData.charterType}</p>}
+              {guestData.experience && <p><strong>Sailing Experience:</strong> {guestData.experience}</p>}
+              {guestData.lifejackets && <p><strong>Life Jacket Sizes:</strong> {guestData.lifejackets}</p>}
+              {guestData.nonSlip !== undefined && <p><strong>Non-slip Shoes:</strong> {guestData.nonSlip ? 'Yes' : 'No'}</p>}
+              {guestData.allergies && <p><strong>Allergies:</strong> {guestData.allergies}</p>}
+              {guestData.medical && <p><strong>Medical Notes:</strong> {guestData.medical}</p>}
+              {guestData.emgName && <p><strong>Emergency Contact Name:</strong> {guestData.emgName}</p>}
+              {guestData.emgPhone && <p><strong>Emergency Contact Phone:</strong> {guestData.emgPhone}</p>}
+              {guestData.emgRelation && <p><strong>Emergency Contact Relation:</strong> {guestData.emgRelation}</p>}
+              {guestData.agreePolicies !== undefined && <p><strong>Agreed to Policies:</strong> {guestData.agreePolicies ? 'Yes' : 'No'}</p>}
+              {guestData.agreeWaiver !== undefined && <p><strong>Agreed to Waiver:</strong> {guestData.agreeWaiver ? 'Yes' : 'No'}</p>}
+              {guestData.photoConsent !== undefined && <p><strong>Photo Consent:</strong> {guestData.photoConsent ? 'Yes' : 'No'}</p>}
+              {guestData.signature && <p><strong>Signature:</strong> {guestData.signature}</p>}
+              {guestData.notes && <p><strong>Special Requests/Notes:</strong> {guestData.notes}</p>}
+            </div>
+          )}
+          <div style={{ marginTop: '16px', padding: '12px', background: '#fff', borderRadius: '4px', fontSize: '12px', color: '#666' }}>
+            <strong>Debug Info:</strong> Guest data keys: {Object.keys(guestData).join(', ') || 'None'}
           </div>
         </div>
       )}

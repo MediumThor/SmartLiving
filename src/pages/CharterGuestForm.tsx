@@ -57,12 +57,42 @@ const CharterGuestForm = () => {
     setSubmitting(true);
 
     try {
-      await setDoc(doc(db, 'charterRegistrations', id!), {
-        guestData: formData,
+      // Ensure we're saving all form data, including any fields that might have been filled
+      const dataToSave: any = {
+        guestData: {
+          ...formData,
+          // Include any fields that were filled but might not be in formData
+          fullName: formData.fullName || '',
+          phone: formData.phone || '',
+          email: formData.email || lockedFields.email || '',
+          address: formData.address || '',
+          allergies: formData.allergies || '',
+          medical: formData.medical || '',
+          experience: formData.experience || '',
+          lifejackets: formData.lifejackets || '',
+          nonSlip: formData.nonSlip || false,
+          emgName: formData.emgName || '',
+          emgPhone: formData.emgPhone || '',
+          emgRelation: formData.emgRelation || '',
+          agreePolicies: formData.agreePolicies || false,
+          agreeWaiver: formData.agreeWaiver || false,
+          photoConsent: formData.photoConsent || false,
+          signature: formData.signature || '',
+          notes: formData.notes || '',
+          charterType: formData.charterType || lockedFields.charterType || '',
+          charterDate: formData.charterDate || lockedFields.charterDate || lockedFields.charterFromDate || '',
+          startTime: formData.startTime || lockedFields.startTime || lockedFields.charterFromTime || '',
+          partySize: formData.partySize || lockedFields.partySize || 1
+        },
         status: 'completed',
         updatedAt: serverTimestamp()
-      }, { merge: true });
+      };
 
+      console.log('Saving guest data:', dataToSave.guestData); // Debug log
+
+      await setDoc(doc(db, 'charterRegistrations', id!), dataToSave, { merge: true });
+
+      console.log('Form submitted successfully!'); // Debug log
       setSubmitted(true);
     } catch (error) {
       console.error('Error submitting form:', error);
