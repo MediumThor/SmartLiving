@@ -183,9 +183,9 @@ const Blog = () => {
                     const isExpanded = expandedPosts[post.id] === true;
                     const plainText = getPlainTextFromHtml(post.content);
                     const words = plainText.split(/\s+/).filter(Boolean);
-                    const needsTruncate = words.length > 200;
+                    const needsTruncate = words.length > 100;
                     const previewText = needsTruncate
-                      ? words.slice(0, 200).join(' ') + '…'
+                      ? words.slice(0, 100).join(' ') + '…'
                       : plainText;
 
                     return (
