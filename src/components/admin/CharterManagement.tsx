@@ -366,10 +366,27 @@ const CharterManagement = () => {
     }
   };
 
+  const handleMarkInquirySeen = async (inq: CharterInquiry) => {
+    if (inq.status === 'contacted') return;
+    try {
+      await setDoc(
+        doc(db, 'charterInquiries', inq.id),
+        { status: 'contacted' },
+        { merge: true }
+      );
+      setInquiries(prev =>
+        prev.map(i => (i.id === inq.id ? { ...i, status: 'contacted' } : i))
+      );
+    } catch (error) {
+      console.error('Error marking inquiry as seen:', error);
+      alert('Failed to mark inquiry as seen.');
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     const statusMap: { [key: string]: { label: string; class: string } } = {
       'new': { label: 'New', class: 'status-new' },
-      'contacted': { label: 'Contacted', class: 'status-contacted' },
+      'contacted': { label: 'Seen', class: 'status-contacted' },
       'form-sent': { label: 'Form Sent', class: 'status-sent' },
       'completed': { label: 'Completed', class: 'status-completed' },
       'draft': { label: 'Draft', class: 'status-draft' },
@@ -431,7 +448,13 @@ const CharterManagement = () => {
                       <h3>{inquiry.name}</h3>
                       <p className="inquiry-email">{inquiry.email}</p>
                     </div>
-                    {getStatusBadge(inquiry.status)}
+                    <button
+                      type="button"
+                      className="status-badge-button"
+                      onClick={() => handleMarkInquirySeen(inquiry)}
+                    >
+                      {getStatusBadge(inquiry.status)}
+                    </button>
                   </div>
                   <div className="inquiry-details">
                     <p><strong>Phone:</strong> {inquiry.phone}</p>

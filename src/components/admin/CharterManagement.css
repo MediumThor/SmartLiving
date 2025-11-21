@@ -112,6 +112,17 @@
   white-space: nowrap;
 }
 
+.status-badge-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.status-badge-button:disabled {
+  cursor: default;
+}
+
 .status-new {
   background-color: #dbeafe;
   color: #1e40af;
