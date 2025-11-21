@@ -192,6 +192,13 @@ const CharterManagement = () => {
     <div className="charter-management">
       <div className="section-header">
         <h2>Charter Management</h2>
+        <button
+          className="btn-refresh"
+          type="button"
+          onClick={fetchData}
+        >
+          Refresh
+        </button>
         <div className="view-tabs">
           <button
             className={`view-tab ${activeView === 'inquiries' ? 'active' : ''}`}
