@@ -459,12 +459,21 @@ const CharterManagement = () => {
           <div className="cm-modal">
             <div className="cm-modal-header">
               <h3>Customer Details</h3>
-              <button
-                className="cm-modal-close"
-                onClick={() => setSelectedCustomer(null)}
-              >
-                ×
-              </button>
+              <div className="cm-modal-header-actions">
+                <button
+                  type="button"
+                  className="cm-modal-print"
+                  onClick={() => window.print()}
+                >
+                  Print Summary
+                </button>
+                <button
+                  className="cm-modal-close"
+                  onClick={() => setSelectedCustomer(null)}
+                >
+                  ×
+                </button>
+              </div>
             </div>
             <div className="cm-modal-body">
               <div className="cm-modal-section">
