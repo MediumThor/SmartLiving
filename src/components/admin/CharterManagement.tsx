@@ -490,6 +490,28 @@ const CharterManagement = () => {
                       >
                         View Customer Timeline
                       </button>
+                      {getLatestCompletedRegistration(customer) && (
+                        <button
+                          className="btn-view"
+                          type="button"
+                          onClick={() => {
+                            const latest = getLatestCompletedRegistration(customer);
+                            if (!latest) return;
+                            setSelectedRegistration(latest);
+                            const locked = latest.lockedFields || {};
+                            const guest = latest.guestData || {};
+                            setSummaryText(
+                              latest.adminSummary ||
+                              `Charter for ${guest.fullName || locked.chartererName || 'Guest'} on ` +
+                              `${locked.charterDate || locked.charterFromDate || guest.charterDate || 'N/A'} ` +
+                              `(${locked.charterType || guest.charterType || 'Charter'}) with ` +
+                              `${locked.partySize || guest.partySize || 1} guests.`
+                            );
+                          }}
+                        >
+                          View Trip Summary
+                        </button>
+                      )}
                     </div>
                   </div>
                 );
@@ -718,12 +740,6 @@ const CharterManagement = () => {
                       <p><strong>Date:</strong> {locked.charterDate || locked.charterFromDate || guest.charterDate || 'N/A'}</p>
                       <p><strong>Start Time:</strong> {formatTime(locked.startTime || locked.charterFromTime || guest.startTime)}</p>
                       <p><strong>Party Size:</strong> {locked.partySize || guest.partySize || 1}</p>
-                      {locked.totalAmount !== undefined && (
-                        <p><strong>Total Amount:</strong> ${locked.totalAmount}</p>
-                      )}
-                      {locked.depositDue !== undefined && (
-                        <p><strong>Deposit Due:</strong> ${locked.depositDue}</p>
-                      )}
                     </div>
 
                     <div className="cm-modal-section">
@@ -783,6 +799,44 @@ const CharterManagement = () => {
                         <p style={{ marginTop: '0.5rem' }}>
                           <strong>Guest Notes:</strong> {guest.notes}
                         </p>
+                      )}
+                    </div>
+
+                    <div className="cm-modal-section">
+                      <h4>Invoice (Draft)</h4>
+                      <p><strong>Base Charter Fee:</strong> {locked.charterFee !== undefined ? `$${locked.charterFee}` : 'N/A'}</p>
+                      {locked.provisioning !== undefined && (
+                        <p><strong>Provisioning:</strong> ${locked.provisioning}</p>
+                      )}
+                      {locked.nationalParksFee !== undefined && (
+                        <p><strong>National Parks Fee:</strong> ${locked.nationalParksFee}</p>
+                      )}
+                      {locked.cruisingPermit !== undefined && (
+                        <p><strong>Cruising Permit:</strong> ${locked.cruisingPermit}</p>
+                      )}
+                      {locked.fuelSurcharge !== undefined && (
+                        <p><strong>Fuel Surcharge:</strong> ${locked.fuelSurcharge}</p>
+                      )}
+                      {locked.visarDonation !== undefined && (
+                        <p><strong>VISAR Donation:</strong> ${locked.visarDonation}</p>
+                      )}
+                      {locked.hotel !== undefined && (
+                        <p><strong>Hotel:</strong> ${locked.hotel}</p>
+                      )}
+                      {locked.instructorFee !== undefined && (
+                        <p><strong>Instructor Fee:</strong> ${locked.instructorFee}</p>
+                      )}
+                      {locked.refundableDamageDeposit !== undefined && (
+                        <p><strong>Refundable Damage Deposit:</strong> ${locked.refundableDamageDeposit}</p>
+                      )}
+                      {locked.totalAmount !== undefined && (
+                        <p><strong>Total Amount:</strong> ${locked.totalAmount}</p>
+                      )}
+                      {locked.depositDue !== undefined && (
+                        <p><strong>Deposit Due:</strong> ${locked.depositDue}</p>
+                      )}
+                      {locked.balanceDue !== undefined && (
+                        <p><strong>Balance Due:</strong> ${locked.balanceDue}</p>
                       )}
                     </div>
 
