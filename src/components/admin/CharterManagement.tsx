@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs, query, orderBy, doc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, deleteDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useNavigate } from 'react-router-dom';
 import './CharterManagement.css';
@@ -26,6 +26,7 @@ interface CharterRegistration {
   createdAt: any;
   updatedAt: any;
   customerLinkPath?: string;
+  adminSummary?: string;
 }
 
 interface CustomerSummary {
@@ -41,6 +42,9 @@ const CharterManagement = () => {
   const [loading, setLoading] = useState(true);
   const [activeView, setActiveView] = useState<'inquiries' | 'registrations' | 'customers'>('inquiries');
   const [selectedCustomer, setSelectedCustomer] = useState<CustomerSummary | null>(null);
+  const [selectedRegistration, setSelectedRegistration] = useState<CharterRegistration | null>(null);
+  const [summaryText, setSummaryText] = useState('');
+  const [savingSummary, setSavingSummary] = useState(false);
   const navigate = useNavigate();
 
   const getLatestCompletedRegistration = (customer: CustomerSummary): CharterRegistration | null => {
@@ -109,6 +113,30 @@ const CharterManagement = () => {
     } catch (error) {
       console.error('Error deleting registration:', error);
       alert('Failed to delete registration form');
+    }
+  };
+
+  const handleSaveSummary = async () => {
+    if (!selectedRegistration) return;
+    setSavingSummary(true);
+    try {
+      await setDoc(
+        doc(db, 'charterRegistrations', selectedRegistration.id),
+        { adminSummary: summaryText, updatedAt: serverTimestamp() },
+        { merge: true }
+      );
+
+      setRegistrations(prev =>
+        prev.map(reg =>
+          reg.id === selectedRegistration.id ? { ...reg, adminSummary: summaryText } : reg
+        )
+      );
+      alert('Summary saved.');
+    } catch (error) {
+      console.error('Error saving summary:', error);
+      alert('Failed to save summary.');
+    } finally {
+      setSavingSummary(false);
     }
   };
 
@@ -357,21 +385,26 @@ const CharterManagement = () => {
                     </div>
                     <div className="registration-actions">
                       <button 
-                        onClick={() => handleEditForm(reg.id)}
-                        className="btn-edit"
-                        style={effectiveStatus === 'completed' ? {
-                          background: '#4CAF50',
-                          color: 'white',
-                          fontWeight: 'bold'
-                        } : {}}
-                      >
-                        {effectiveStatus === 'completed' ? '✅ View Full Details' : 'Edit Form'}
-                      </button>
-                      <button
-                        onClick={() => window.open(`/charter-form/${reg.id}?print=1`, '_blank')}
+                        onClick={() => {
+                          setSelectedRegistration(reg);
+                          const locked = reg.lockedFields || {};
+                          const guest = reg.guestData || {};
+                          setSummaryText(
+                            reg.adminSummary ||
+                            `Charter for ${guest.fullName || locked.chartererName || 'Guest'} on ` +
+                            `${locked.charterDate || locked.charterFromDate || 'N/A'} ` +
+                            `(${locked.charterType || 'Charter'}) with ${locked.partySize || guest.partySize || 1} guests.`
+                          );
+                        }}
                         className="btn-view"
                       >
-                        Print PDF
+                        View Full Details
+                      </button>
+                      <button 
+                        onClick={() => handleEditForm(reg.id)}
+                        className="btn-edit"
+                      >
+                        Edit Form
                       </button>
                       <button
                         onClick={() => handleDeleteRegistration(reg.id)}
@@ -459,21 +492,12 @@ const CharterManagement = () => {
           <div className="cm-modal">
             <div className="cm-modal-header">
               <h3>Customer Details</h3>
-              <div className="cm-modal-header-actions">
-                <button
-                  type="button"
-                  className="cm-modal-print"
-                  onClick={() => window.print()}
-                >
-                  Print Summary
-                </button>
-                <button
-                  className="cm-modal-close"
-                  onClick={() => setSelectedCustomer(null)}
-                >
-                  ×
-                </button>
-              </div>
+              <button
+                className="cm-modal-close"
+                onClick={() => setSelectedCustomer(null)}
+              >
+                ×
+              </button>
             </div>
             <div className="cm-modal-body">
               <div className="cm-modal-section">
@@ -624,12 +648,6 @@ const CharterManagement = () => {
                             View Registration (Admin)
                           </button>
                           <button
-                            className="btn-view"
-                            onClick={() => window.open(`/charter-form/${reg.id}?print=1`, '_blank')}
-                          >
-                            Open Customer / Print
-                          </button>
-                          <button
                             className="btn-delete"
                             onClick={() => handleDeleteRegistration(reg.id)}
                           >
@@ -641,6 +659,133 @@ const CharterManagement = () => {
                   })
                 )}
               </div>
+            </div>
+          </div>
+        </>
+      )}
+      {selectedRegistration && (
+        <>
+          <div className="cm-modal-backdrop" onClick={() => setSelectedRegistration(null)} />
+          <div className="cm-modal">
+            <div className="cm-modal-header">
+              <h3>Guest Submission Summary</h3>
+              <button
+                type="button"
+                className="cm-modal-close"
+                onClick={() => setSelectedRegistration(null)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="cm-modal-body">
+              {(() => {
+                const locked = selectedRegistration.lockedFields || {};
+                const guest = selectedRegistration.guestData || {};
+                return (
+                  <>
+                    <div className="cm-modal-section">
+                      <h4>Charter Details</h4>
+                      <p><strong>Charter Type:</strong> {locked.charterType || guest.charterType || 'N/A'}</p>
+                      <p><strong>Date:</strong> {locked.charterDate || locked.charterFromDate || guest.charterDate || 'N/A'}</p>
+                      <p><strong>Start Time:</strong> {locked.startTime || locked.charterFromTime || guest.startTime || 'N/A'}</p>
+                      <p><strong>Party Size:</strong> {locked.partySize || guest.partySize || 1}</p>
+                      {locked.totalAmount !== undefined && (
+                        <p><strong>Total Amount:</strong> ${locked.totalAmount}</p>
+                      )}
+                      {locked.depositDue !== undefined && (
+                        <p><strong>Deposit Due:</strong> ${locked.depositDue}</p>
+                      )}
+                    </div>
+
+                    <div className="cm-modal-section">
+                      <h4>Lead Guest</h4>
+                      <p><strong>Name:</strong> {guest.fullName || locked.chartererName || 'N/A'}</p>
+                      <p><strong>Email:</strong> {guest.email || locked.email || selectedRegistration.guestEmail}</p>
+                      {guest.phone && <p><strong>Phone:</strong> {guest.phone}</p>}
+                      {guest.address && <p><strong>Address:</strong> {guest.address}</p>}
+                    </div>
+
+                    <div className="cm-modal-section">
+                      <h4>Additional Guests</h4>
+                      {Array.isArray(guest.guests) && guest.guests.filter(Boolean).length > 0 ? (
+                        <ul className="cm-summary-list">
+                          {guest.guests.filter(Boolean).map((g: string, idx: number) => (
+                            <li key={idx}>{g}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p>No additional guests listed.</p>
+                      )}
+                    </div>
+
+                    <div className="cm-modal-section">
+                      <h4>Health & Safety</h4>
+                      {guest.allergies && <p><strong>Allergies:</strong> {guest.allergies}</p>}
+                      {guest.medical && <p><strong>Medical Notes:</strong> {guest.medical}</p>}
+                      {(guest.emgName || guest.emgPhone || guest.emgRelation) && (
+                        <p>
+                          <strong>Emergency Contact:</strong>{' '}
+                          {[guest.emgName, guest.emgRelation, guest.emgPhone].filter(Boolean).join(' • ')}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="cm-modal-section">
+                      <h4>Experience & Preferences</h4>
+                      {guest.experience && <p><strong>Experience:</strong> {guest.experience}</p>}
+                      {guest.lifejackets && <p><strong>Lifejackets:</strong> {guest.lifejackets}</p>}
+                      {typeof guest.nonSlip === 'boolean' && (
+                        <p><strong>Non-slip shoes:</strong> {guest.nonSlip ? 'Yes' : 'No'}</p>
+                      )}
+                    </div>
+
+                    <div className="cm-modal-section">
+                      <h4>Agreements & Notes</h4>
+                      <div className="cm-summary-pills">
+                        {guest.agreePolicies && <span className="cm-pill">Policies Agreed</span>}
+                        {guest.agreeWaiver && <span className="cm-pill">Waiver Signed</span>}
+                        {typeof guest.photoConsent === 'boolean' && (
+                          <span className="cm-pill">
+                            Photo Consent: {guest.photoConsent ? 'Yes' : 'No'}
+                          </span>
+                        )}
+                      </div>
+                      {guest.notes && (
+                        <p style={{ marginTop: '0.5rem' }}>
+                          <strong>Guest Notes:</strong> {guest.notes}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="cm-modal-section">
+                      <h4>Admin Summary (Editable)</h4>
+                      <textarea
+                        value={summaryText}
+                        onChange={(e) => setSummaryText(e.target.value)}
+                        rows={5}
+                        style={{ width: '100%', fontFamily: 'inherit', fontSize: '0.95rem' }}
+                      />
+                      <div className="cm-modal-actions" style={{ marginTop: '0.75rem' }}>
+                        <button
+                          type="button"
+                          className="btn-primary"
+                          onClick={handleSaveSummary}
+                          disabled={savingSummary}
+                        >
+                          {savingSummary ? 'Saving...' : 'Save Summary'}
+                        </button>
+                        <button
+                          type="button"
+                          className="btn-view"
+                          onClick={() => window.print()}
+                        >
+                          Print Summary
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
           </div>
         </>

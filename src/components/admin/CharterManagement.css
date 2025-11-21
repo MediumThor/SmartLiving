@@ -224,26 +224,6 @@
   margin: 0;
 }
 
-.cm-modal-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.cm-modal-print {
-  padding: 0.3rem 0.8rem;
-  font-size: 0.8rem;
-  border-radius: 999px;
-  border: 1px solid #d0d7de;
-  background: #f6f8fa;
-  color: #24292f;
-  cursor: pointer;
-}
-
-.cm-modal-print:hover {
-  background: #eaeef2;
-}
-
 .cm-modal-close {
   background: transparent;
   border: none;
@@ -373,7 +353,6 @@
   }
 
   .cm-modal-close,
-  .cm-modal-print {
     display: none !important;
   }
 }
