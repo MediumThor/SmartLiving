@@ -346,14 +346,28 @@
     width: 100%;
     max-height: none;
     border-radius: 0;
+    margin: 0;
+    padding: 0.5in 0.75in;
   }
 
   .cm-modal-backdrop {
     display: none !important;
   }
 
-  .cm-modal-close,
+  .cm-modal-close {
     display: none !important;
+  }
+}
+
+@page {
+  margin: 0.25in;
+}
+
+@media print {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
   }
 }
 

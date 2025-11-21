@@ -12,7 +12,7 @@ const CharterGuestForm = () => {
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const [lockedFields, setLockedFields] = useState<FormData>({});
-  const [formData, setFormData] = useState<FormData>({});
+  const [formData, setFormData] = useState<FormData>({ guests: ['', '', '', ''] });
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -39,10 +39,18 @@ const CharterGuestForm = () => {
       if (formDoc.exists()) {
         const data = formDoc.data();
         setLockedFields(data.lockedFields || {});
-        setFormData(data.guestData || {});
-        
+        const guestData = data.guestData || {};
+        setLockedFields(data.lockedFields || {});
+        setFormData(prev => ({
+          ...prev,
+          ...guestData,
+          guests: Array.isArray(guestData.guests)
+            ? [...guestData.guests, '', '', '', ''].slice(0, 4)
+            : ['', '', '', ''],
+        }));
+
         // Pre-fill customer name from locked fields if available
-        if (data.lockedFields?.chartererName && !data.guestData?.fullName) {
+        if (data.lockedFields?.chartererName && !guestData.fullName) {
           setFormData(prev => ({
             ...prev,
             fullName: data.lockedFields.chartererName
@@ -90,6 +98,9 @@ const CharterGuestForm = () => {
           photoConsent: formData.photoConsent || false,
           signature: formData.signature || '',
           notes: formData.notes || '',
+          guests: Array.isArray(formData.guests)
+            ? formData.guests.map((g: any) => (typeof g === 'string' ? g.trim() : '')).filter(Boolean)
+            : [],
           charterType: formData.charterType || lockedFields.charterType || '',
           charterDate: formData.charterDate || lockedFields.charterDate || lockedFields.charterFromDate || '',
           startTime: formData.startTime || lockedFields.startTime || lockedFields.charterFromTime || '',
@@ -303,6 +314,68 @@ const CharterGuestForm = () => {
             </div>
           </fieldset>
         )}
+
+        {/* Guest Roster */}
+        <fieldset className="form-section">
+          <legend>Guest Roster</legend>
+          <p className="form-description">
+            List additional guests (names only). Add age if any guest is a minor.
+          </p>
+          <div className="form-grid">
+            <div className="form-group">
+              <label>Guest 1</label>
+              <input
+                type="text"
+                value={formData.guests?.[0] || ''}
+                onChange={(e) => {
+                  const guests = Array.isArray(formData.guests) ? [...formData.guests] : ['', '', '', ''];
+                  guests[0] = e.target.value;
+                  handleChange('guests', guests);
+                }}
+                placeholder="Guest 1 — Full name (Age)"
+              />
+            </div>
+            <div className="form-group">
+              <label>Guest 2</label>
+              <input
+                type="text"
+                value={formData.guests?.[1] || ''}
+                onChange={(e) => {
+                  const guests = Array.isArray(formData.guests) ? [...formData.guests] : ['', '', '', ''];
+                  guests[1] = e.target.value;
+                  handleChange('guests', guests);
+                }}
+                placeholder="Guest 2 — Full name (Age)"
+              />
+            </div>
+            <div className="form-group">
+              <label>Guest 3</label>
+              <input
+                type="text"
+                value={formData.guests?.[2] || ''}
+                onChange={(e) => {
+                  const guests = Array.isArray(formData.guests) ? [...formData.guests] : ['', '', '', ''];
+                  guests[2] = e.target.value;
+                  handleChange('guests', guests);
+                }}
+                placeholder="Guest 3 — Full name (Age)"
+              />
+            </div>
+            <div className="form-group">
+              <label>Guest 4</label>
+              <input
+                type="text"
+                value={formData.guests?.[3] || ''}
+                onChange={(e) => {
+                  const guests = Array.isArray(formData.guests) ? [...formData.guests] : ['', '', '', ''];
+                  guests[3] = e.target.value;
+                  handleChange('guests', guests);
+                }}
+                placeholder="Guest 4 — Full name (Age)"
+              />
+            </div>
+          </div>
+        </fieldset>
 
         {/* Safety & Health */}
         <fieldset className="form-section">

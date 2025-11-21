@@ -697,6 +697,22 @@ const CharterManagement = () => {
                 return (
                   <>
                     <div className="cm-modal-section">
+                      <h4>Vessel & Operator</h4>
+                      {locked.companyName && <p><strong>Company:</strong> {locked.companyName}</p>}
+                      {locked.chartererName && <p><strong>Captain / Charterer:</strong> {locked.chartererName}</p>}
+                      {locked.yachtName && <p><strong>Yacht Name:</strong> {locked.yachtName}</p>}
+                      {locked.yachtModel && <p><strong>Yacht Model:</strong> {locked.yachtModel}</p>}
+                      {(locked.sleepFromDate || locked.sleepToDate || locked.sleepAboard) && (
+                        <p>
+                          <strong>Sleep Aboard:</strong>{' '}
+                          {locked.sleepAboard
+                            ? `Yes (${locked.sleepFromDate || 'start'} night)`
+                            : 'No'}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="cm-modal-section">
                       <h4>Charter Details</h4>
                       <p><strong>Charter Type:</strong> {locked.charterType || guest.charterType || 'N/A'}</p>
                       <p><strong>Date:</strong> {locked.charterDate || locked.charterFromDate || guest.charterDate || 'N/A'}</p>
