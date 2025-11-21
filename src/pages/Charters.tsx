@@ -31,7 +31,6 @@ const Charters = () => {
   ];
 
   const [slideshowImages, setSlideshowImages] = useState<string[]>(defaultSlideshowImages);
-  const [loadingSlides, setLoadingSlides] = useState(true);
 
   useEffect(() => {
     const fetchSlides = async () => {
@@ -52,7 +51,7 @@ const Charters = () => {
         console.error('Error loading slideshow images:', error);
         setSlideshowImages(defaultSlideshowImages);
       } finally {
-        setLoadingSlides(false);
+        // no-op; we always have either fetched or default images
       }
     };
 
@@ -139,9 +138,30 @@ const Charters = () => {
               the water. These trips take on a unique personality, and we invite you to be part of 
               our community.
             </p>
+            <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+              <button
+                type="button"
+                className="charters-primary-button"
+                onClick={() => {
+                  const el = document.getElementById('charter-inquiry');
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }}
+              >
+                Inquire About This Charter
+              </button>
+            </div>
           </div>
         </section>
-
+  {/* Image Slideshow */}
+  <section className="charters-section">
+          <div className="section-container">
+            {slideshowImages.length > 0 && (
+              <ImageSlideshow images={slideshowImages} title="Sailing Adventure Gallery" />
+            )}
+          </div>
+        </section>
         {/* Pricing Section */}
         <section className="charters-section pricing-section">
           <div className="section-container">
@@ -236,14 +256,7 @@ const Charters = () => {
           </div>
         </section>
 
-        {/* Image Slideshow */}
-        <section className="charters-section">
-          <div className="section-container">
-            {slideshowImages.length > 0 && (
-              <ImageSlideshow images={slideshowImages} title="Sailing Adventure Gallery" />
-            )}
-          </div>
-        </section>
+      
 
         {/* Sample Itinerary Section */}
         <section className="charters-section alt-bg">
@@ -315,7 +328,7 @@ const Charters = () => {
         </section>
 
         {/* Inquiry Form Section */}
-        <section className="charters-section cta-section">
+        <section className="charters-section cta-section" id="charter-inquiry">
           <div className="section-container">
             <h2 className="section-title">INQUIRE ABOUT A CHARTER</h2>
             <p className="section-description">
