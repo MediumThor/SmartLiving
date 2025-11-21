@@ -43,6 +43,23 @@ const CharterManagement = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<CustomerSummary | null>(null);
   const navigate = useNavigate();
 
+  const getLatestCompletedRegistration = (customer: CustomerSummary): CharterRegistration | null => {
+    const completed = customer.registrations.filter((reg) => {
+      const hasGuestData = reg.guestData && Object.keys(reg.guestData).length > 0;
+      return reg.status === 'completed' || hasGuestData;
+    });
+
+    if (completed.length === 0) return null;
+
+    completed.sort((a, b) => {
+      const aTime = a.updatedAt?.toDate ? a.updatedAt.toDate().getTime() : 0;
+      const bTime = b.updatedAt?.toDate ? b.updatedAt.toDate().getTime() : 0;
+      return bTime - aTime;
+    });
+
+    return completed[0];
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -448,6 +465,98 @@ const CharterManagement = () => {
                 <p><strong>Name:</strong> {selectedCustomer.name || 'Unknown'}</p>
                 <p><strong>Email:</strong> {selectedCustomer.email}</p>
               </div>
+
+              {/* Latest completed registration summary */}
+              {(() => {
+                const latest = getLatestCompletedRegistration(selectedCustomer);
+                if (!latest) return null;
+
+                const locked = latest.lockedFields || {};
+                const guest = latest.guestData || {};
+
+                return (
+                  <div className="cm-modal-section cm-summary-section">
+                    <h4>Latest Completed Registration Summary</h4>
+                    <div className="cm-summary-grid">
+                      <div className="cm-summary-block">
+                        <h5>Charter Details</h5>
+                        <p><strong>Charter Type:</strong> {locked.charterType || 'N/A'}</p>
+                        <p><strong>Date:</strong> {locked.charterDate || locked.charterFromDate || 'N/A'}</p>
+                        <p><strong>Start Time:</strong> {locked.startTime || locked.charterFromTime || 'N/A'}</p>
+                        {locked.totalAmount !== undefined && (
+                          <p><strong>Total Amount:</strong> ${locked.totalAmount}</p>
+                        )}
+                        {locked.depositDue !== undefined && (
+                          <p><strong>Deposit Due:</strong> ${locked.depositDue}</p>
+                        )}
+                        {locked.partySize && (
+                          <p><strong>Party Size:</strong> {locked.partySize}</p>
+                        )}
+                      </div>
+
+                      <div className="cm-summary-block">
+                        <h5>Lead Guest</h5>
+                        <p><strong>Name:</strong> {guest.fullName || locked.chartererName || 'N/A'}</p>
+                        <p><strong>Email:</strong> {guest.email || locked.email || selectedCustomer.email}</p>
+                        {guest.phone && <p><strong>Phone:</strong> {guest.phone}</p>}
+                        {guest.address && <p><strong>Address:</strong> {guest.address}</p>}
+                      </div>
+
+                      <div className="cm-summary-block">
+                        <h5>Additional Guests</h5>
+                        {Array.isArray(guest.guests) && guest.guests.filter(Boolean).length > 0 ? (
+                          <ul className="cm-summary-list">
+                            {guest.guests.filter(Boolean).map((g: string, idx: number) => (
+                              <li key={idx}>{g}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p>No additional guests listed.</p>
+                        )}
+                      </div>
+
+                      <div className="cm-summary-block">
+                        <h5>Health & Safety</h5>
+                        {guest.allergies && <p><strong>Allergies:</strong> {guest.allergies}</p>}
+                        {guest.medical && <p><strong>Medical Notes:</strong> {guest.medical}</p>}
+                        {(guest.emgName || guest.emgPhone || guest.emgRelation) && (
+                          <p>
+                            <strong>Emergency Contact:</strong>{' '}
+                            {[guest.emgName, guest.emgRelation, guest.emgPhone].filter(Boolean).join(' • ')}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="cm-summary-block">
+                        <h5>Experience & Preferences</h5>
+                        {guest.experience && <p><strong>Experience:</strong> {guest.experience}</p>}
+                        {guest.lifejackets && <p><strong>Lifejackets:</strong> {guest.lifejackets}</p>}
+                        {typeof guest.nonSlip === 'boolean' && (
+                          <p><strong>Non-slip shoes:</strong> {guest.nonSlip ? 'Yes' : 'No'}</p>
+                        )}
+                      </div>
+
+                      <div className="cm-summary-block">
+                        <h5>Agreements & Notes</h5>
+                        <div className="cm-summary-pills">
+                          {guest.agreePolicies && <span className="cm-pill">Policies Agreed</span>}
+                          {guest.agreeWaiver && <span className="cm-pill">Waiver Signed</span>}
+                          {typeof guest.photoConsent === 'boolean' && (
+                            <span className="cm-pill">
+                              Photo Consent: {guest.photoConsent ? 'Yes' : 'No'}
+                            </span>
+                          )}
+                        </div>
+                        {guest.notes && (
+                          <p style={{ marginTop: '0.5rem' }}>
+                            <strong>Additional Notes:</strong> {guest.notes}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
 
               <div className="cm-modal-section">
                 <h4>Inquiries ({selectedCustomer.inquiries.length})</h4>
