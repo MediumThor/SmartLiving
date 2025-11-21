@@ -5,9 +5,10 @@ import BlogManagement from '../components/admin/BlogManagement';
 import ImageLibrary from '../components/admin/ImageLibrary';
 import PageContentEditor from '../components/admin/PageContentEditor';
 import CharterManagement from '../components/admin/CharterManagement';
+import ContactInquiries from '../components/admin/ContactInquiries';
 import './AdminDashboard.css';
 
-type TabType = 'blogs' | 'images' | 'content' | 'charters';
+type TabType = 'blogs' | 'images' | 'content' | 'charters' | 'inquiries';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState<TabType>('blogs');
@@ -61,6 +62,12 @@ const AdminDashboard = () => {
         >
           ⛵ Charters
         </button>
+        <button
+          className={`tab-button ${activeTab === 'inquiries' ? 'active' : ''}`}
+          onClick={() => setActiveTab('inquiries')}
+        >
+          📥 Inquiries
+        </button>
       </div>
 
       <div className="dashboard-content">
@@ -68,6 +75,7 @@ const AdminDashboard = () => {
         {activeTab === 'images' && <ImageLibrary />}
         {/* PageContentEditor kept for future use but not currently active */}
         {activeTab === 'charters' && <CharterManagement />}
+        {activeTab === 'inquiries' && <ContactInquiries />}
       </div>
     </div>
   );

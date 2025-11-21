@@ -35,21 +35,9 @@ interface CustomerSummary {
   registrations: CharterRegistration[];
 }
 
-interface ContactMessage {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  subject: string;
-  message: string;
-  createdAt: any;
-  status: 'new' | 'read';
-}
-
 const CharterManagement = () => {
   const [inquiries, setInquiries] = useState<CharterInquiry[]>([]);
   const [registrations, setRegistrations] = useState<CharterRegistration[]>([]);
-  const [contacts, setContacts] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeView, setActiveView] = useState<'inquiries' | 'registrations' | 'customers'>('inquiries');
   const [selectedCustomer, setSelectedCustomer] = useState<CustomerSummary | null>(null);
@@ -79,18 +67,8 @@ const CharterManagement = () => {
         ...doc.data()
       })) as CharterRegistration[];
 
-      // Fetch general contact messages (Let's Connect form)
-      const contactsRef = collection(db, 'contactMessages');
-      const contactsQuery = query(contactsRef, orderBy('createdAt', 'desc'));
-      const contactsSnapshot = await getDocs(contactsQuery);
-      const contactsData = contactsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as ContactMessage[];
-
       setInquiries(inquiriesData);
       setRegistrations(registrationsData);
-      setContacts(contactsData);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -176,17 +154,6 @@ const CharterManagement = () => {
     }
   };
 
-  const handleDeleteContact = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this inquiry?')) return;
-    try {
-      await deleteDoc(doc(db, 'contactMessages', id));
-      setContacts(contacts.filter(c => c.id !== id));
-    } catch (error) {
-      console.error('Error deleting contact inquiry:', error);
-      alert('Failed to delete inquiry');
-    }
-  };
-
   const getStatusBadge = (status: string) => {
     const statusMap: { [key: string]: { label: string; class: string } } = {
       'new': { label: 'New', class: 'status-new' },
@@ -213,7 +180,7 @@ const CharterManagement = () => {
             className={`view-tab ${activeView === 'inquiries' ? 'active' : ''}`}
             onClick={() => setActiveView('inquiries')}
           >
-            Inquiries ({inquiries.length + contacts.length})
+            Inquiries ({inquiries.length})
           </button>
           <button
             className={`view-tab ${activeView === 'registrations' ? 'active' : ''}`}
@@ -231,96 +198,53 @@ const CharterManagement = () => {
       </div>
 
       {activeView === 'inquiries' && (
-        <>
-          <div className="inquiries-section">
-            {inquiries.length === 0 ? (
-              <div className="empty-state">
-                <p>No charter inquiries yet.</p>
-              </div>
-            ) : (
-              <div className="inquiries-list">
-                {inquiries.map(inquiry => (
-                  <div key={inquiry.id} className="inquiry-card">
-                    <div className="inquiry-header">
-                      <div>
-                        <h3>{inquiry.name}</h3>
-                        <p className="inquiry-email">{inquiry.email}</p>
-                      </div>
-                      {getStatusBadge(inquiry.status)}
+        <div className="inquiries-section">
+          {inquiries.length === 0 ? (
+            <div className="empty-state">
+              <p>No charter inquiries yet.</p>
+            </div>
+          ) : (
+            <div className="inquiries-list">
+              {inquiries.map(inquiry => (
+                <div key={inquiry.id} className="inquiry-card">
+                  <div className="inquiry-header">
+                    <div>
+                      <h3>{inquiry.name}</h3>
+                      <p className="inquiry-email">{inquiry.email}</p>
                     </div>
-                    <div className="inquiry-details">
-                      <p><strong>Phone:</strong> {inquiry.phone}</p>
-                      <p><strong>Charter Date:</strong> {inquiry.charterDate}</p>
-                      <p><strong>Party Size:</strong> {inquiry.partySize} guests</p>
-                      {inquiry.message && (
-                        <p><strong>Message:</strong> {inquiry.message}</p>
-                      )}
-                      <p className="inquiry-date">
-                        Submitted: {inquiry.createdAt?.toDate ? 
-                          new Date(inquiry.createdAt.toDate()).toLocaleString() : 'N/A'}
-                      </p>
-                    </div>
-                    <div className="inquiry-actions">
-                      <button 
-                        onClick={() => handleCreateForm(inquiry.id)}
-                        className="btn-primary"
-                      >
-                        Create Registration Form
-                      </button>
-                      <button 
-                        onClick={() => handleDeleteInquiry(inquiry.id)}
-                        className="btn-delete"
-                      >
-                        Delete
-                      </button>
-                    </div>
+                    {getStatusBadge(inquiry.status)}
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="inquiries-section">
-            {contacts.length === 0 ? (
-              <div className="empty-state">
-                <p>No general contact inquiries yet.</p>
-              </div>
-            ) : (
-              <div className="inquiries-list">
-                {contacts.map(contact => (
-                  <div key={contact.id} className="inquiry-card">
-                    <div className="inquiry-header">
-                      <div>
-                        <h3>{contact.name || 'Unknown Contact'}</h3>
-                        <p className="inquiry-email">{contact.email}</p>
-                      </div>
-                    </div>
-                    <div className="inquiry-details">
-                      <p><strong>Subject:</strong> {contact.subject}</p>
-                      {contact.phone && <p><strong>Phone:</strong> {contact.phone}</p>}
-                      <p className="inquiry-date">
-                        Submitted: {contact.createdAt?.toDate ? 
-                          new Date(contact.createdAt.toDate()).toLocaleString() : 'N/A'}
-                      </p>
-                      <p style={{ whiteSpace: 'pre-wrap' }}>
-                        <strong>Message:</strong><br />
-                        {contact.message}
-                      </p>
-                    </div>
-                    <div className="inquiry-actions">
-                      <button 
-                        onClick={() => handleDeleteContact(contact.id)}
-                        className="btn-delete"
-                      >
-                        Delete
-                      </button>
-                    </div>
+                  <div className="inquiry-details">
+                    <p><strong>Phone:</strong> {inquiry.phone}</p>
+                    <p><strong>Charter Date:</strong> {inquiry.charterDate}</p>
+                    <p><strong>Party Size:</strong> {inquiry.partySize} guests</p>
+                    {inquiry.message && (
+                      <p><strong>Message:</strong> {inquiry.message}</p>
+                    )}
+                    <p className="inquiry-date">
+                      Submitted: {inquiry.createdAt?.toDate ? 
+                        new Date(inquiry.createdAt.toDate()).toLocaleString() : 'N/A'}
+                    </p>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </>
+                  <div className="inquiry-actions">
+                    <button 
+                      onClick={() => handleCreateForm(inquiry.id)}
+                      className="btn-primary"
+                    >
+                      Create Registration Form
+                    </button>
+                    <button 
+                      onClick={() => handleDeleteInquiry(inquiry.id)}
+                      className="btn-delete"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       )}
 
       {activeView === 'registrations' && (
@@ -440,47 +364,6 @@ const CharterManagement = () => {
         </div>
       )}
 
-      {activeView === 'contacts' && (
-        <div className="registrations-section">
-          {contacts.length === 0 ? (
-            <div className="empty-state">
-              <p>No contact messages yet.</p>
-            </div>
-          ) : (
-            <div className="registrations-list">
-              {contacts.map((contact) => (
-                <div key={contact.id} className="registration-card">
-                  <div className="registration-header">
-                    <div>
-                      <h3>{contact.name || 'Unknown Contact'}</h3>
-                      <p className="registration-email">{contact.email}</p>
-                    </div>
-                    <div className="status-badge-container">
-                      <span className={`status-badge ${contact.status === 'new' ? 'status-new' : 'status-default'}`}>
-                        {contact.status === 'new' ? 'New' : 'Read'}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="registration-details">
-                    <p><strong>Subject:</strong> {contact.subject}</p>
-                    {contact.phone && <p><strong>Phone:</strong> {contact.phone}</p>}
-                    <p>
-                      <strong>Received:</strong>{' '}
-                      {contact.createdAt?.toDate
-                        ? new Date(contact.createdAt.toDate()).toLocaleString()
-                        : 'N/A'}
-                    </p>
-                    <p style={{ whiteSpace: 'pre-wrap' }}>
-                      <strong>Message:</strong><br />
-                      {contact.message}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
 
       {activeView === 'customers' && (
         <div className="registrations-section">
