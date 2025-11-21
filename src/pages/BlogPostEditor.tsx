@@ -16,6 +16,7 @@ const BlogPostEditor = () => {
   const [content, setContent] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [published, setPublished] = useState(false);
+  const [publishedOn, setPublishedOn] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -38,6 +39,10 @@ const BlogPostEditor = () => {
         setContent(data.content || '');
         setImageUrl(data.imageUrl || '');
         setPublished(data.published || false);
+        if (data.publishedOn?.toDate) {
+          const d = data.publishedOn.toDate();
+          setPublishedOn(d.toISOString().slice(0, 10));
+        }
       } else {
         alert('Post not found');
         navigate('/admin/dashboard');
@@ -74,6 +79,11 @@ const BlogPostEditor = () => {
       // Only include imageUrl if it has a value (Firestore doesn't allow undefined)
       if (imageUrl.trim()) {
         postData.imageUrl = imageUrl.trim();
+      }
+
+      // Optional backdated published date for old posts
+      if (publishedOn.trim()) {
+        postData.publishedOn = new Date(publishedOn + 'T12:00:00');
       }
 
       if (isEditing && id) {
@@ -151,6 +161,19 @@ const BlogPostEditor = () => {
             onChange={(e) => setImageUrl(e.target.value)}
             placeholder="https://example.com/image.jpg"
           />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="publishedOn">Published On (optional)</label>
+          <input
+            type="date"
+            id="publishedOn"
+            value={publishedOn}
+            onChange={(e) => setPublishedOn(e.target.value)}
+          />
+          <p className="field-help">
+            Set this if you&apos;re adding an older post and want it to appear with an earlier date.
+          </p>
         </div>
 
         <div className="form-group">

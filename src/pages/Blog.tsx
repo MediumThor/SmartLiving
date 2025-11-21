@@ -11,6 +11,7 @@ interface BlogPost {
   excerpt?: string;
   author: string;
   createdAt: any;
+  publishedOn?: any;
   published: boolean;
   imageUrl?: string;
 }
@@ -99,8 +100,10 @@ const Blog = () => {
 
       // Ensure newest posts appear first, even if Firestore query didn't sort
       postsData.sort((a, b) => {
-        const aTime = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
-        const bTime = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+        const aTs = a.publishedOn || a.createdAt;
+        const bTs = b.publishedOn || b.createdAt;
+        const aTime = aTs?.toMillis ? aTs.toMillis() : 0;
+        const bTime = bTs?.toMillis ? bTs.toMillis() : 0;
         return bTime - aTime; // descending: newest first
       });
 
@@ -113,9 +116,10 @@ const Blog = () => {
     }
   };
 
-  const formatDate = (timestamp: any) => {
-    if (!timestamp) return 'No date';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  const formatDate = (post: BlogPost) => {
+    const ts = post.publishedOn || post.createdAt;
+    if (!ts) return 'No date';
+    const date = ts.toDate ? ts.toDate() : new Date(ts);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -173,7 +177,7 @@ const Blog = () => {
                 <div className="blog-post-content">
                   <h2>{post.title}</h2>
                   <div className="blog-post-meta">
-                    <span className="blog-post-date">{formatDate(post.createdAt)}</span>
+                    <span className="blog-post-date">{formatDate(post)}</span>
                     <span className="blog-post-author">By {post.author}</span>
                   </div>
                   {post.excerpt && (
