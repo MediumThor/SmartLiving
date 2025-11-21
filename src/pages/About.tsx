@@ -46,7 +46,7 @@ const About = () => {
           className="parallax-hero-image parallax" 
           data-speed="0.4"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80)'
+            backgroundImage: 'url(https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80)'
           }}
         >
           <div className="parallax-overlay">
