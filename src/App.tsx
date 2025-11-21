@@ -23,12 +23,23 @@ import './App.css';
 const ScrollToTop = () => {
   const location = useLocation();
 
+  // Disable browser automatic scroll restoration so we control it
   useEffect(() => {
-    // Always jump to top on any route change (including back/forward)
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-  }, [location.key]);
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+  }, []);
+
+  useEffect(() => {
+    // Wait until after React paints the new route, then scroll to top
+    const id = window.requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    });
+
+    return () => window.cancelAnimationFrame(id);
+  }, [location.pathname]);
 
   return null;
 };
