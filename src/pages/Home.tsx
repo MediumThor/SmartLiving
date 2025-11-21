@@ -99,7 +99,16 @@ const Home = () => {
         </div>
       </section>
 
-    
+       {/* Home Slideshow Gallery */}
+       <section className="home-slideshow-section">
+        <div className="home-slideshow-container">
+          {loadingHomeSlides ? (
+            <div className="loading">Loading gallery...</div>
+          ) : (
+            <ImageSlideshow images={homeSlides} title="Life On and Off the Water" />
+          )}
+        </div>
+      </section> 
 
       {/* CTA Cards Section */}
       <section className="cta-section">
@@ -140,16 +149,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Home Slideshow Gallery */}
-      <section className="home-slideshow-section">
-        <div className="home-slideshow-container">
-          {loadingHomeSlides ? (
-            <div className="loading">Loading gallery...</div>
-          ) : (
-            <ImageSlideshow images={homeSlides} title="Life On and Off the Water" />
-          )}
-        </div>
-      </section>
+  
 
       {/* Social Links Section */}
       <section className="social-section">
