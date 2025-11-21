@@ -77,7 +77,7 @@ const Home = () => {
               values-based leadership.
             </p>
             <Link to="/leadership" className="cta-button cta-button-small">
-              Explore Leadership
+               Leadership
             </Link>
           </div>
           <div className="cta-card">

@@ -35,11 +35,23 @@ interface CustomerSummary {
   registrations: CharterRegistration[];
 }
 
+interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+  createdAt: any;
+  status: 'new' | 'read';
+}
+
 const CharterManagement = () => {
   const [inquiries, setInquiries] = useState<CharterInquiry[]>([]);
   const [registrations, setRegistrations] = useState<CharterRegistration[]>([]);
+  const [contacts, setContacts] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeView, setActiveView] = useState<'inquiries' | 'registrations' | 'customers'>('inquiries');
+  const [activeView, setActiveView] = useState<'inquiries' | 'registrations' | 'customers' | 'contacts'>('inquiries');
   const [selectedCustomer, setSelectedCustomer] = useState<CustomerSummary | null>(null);
   const navigate = useNavigate();
 
@@ -67,8 +79,18 @@ const CharterManagement = () => {
         ...doc.data()
       })) as CharterRegistration[];
 
+      // Fetch general contact messages (Let's Connect form)
+      const contactsRef = collection(db, 'contactMessages');
+      const contactsQuery = query(contactsRef, orderBy('createdAt', 'desc'));
+      const contactsSnapshot = await getDocs(contactsQuery);
+      const contactsData = contactsSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as ContactMessage[];
+
       setInquiries(inquiriesData);
       setRegistrations(registrationsData);
+      setContacts(contactsData);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -187,6 +209,12 @@ const CharterManagement = () => {
             onClick={() => setActiveView('registrations')}
           >
             Registrations ({registrations.length})
+          </button>
+          <button
+            className={`view-tab ${activeView === 'contacts' ? 'active' : ''}`}
+            onClick={() => setActiveView('contacts')}
+          >
+            Contacts ({contacts.length})
           </button>
           <button
             className={`view-tab ${activeView === 'customers' ? 'active' : ''}`}
@@ -359,6 +387,48 @@ const CharterManagement = () => {
                   </div>
                 );
               })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeView === 'contacts' && (
+        <div className="registrations-section">
+          {contacts.length === 0 ? (
+            <div className="empty-state">
+              <p>No contact messages yet.</p>
+            </div>
+          ) : (
+            <div className="registrations-list">
+              {contacts.map((contact) => (
+                <div key={contact.id} className="registration-card">
+                  <div className="registration-header">
+                    <div>
+                      <h3>{contact.name || 'Unknown Contact'}</h3>
+                      <p className="registration-email">{contact.email}</p>
+                    </div>
+                    <div className="status-badge-container">
+                      <span className={`status-badge ${contact.status === 'new' ? 'status-new' : 'status-default'}`}>
+                        {contact.status === 'new' ? 'New' : 'Read'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="registration-details">
+                    <p><strong>Subject:</strong> {contact.subject}</p>
+                    {contact.phone && <p><strong>Phone:</strong> {contact.phone}</p>}
+                    <p>
+                      <strong>Received:</strong>{' '}
+                      {contact.createdAt?.toDate
+                        ? new Date(contact.createdAt.toDate()).toLocaleString()
+                        : 'N/A'}
+                    </p>
+                    <p style={{ whiteSpace: 'pre-wrap' }}>
+                      <strong>Message:</strong><br />
+                      {contact.message}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>

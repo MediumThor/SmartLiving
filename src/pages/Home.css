@@ -240,7 +240,8 @@
 .cta-button-small {
   padding: 6px 14px;
   font-size: 11px;
-  max-width: 150px;
+  max-width: 130px;
+  text-align: center;
 }
 
 /* Social Section */

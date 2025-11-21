@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import './ContactForm.css';
 
 interface FormData {
   name: string;
   email: string;
   phone: string;
+  subject: string;
   message: string;
 }
 
@@ -14,12 +17,13 @@ const ContactForm = () => {
     name: '',
     email: '',
     phone: '',
+    subject: 'General Question',
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -33,21 +37,18 @@ const ContactForm = () => {
     setSubmitStatus('idle');
 
     try {
-      // TODO: Replace with actual API endpoint
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+      await addDoc(collection(db, 'contactMessages'), {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        subject: formData.subject,
+        message: formData.message.trim(),
+        status: 'new',
+        createdAt: serverTimestamp(),
       });
 
-      if (response.ok) {
-        setSubmitStatus('success');
-        setFormData({ name: '', email: '', phone: '', message: '' });
-      } else {
-        setSubmitStatus('error');
-      }
+      setSubmitStatus('success');
+      setFormData({ name: '', email: '', phone: '', subject: 'General Question', message: '' });
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitStatus('error');
@@ -110,6 +111,24 @@ const ContactForm = () => {
             onChange={handleChange}
             placeholder="(414) 522-1918"
           />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="subject">Subject *</label>
+          <select
+            id="subject"
+            name="subject"
+            value={formData.subject}
+            onChange={handleChange}
+            required
+          >
+            <option value="General Question">General Question</option>
+            <option value="Sailing Charter Inquiry">Sailing Charter Inquiry</option>
+            <option value="Leadership & Coaching">Leadership & Coaching</option>
+            <option value="Wellness & Smart Living">Wellness & Smart Living</option>
+            <option value="Speaking / Workshops">Speaking / Workshops</option>
+            <option value="Other">Other</option>
+          </select>
         </div>
 
         <div className="form-group">
