@@ -83,6 +83,10 @@
   transition: transform 0.3s ease;
 }
 
+.column-card h3 {
+  text-align: center;
+}
+
 .column-card:hover .column-image img {
   transform: scale(1.1);
 }
