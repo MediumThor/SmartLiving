@@ -800,6 +800,18 @@ const CharterManagement = () => {
                       <p><strong>Charter Date:</strong> {inq.charterDate}</p>
                       <p><strong>Party Size:</strong> {inq.partySize}</p>
                       {inq.message && <p><strong>Message:</strong> {inq.message}</p>}
+                      <div className="cm-modal-actions">
+                        <button
+                          className="btn-primary"
+                          type="button"
+                          onClick={() => {
+                            setSelectedCustomer(null);
+                            handleCreateForm(inq.id);
+                          }}
+                        >
+                          Create Registration Form
+                        </button>
+                      </div>
                     </div>
                   ))
                 )}
