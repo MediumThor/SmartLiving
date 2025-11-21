@@ -413,6 +413,16 @@ const CharterGuestForm = () => {
               I have read and agree to the liability waiver. *
             </label>
           </div>
+          <div className="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                checked={formData.photoConsent || false}
+                onChange={(e) => handleChange('photoConsent', e.target.checked)}
+              />
+              I consent to reasonable use of photos/video from this charter for marketing and storytelling.
+            </label>
+          </div>
         </fieldset>
 
         {/* Notes */}
