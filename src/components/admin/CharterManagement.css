@@ -329,38 +329,40 @@
 }
 
 @media print {
-  /* Hide everything by default */
-  * {
-    display: none !important;
+  /* Hide everything by default, but keep layout */
+  body * {
+    visibility: hidden;
   }
 
   /* Show only the guest summary modal */
   .cm-modal,
   .cm-modal * {
-    display: block !important;
+    visibility: visible;
   }
 
   .cm-modal {
-    position: static !important;
-    transform: none !important;
-    box-shadow: none !important;
-    max-width: 100% !important;
-    width: 100% !important;
-    max-height: none !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
-    padding: 0.5in 0.75in !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0.5in 0.75in;
+    box-shadow: none;
+    max-width: 100%;
+    width: 100%;
+    max-height: none;
+    border-radius: 0;
   }
 
   .cm-modal-backdrop,
   .cm-modal-close {
-    display: none !important;
+    display: none;
   }
 
   html,
   body {
-    margin: 0 !important;
-    padding: 0 !important;
+    margin: 0;
+    padding: 0;
   }
 
   @page {

@@ -803,32 +803,7 @@ const CharterManagement = () => {
                     </div>
 
                     <div className="cm-modal-section">
-                      <h4>Invoice (Draft)</h4>
-                      <p><strong>Base Charter Fee:</strong> {locked.charterFee !== undefined ? `$${locked.charterFee}` : 'N/A'}</p>
-                      {locked.provisioning !== undefined && (
-                        <p><strong>Provisioning:</strong> ${locked.provisioning}</p>
-                      )}
-                      {locked.nationalParksFee !== undefined && (
-                        <p><strong>National Parks Fee:</strong> ${locked.nationalParksFee}</p>
-                      )}
-                      {locked.cruisingPermit !== undefined && (
-                        <p><strong>Cruising Permit:</strong> ${locked.cruisingPermit}</p>
-                      )}
-                      {locked.fuelSurcharge !== undefined && (
-                        <p><strong>Fuel Surcharge:</strong> ${locked.fuelSurcharge}</p>
-                      )}
-                      {locked.visarDonation !== undefined && (
-                        <p><strong>VISAR Donation:</strong> ${locked.visarDonation}</p>
-                      )}
-                      {locked.hotel !== undefined && (
-                        <p><strong>Hotel:</strong> ${locked.hotel}</p>
-                      )}
-                      {locked.instructorFee !== undefined && (
-                        <p><strong>Instructor Fee:</strong> ${locked.instructorFee}</p>
-                      )}
-                      {locked.refundableDamageDeposit !== undefined && (
-                        <p><strong>Refundable Damage Deposit:</strong> ${locked.refundableDamageDeposit}</p>
-                      )}
+                      <h4>Invoice Summary</h4>
                       {locked.totalAmount !== undefined && (
                         <p><strong>Total Amount:</strong> ${locked.totalAmount}</p>
                       )}
