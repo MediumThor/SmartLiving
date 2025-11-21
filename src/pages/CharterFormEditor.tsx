@@ -244,11 +244,7 @@ const CharterFormEditor = () => {
         // Load locked fields into formData (these are the captain's pre-filled fields)
         const lockedData = data.lockedFields || {};
         const guestDataLoaded = data.guestData || {};
-        
-        console.log('Loading form - Locked fields:', lockedData); // Debug log
-        console.log('Loading form - Guest data:', guestDataLoaded); // Debug log
-        console.log('Loading form - Status:', data.status); // Debug log
-        
+
         // Merge locked fields and guest data (guest data takes precedence for editable fields)
         setFormData(prev => ({
           ...prev,

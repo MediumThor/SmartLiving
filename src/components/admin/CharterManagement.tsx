@@ -64,6 +64,19 @@ const CharterManagement = () => {
     return completed[0];
   };
 
+  const formatTime = (value?: string) => {
+    if (!value) return 'N/A';
+    // Expecting "HH:MM" from inputs; convert to 12-hour am/pm
+    const [h, m] = value.split(':').map(Number);
+    if (Number.isNaN(h) || Number.isNaN(m)) return value;
+    const date = new Date();
+    date.setHours(h, m, 0, 0);
+    return date.toLocaleTimeString(undefined, {
+      hour: 'numeric',
+      minute: '2-digit',
+    });
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -344,7 +357,7 @@ const CharterManagement = () => {
                       {reg.lockedFields && (
                         <div className="locked-fields-preview">
                           <p><strong>Charter Date:</strong> {reg.lockedFields.charterDate || reg.lockedFields.charterFromDate || 'Not set'}</p>
-                          <p><strong>Start Time:</strong> {reg.lockedFields.startTime || reg.lockedFields.charterFromTime || 'Not set'}</p>
+                          <p><strong>Start Time:</strong> {formatTime(reg.lockedFields.startTime || reg.lockedFields.charterFromTime)}</p>
                           {reg.lockedFields.chartererName && (
                             <p><strong>Guest:</strong> {reg.lockedFields.chartererName}</p>
                           )}
@@ -522,7 +535,7 @@ const CharterManagement = () => {
                         <h5>Charter Details</h5>
                         <p><strong>Charter Type:</strong> {locked.charterType || 'N/A'}</p>
                         <p><strong>Date:</strong> {locked.charterDate || locked.charterFromDate || 'N/A'}</p>
-                        <p><strong>Start Time:</strong> {locked.startTime || locked.charterFromTime || 'N/A'}</p>
+                        <p><strong>Start Time:</strong> {formatTime(locked.startTime || locked.charterFromTime)}</p>
                         {locked.totalAmount !== undefined && (
                           <p><strong>Total Amount:</strong> ${locked.totalAmount}</p>
                         )}
@@ -630,7 +643,7 @@ const CharterManagement = () => {
                       <div key={reg.id} className="cm-modal-card">
                         <p><strong>Status:</strong> {effectiveStatus}</p>
                         <p><strong>Charter Date:</strong> {reg.lockedFields?.charterDate || reg.lockedFields?.charterFromDate || 'Not set'}</p>
-                        <p><strong>Start Time:</strong> {reg.lockedFields?.startTime || reg.lockedFields?.charterFromTime || 'Not set'}</p>
+                        <p><strong>Start Time:</strong> {formatTime(reg.lockedFields?.startTime || reg.lockedFields?.charterFromTime)}</p>
                         {hasGuestData && reg.guestData.fullName && (
                           <p><strong>Guest Name (submitted):</strong> {reg.guestData.fullName}</p>
                         )}
@@ -687,7 +700,7 @@ const CharterManagement = () => {
                       <h4>Charter Details</h4>
                       <p><strong>Charter Type:</strong> {locked.charterType || guest.charterType || 'N/A'}</p>
                       <p><strong>Date:</strong> {locked.charterDate || locked.charterFromDate || guest.charterDate || 'N/A'}</p>
-                      <p><strong>Start Time:</strong> {locked.startTime || locked.charterFromTime || guest.startTime || 'N/A'}</p>
+                      <p><strong>Start Time:</strong> {formatTime(locked.startTime || locked.charterFromTime || guest.startTime)}</p>
                       <p><strong>Party Size:</strong> {locked.partySize || guest.partySize || 1}</p>
                       {locked.totalAmount !== undefined && (
                         <p><strong>Total Amount:</strong> ${locked.totalAmount}</p>
