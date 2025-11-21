@@ -1,8 +1,29 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import './Page.css';
 
 const About = () => {
+  const [headshotUrl, setHeadshotUrl] = useState<string>('/b71621_b470c1b9ebf6400eac8a60817fb5682a~mv2.avif');
+
   useEffect(() => {
+    const loadHeadshot = async () => {
+      try {
+        const docRef = doc(db, 'headshots', 'main');
+        const snap = await getDoc(docRef);
+        if (snap.exists()) {
+          const data = snap.data() as { url?: string };
+          if (data.url && data.url.trim()) {
+            setHeadshotUrl(data.url.trim());
+          }
+        }
+      } catch (error) {
+        console.error('Error loading headshot for About page:', error);
+      }
+    };
+
+    loadHeadshot();
+
     const handleScroll = () => {
       const scrolled = window.pageYOffset;
       const parallaxElements = document.querySelectorAll('.parallax');
@@ -25,7 +46,7 @@ const About = () => {
           className="parallax-hero-image parallax" 
           data-speed="0.4"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80)'
+            backgroundImage: `url(${headshotUrl})`
           }}
         >
           <div className="parallax-overlay">

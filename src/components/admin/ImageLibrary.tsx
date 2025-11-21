@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, orderBy } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, orderBy, setDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import './ImageLibrary.css';
 
@@ -18,6 +18,12 @@ interface SlideshowImage {
   createdAt: any;
 }
 
+interface Headshot {
+  url: string;
+  name?: string;
+  updatedAt?: any;
+}
+
 const ImageLibrary = () => {
   const [images, setImages] = useState<ImageItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,9 +38,16 @@ const ImageLibrary = () => {
   const [newSlideName, setNewSlideName] = useState('');
   const [uploadingSlide, setUploadingSlide] = useState(false);
 
+  const [headshot, setHeadshot] = useState<Headshot | null>(null);
+  const [headshotUrl, setHeadshotUrl] = useState('');
+  const [headshotName, setHeadshotName] = useState('');
+  const [loadingHeadshot, setLoadingHeadshot] = useState(true);
+  const [savingHeadshot, setSavingHeadshot] = useState(false);
+
   useEffect(() => {
     fetchImages();
     fetchSlideshowImages();
+    fetchHeadshot();
   }, []);
 
   const fetchImages = async () => {
@@ -73,6 +86,28 @@ const ImageLibrary = () => {
       console.error('Error fetching slideshow images:', error);
     } finally {
       setLoadingSlides(false);
+    }
+  };
+
+  const fetchHeadshot = async () => {
+    try {
+      const headshotDoc = await getDocs(collection(db, 'headshots'));
+      // Use the first doc if any exist
+      if (!headshotDoc.empty) {
+        const docSnap = headshotDoc.docs[0];
+        const data = docSnap.data() as Headshot;
+        setHeadshot(data);
+        setHeadshotUrl(data.url || '');
+        setHeadshotName(data.name || '');
+      } else {
+        setHeadshot(null);
+        setHeadshotUrl('');
+        setHeadshotName('');
+      }
+    } catch (error) {
+      console.error('Error fetching headshot:', error);
+    } finally {
+      setLoadingHeadshot(false);
     }
   };
 
@@ -174,6 +209,55 @@ const ImageLibrary = () => {
     } catch (error) {
       console.error('Error deleting slideshow image:', error);
       alert('Failed to delete slideshow image');
+    }
+  };
+
+  const handleSaveHeadshot = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!headshotUrl.trim()) {
+      alert('Please provide a headshot image URL');
+      return;
+    }
+
+    setSavingHeadshot(true);
+    try {
+      // For simplicity, always use a single document 'main'
+      const headshotDocRef = doc(db, 'headshots', 'main');
+      await setDoc(headshotDocRef, {
+        url: headshotUrl.trim(),
+        name: headshotName.trim() || 'Headshot',
+        updatedAt: serverTimestamp()
+      });
+
+      setHeadshot({
+        url: headshotUrl.trim(),
+        name: headshotName.trim() || 'Headshot',
+        updatedAt: new Date()
+      });
+
+      alert('Headshot updated successfully!');
+    } catch (error) {
+      console.error('Error saving headshot:', error);
+      alert('Failed to save headshot');
+    } finally {
+      setSavingHeadshot(false);
+    }
+  };
+
+  const handleClearHeadshot = async () => {
+    if (!window.confirm('Remove the current headshot? This will fall back to the default image.')) {
+      return;
+    }
+
+    try {
+      await deleteDoc(doc(db, 'headshots', 'main'));
+      setHeadshot(null);
+      setHeadshotUrl('');
+      setHeadshotName('');
+    } catch (error) {
+      console.error('Error clearing headshot:', error);
+      alert('Failed to clear headshot');
     }
   };
 
@@ -336,6 +420,79 @@ const ImageLibrary = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      <div className="section-header" style={{ marginTop: '3rem' }}>
+        <h2>About Me Headshot</h2>
+        <p className="section-description">
+          Set the main headshot image used on the About Me page.
+        </p>
+      </div>
+
+      <form onSubmit={handleSaveHeadshot} className="upload-form">
+        <div className="form-group">
+          <label htmlFor="headshotName">Headshot Name (optional)</label>
+          <input
+            type="text"
+            id="headshotName"
+            value={headshotName}
+            onChange={(e) => setHeadshotName(e.target.value)}
+            placeholder="e.g., Brian Headshot"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="headshotUrl">Headshot Image URL</label>
+          <input
+            type="url"
+            id="headshotUrl"
+            value={headshotUrl}
+            onChange={(e) => setHeadshotUrl(e.target.value)}
+            placeholder="https://example.com/headshot.jpg"
+            required
+          />
+        </div>
+        <button type="submit" className="btn-upload" disabled={savingHeadshot}>
+          {savingHeadshot ? 'Saving...' : 'Save Headshot'}
+        </button>
+      </form>
+
+      {loadingHeadshot ? (
+        <div className="loading">Loading headshot...</div>
+      ) : !headshot || !headshot.url ? (
+        <div className="empty-state">
+          <p>No headshot set yet. Add a headshot image above.</p>
+        </div>
+      ) : (
+        <div className="images-grid">
+          <div className="image-card">
+            <div className="image-preview">
+              <img src={headshot.url} alt={headshot.name || 'Headshot'} />
+            </div>
+            <div className="image-info">
+              <h3>{headshot.name || 'Headshot'}</h3>
+              <div className="image-url">
+                <input 
+                  type="text" 
+                  value={headshot.url} 
+                  readOnly 
+                  onClick={(e) => (e.target as HTMLInputElement).select()}
+                />
+                <button 
+                  onClick={() => copyToClipboard(headshot.url, 'headshot')}
+                  className="btn-copy"
+                >
+                  {copiedId === 'headshot' ? '✓ Copied' : 'Copy'}
+                </button>
+              </div>
+              <button 
+                onClick={handleClearHeadshot}
+                className="btn-delete-img"
+              >
+                Remove Headshot
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
