@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import BlogManagement from '../components/admin/BlogManagement';
 import ImageLibrary from '../components/admin/ImageLibrary';
-import PageContentEditor from '../components/admin/PageContentEditor';
 import CharterManagement from '../components/admin/CharterManagement';
 import ContactInquiries from '../components/admin/ContactInquiries';
 import './AdminDashboard.css';
