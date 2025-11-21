@@ -1,10 +1,24 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ContactForm from '../components/ContactForm';
+import ImageSlideshow from '../components/ImageSlideshow';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import './Home.css';
 
+interface HomeSlide {
+  id: string;
+  url: string;
+  name: string;
+  createdAt: any;
+}
+
 const Home = () => {
+  const [homeSlides, setHomeSlides] = useState<string[]>([]);
+  const [loadingHomeSlides, setLoadingHomeSlides] = useState(true);
+
   useEffect(() => {
+    // Parallax scroll
     const handleScroll = () => {
       const scrolled = window.pageYOffset;
       const parallaxElements = document.querySelectorAll('.parallax');
@@ -17,6 +31,38 @@ const Home = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const fetchHomeSlides = async () => {
+      try {
+        const slidesRef = collection(db, 'homeSlideshowImages');
+        const slidesQuery = query(slidesRef, orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(slidesQuery);
+        const fetched = snapshot.docs.map(doc => (doc.data() as HomeSlide).url).filter(Boolean);
+
+        if (fetched.length > 0) {
+          setHomeSlides(fetched);
+        } else {
+          // Fallback default images for home slideshow
+          setHomeSlides([
+            'https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80',
+            'https://images.unsplash.com/photo-1518837695005-3540f27a2a86?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80',
+            'https://images.unsplash.com/photo-1526481280695-3c687fd543c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80',
+          ]);
+        }
+      } catch (error) {
+        console.error('Error fetching home slideshow images:', error);
+        setHomeSlides([
+          'https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80',
+          'https://images.unsplash.com/photo-1526481280695-3c687fd543c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80',
+        ]);
+      } finally {
+        setLoadingHomeSlides(false);
+      }
+    };
+
+    fetchHomeSlides();
   }, []);
 
   return (
@@ -91,6 +137,17 @@ const Home = () => {
               Visit Wellness
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Home Slideshow Gallery */}
+      <section className="home-slideshow-section">
+        <div className="home-slideshow-container">
+          {loadingHomeSlides ? (
+            <div className="loading">Loading gallery...</div>
+          ) : (
+            <ImageSlideshow images={homeSlides} title="Life On and Off the Water" />
+          )}
         </div>
       </section>
 

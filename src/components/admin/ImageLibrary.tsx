@@ -38,6 +38,13 @@ const ImageLibrary = () => {
   const [newSlideName, setNewSlideName] = useState('');
   const [uploadingSlide, setUploadingSlide] = useState(false);
 
+  // Home page slideshow images
+  const [homeSlides, setHomeSlides] = useState<SlideshowImage[]>([]);
+  const [loadingHomeSlides, setLoadingHomeSlides] = useState(true);
+  const [newHomeSlideUrl, setNewHomeSlideUrl] = useState('');
+  const [newHomeSlideName, setNewHomeSlideName] = useState('');
+  const [uploadingHomeSlide, setUploadingHomeSlide] = useState(false);
+
   const [headshot, setHeadshot] = useState<Headshot | null>(null);
   const [headshotUrl, setHeadshotUrl] = useState('');
   const [headshotName, setHeadshotName] = useState('');
@@ -47,6 +54,7 @@ const ImageLibrary = () => {
   useEffect(() => {
     fetchImages();
     fetchSlideshowImages();
+    fetchHomeSlideshowImages();
     fetchHeadshot();
   }, []);
 
@@ -86,6 +94,24 @@ const ImageLibrary = () => {
       console.error('Error fetching slideshow images:', error);
     } finally {
       setLoadingSlides(false);
+    }
+  };
+
+  const fetchHomeSlideshowImages = async () => {
+    setLoadingHomeSlides(true);
+    try {
+      const slidesRef = collection(db, 'homeSlideshowImages');
+      const slidesQuery = query(slidesRef, orderBy('createdAt', 'desc'));
+      const snapshot = await getDocs(slidesQuery);
+      const items = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...(doc.data() as any),
+      })) as SlideshowImage[];
+      setHomeSlides(items);
+    } catch (error) {
+      console.error('Error fetching home slideshow images:', error);
+    } finally {
+      setLoadingHomeSlides(false);
     }
   };
 
@@ -184,6 +210,42 @@ const ImageLibrary = () => {
     }
   };
 
+  const handleHomeSlideUpload = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!newHomeSlideUrl.trim() || !newHomeSlideName.trim()) {
+      alert('Please provide both a name and URL for the home slideshow image.');
+      return;
+    }
+
+    setUploadingHomeSlide(true);
+    try {
+      const docRef = await addDoc(collection(db, 'homeSlideshowImages'), {
+        url: newHomeSlideUrl.trim(),
+        name: newHomeSlideName.trim(),
+        createdAt: serverTimestamp(),
+      });
+
+      setHomeSlides([
+        {
+          id: docRef.id,
+          url: newHomeSlideUrl.trim(),
+          name: newHomeSlideName.trim(),
+          createdAt: new Date(),
+        },
+        ...homeSlides,
+      ]);
+
+      setNewHomeSlideUrl('');
+      setNewHomeSlideName('');
+    } catch (error) {
+      console.error('Error uploading home slideshow image:', error);
+      alert('Failed to upload home slideshow image');
+    } finally {
+      setUploadingHomeSlide(false);
+    }
+  };
+
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this image?')) {
       return;
@@ -209,6 +271,20 @@ const ImageLibrary = () => {
     } catch (error) {
       console.error('Error deleting slideshow image:', error);
       alert('Failed to delete slideshow image');
+    }
+  };
+
+  const handleDeleteHomeSlide = async (id: string) => {
+    if (!window.confirm('Are you sure you want to remove this image from the home page slideshow?')) {
+      return;
+    }
+
+    try {
+      await deleteDoc(doc(db, 'homeSlideshowImages', id));
+      setHomeSlides(homeSlides.filter(img => img.id !== id));
+    } catch (error) {
+      console.error('Error deleting home slideshow image:', error);
+      alert('Failed to delete home slideshow image');
     }
   };
 
@@ -416,6 +492,82 @@ const ImageLibrary = () => {
                   className="btn-delete-img"
                 >
                   Remove from Slideshow
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="section-header" style={{ marginTop: '3rem' }}>
+        <h2>Home Page Slideshow Images</h2>
+        <p className="section-description">
+          Manage the images used in the Home page slideshow gallery. These are separate from the Charters gallery.
+        </p>
+      </div>
+
+      <form onSubmit={handleHomeSlideUpload} className="upload-form">
+        <div className="form-group">
+          <label htmlFor="homeSlideName">Home Slideshow Image Name</label>
+          <input
+            type="text"
+            id="homeSlideName"
+            value={newHomeSlideName}
+            onChange={(e) => setNewHomeSlideName(e.target.value)}
+            placeholder="e.g., Morning Harbor"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="homeSlideUrl">Home Slideshow Image URL</label>
+          <input
+            type="url"
+            id="homeSlideUrl"
+            value={newHomeSlideUrl}
+            onChange={(e) => setNewHomeSlideUrl(e.target.value)}
+            placeholder="https://images.unsplash.com/..."
+            required
+          />
+        </div>
+        <button type="submit" className="btn-upload" disabled={uploadingHomeSlide}>
+          {uploadingHomeSlide ? 'Adding...' : '+ Add Home Slideshow Image'}
+        </button>
+      </form>
+
+      {loadingHomeSlides ? (
+        <div className="loading">Loading home slideshow images...</div>
+      ) : homeSlides.length === 0 ? (
+        <div className="empty-state">
+          <p>No home slideshow images yet. Add your first home slideshow image!</p>
+        </div>
+      ) : (
+        <div className="images-grid">
+          {homeSlides.map(image => (
+            <div key={image.id} className="image-card">
+              <div className="image-preview">
+                <img src={image.url} alt={image.name} />
+              </div>
+              <div className="image-info">
+                <h3>{image.name}</h3>
+                <div className="image-url">
+                  <input
+                    type="text"
+                    value={image.url}
+                    readOnly
+                    onClick={(e) => (e.target as HTMLInputElement).select()}
+                  />
+                  <button
+                    onClick={() => copyToClipboard(image.url, image.id)}
+                    className="btn-copy"
+                  >
+                    {copiedId === image.id ? '✓ Copied' : 'Copy'}
+                  </button>
+                </div>
+                <button
+                  onClick={() => handleDeleteHomeSlide(image.id)}
+                  className="btn-delete-img"
+                >
+                  Remove from Home Slideshow
                 </button>
               </div>
             </div>
