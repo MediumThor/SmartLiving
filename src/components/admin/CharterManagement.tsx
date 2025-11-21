@@ -153,6 +153,160 @@ const CharterManagement = () => {
     }
   };
 
+  const handlePrintSummary = () => {
+    if (!selectedRegistration) return;
+    const locked = selectedRegistration.lockedFields || {};
+    const guest = selectedRegistration.guestData || {};
+
+    const printWindow = window.open('', '_blank', 'width=900,height=1000');
+    if (!printWindow) return;
+
+    const format = (value: any) => (value === undefined || value === null || value === '' ? 'N/A' : String(value));
+    const startTime = formatTime(locked.startTime || locked.charterFromTime || guest.startTime);
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Charter Trip Summary</title>
+          <style>
+            body {
+              font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+              margin: 0.75in;
+              font-size: 12px;
+              color: #222;
+            }
+            h1 {
+              font-size: 20px;
+              margin-bottom: 4px;
+            }
+            h2 {
+              font-size: 16px;
+              margin-top: 18px;
+              margin-bottom: 6px;
+              border-bottom: 1px solid #ddd;
+              padding-bottom: 2px;
+            }
+            p {
+              margin: 2px 0;
+            }
+            ul {
+              margin: 4px 0 4px 18px;
+            }
+            .section {
+              margin-bottom: 10px;
+            }
+            .pill-row span {
+              display: inline-block;
+              padding: 2px 6px;
+              margin-right: 4px;
+              border-radius: 999px;
+              background: #e3f2fd;
+              font-size: 11px;
+            }
+            .invoice p {
+              font-weight: 500;
+            }
+            .small {
+              font-size: 11px;
+              color: #666;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Charter Trip Summary</h1>
+          <p class="small">Generated: ${new Date().toLocaleString()}</p>
+
+          <div class="section">
+            <h2>Vessel & Operator</h2>
+            <p><strong>Company:</strong> ${format(locked.companyName)}</p>
+            <p><strong>Captain / Charterer:</strong> ${format(locked.chartererName)}</p>
+            <p><strong>Yacht Name:</strong> ${format(locked.yachtName)}</p>
+            <p><strong>Yacht Model:</strong> ${format(locked.yachtModel)}</p>
+          </div>
+
+          <div class="section">
+            <h2>Charter Details</h2>
+            <p><strong>Charter Type:</strong> ${format(locked.charterType || guest.charterType)}</p>
+            <p><strong>Date:</strong> ${format(locked.charterDate || locked.charterFromDate || guest.charterDate)}</p>
+            <p><strong>Start Time:</strong> ${startTime}</p>
+            <p><strong>Party Size:</strong> ${format(locked.partySize || guest.partySize || 1)}</p>
+          </div>
+
+          <div class="section">
+            <h2>Lead Guest</h2>
+            <p><strong>Name:</strong> ${format(guest.fullName || locked.chartererName)}</p>
+            <p><strong>Email:</strong> ${format(guest.email || locked.email || selectedRegistration.guestEmail)}</p>
+            <p><strong>Phone:</strong> ${format(guest.phone)}</p>
+            <p><strong>Address:</strong> ${format(guest.address)}</p>
+          </div>
+
+          <div class="section">
+            <h2>Guest Roster</h2>
+            ${
+              Array.isArray(guest.guests) && guest.guests.filter(Boolean).length
+                ? `<ul>${guest.guests
+                    .filter(Boolean)
+                    .map((g: string) => `<li>${g}</li>`)
+                    .join('')}</ul>`
+                : '<p>No additional guests listed.</p>'
+            }
+          </div>
+
+          <div class="section">
+            <h2>Health & Safety</h2>
+            <p><strong>Allergies:</strong> ${format(guest.allergies)}</p>
+            <p><strong>Medical Notes:</strong> ${format(guest.medical)}</p>
+            <p><strong>Emergency Contact:</strong> ${
+              [guest.emgName, guest.emgRelation, guest.emgPhone].filter(Boolean).join(' • ') || 'N/A'
+            }</p>
+          </div>
+
+          <div class="section">
+            <h2>Experience & Preferences</h2>
+            <p><strong>Experience:</strong> ${format(guest.experience)}</p>
+            <p><strong>Lifejackets:</strong> ${format(guest.lifejackets)}</p>
+            <p><strong>Non-slip Shoes:</strong> ${
+              typeof guest.nonSlip === 'boolean' ? (guest.nonSlip ? 'Yes' : 'No') : 'N/A'
+            }</p>
+          </div>
+
+          <div class="section">
+            <h2>Agreements & Notes</h2>
+            <div class="pill-row">
+              ${guest.agreePolicies ? '<span>Policies Agreed</span>' : ''}
+              ${guest.agreeWaiver ? '<span>Waiver Signed</span>' : ''}
+              ${
+                typeof guest.photoConsent === 'boolean'
+                  ? `<span>Photo Consent: ${guest.photoConsent ? 'Yes' : 'No'}</span>`
+                  : ''
+              }
+            </div>
+            <p><strong>Guest Notes:</strong> ${format(guest.notes)}</p>
+          </div>
+
+          <div class="section invoice">
+            <h2>Invoice Summary</h2>
+            <p><strong>Total Amount:</strong> ${locked.totalAmount !== undefined ? `$${locked.totalAmount}` : 'N/A'}</p>
+            <p><strong>Deposit Due:</strong> ${locked.depositDue !== undefined ? `$${locked.depositDue}` : 'N/A'}</p>
+            <p><strong>Balance Due:</strong> ${locked.balanceDue !== undefined ? `$${locked.balanceDue}` : 'N/A'}</p>
+          </div>
+
+          <div class="section">
+            <h2>Admin Summary</h2>
+            <p>${summaryText ? summaryText.replace(/\n/g, '<br/>') : '<em>No admin summary entered.</em>'}</p>
+          </div>
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 300);
+  };
+
   // Build combined customer view keyed by email
   const customerSummaries: CustomerSummary[] = (() => {
     const map: { [email: string]: CustomerSummary } = {};
@@ -835,7 +989,7 @@ const CharterManagement = () => {
                         <button
                           type="button"
                           className="btn-view"
-                          onClick={() => window.print()}
+                          onClick={handlePrintSummary}
                         >
                           Print Summary
                         </button>
