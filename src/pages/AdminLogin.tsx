@@ -9,7 +9,7 @@ const AdminLogin = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login, loginWithGoogle } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -22,21 +22,6 @@ const AdminLogin = () => {
       navigate('/admin/dashboard');
     } catch (err) {
       setError('Failed to log in. Please check your credentials.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    setError('');
-    setLoading(true);
-
-    try {
-      await loginWithGoogle();
-      navigate('/admin/dashboard');
-    } catch (err) {
-      setError('Failed to log in with Google.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -81,19 +66,6 @@ const AdminLogin = () => {
           </button>
         </form>
 
-        <div className="divider">
-          <span>OR</span>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleGoogleLogin}
-          className="google-login-button"
-          disabled={loading}
-        >
-          <span className="google-icon">G</span>
-          Sign in with Google
-        </button>
       </div>
     </div>
   );
