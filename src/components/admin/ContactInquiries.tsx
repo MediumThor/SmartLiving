@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs, query, orderBy, doc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, deleteDoc, setDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import './CharterManagement.css';
 
@@ -51,6 +51,23 @@ const ContactInquiries = () => {
     }
   };
 
+  const handleMarkSeen = async (contact: ContactMessage) => {
+    if (contact.status === 'read') return;
+    try {
+      await setDoc(
+        doc(db, 'contactMessages', contact.id),
+        { status: 'read' },
+        { merge: true }
+      );
+      setContacts(prev =>
+        prev.map(c => (c.id === contact.id ? { ...c, status: 'read' } : c))
+      );
+    } catch (error) {
+      console.error('Error marking contact as seen:', error);
+      alert('Failed to mark contact as seen.');
+    }
+  };
+
   if (loading) {
     return <div className="loading">Loading contact inquiries...</div>;
   }
@@ -75,21 +92,25 @@ const ContactInquiries = () => {
                     <h3>{contact.name || 'Unknown Contact'}</h3>
                     <p className="registration-email">{contact.email}</p>
                   </div>
-                  <div className="status-badge-container">
+                  <button
+                    type="button"
+                    className="status-badge-button"
+                    onClick={() => handleMarkSeen(contact)}
+                  >
                     <span className="status-badge status-new">
-                      {contact.status === 'read' ? 'Read' : 'New'}
+                      {contact.status === 'read' ? 'Seen' : 'New'}
                     </span>
-                  </div>
+                  </button>
                 </div>
                 <div className="registration-details">
-                  <p><strong>Subject:</strong> {contact.subject}</p>
-                  {contact.phone && <p><strong>Phone:</strong> {contact.phone}</p>}
                   <p>
                     <strong>Received:</strong>{' '}
                     {contact.createdAt?.toDate
                       ? new Date(contact.createdAt.toDate()).toLocaleString()
                       : 'N/A'}
                   </p>
+                  <p><strong>Subject:</strong> {contact.subject}</p>
+                  {contact.phone && <p><strong>Phone:</strong> {contact.phone}</p>}
                   <p style={{ whiteSpace: 'pre-wrap' }}>
                     <strong>Message:</strong><br />
                     {contact.message}
