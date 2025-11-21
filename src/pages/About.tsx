@@ -46,7 +46,7 @@ const About = () => {
           className="parallax-hero-image parallax" 
           data-speed="0.4"
           style={{
-            backgroundImage: `url(${headshotUrl})`
+            backgroundImage: 'url(https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80)'
           }}
         >
           <div className="parallax-overlay">
@@ -61,6 +61,10 @@ const About = () => {
             Welcome to my personal website. Here you'll learn about my journey, my passions, 
             and my commitment to Smart Living.
           </p>
+        </div>
+
+        <div className="about-headshot">
+          <img src={headshotUrl} alt="Headshot" />
         </div>
 
         {/* Three Column Section */}
