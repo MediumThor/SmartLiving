@@ -15,9 +15,21 @@ interface BlogPost {
   imageUrl?: string;
 }
 
+const getPlainTextFromHtml = (html: string): string => {
+  if (!html) return '';
+  if (typeof window === 'undefined') {
+    // Fallback for safety; simple tag strip
+    return html.replace(/<[^>]+>/g, ' ');
+  }
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent || div.innerText || '';
+};
+
 const Blog = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedPosts, setExpandedPosts] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const handleScroll = () => {
@@ -167,10 +179,44 @@ const Blog = () => {
                   {post.excerpt && (
                     <p className="blog-post-excerpt">{post.excerpt}</p>
                   )}
-                  <div 
-                    className="blog-post-body"
-                    dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }}
-                  />
+                  {(() => {
+                    const isExpanded = expandedPosts[post.id] === true;
+                    const plainText = getPlainTextFromHtml(post.content);
+                    const words = plainText.split(/\s+/).filter(Boolean);
+                    const needsTruncate = words.length > 200;
+                    const previewText = needsTruncate
+                      ? words.slice(0, 200).join(' ') + '…'
+                      : plainText;
+
+                    return (
+                      <>
+                        {isExpanded ? (
+                          <div
+                            className="blog-post-body"
+                            dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }}
+                          />
+                        ) : (
+                          <p className="blog-post-body">
+                            {previewText}
+                          </p>
+                        )}
+                        {needsTruncate && (
+                          <button
+                            type="button"
+                            className="blog-read-more"
+                            onClick={() =>
+                              setExpandedPosts((prev) => ({
+                                ...prev,
+                                [post.id]: !isExpanded,
+                              }))
+                            }
+                          >
+                            {isExpanded ? 'See less' : 'See more'}
+                          </button>
+                        )}
+                      </>
+                    );
+                  })()}
                 </div>
               </article>
             ))}
