@@ -329,45 +329,43 @@
 }
 
 @media print {
+  /* Hide everything by default */
   body * {
-    visibility: hidden;
+    display: none !important;
   }
 
+  /* Show only the modal and its contents */
   .cm-modal,
   .cm-modal * {
-    visibility: visible;
+    display: block !important;
+    visibility: visible !important;
   }
 
   .cm-modal {
-    position: static;
-    transform: none;
-    box-shadow: none;
-    max-width: 100%;
-    width: 100%;
-    max-height: none;
-    border-radius: 0;
-    margin: 0;
-    padding: 0.5in 0.75in;
+    position: static !important;
+    transform: none !important;
+    box-shadow: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 0.5in 0.75in !important;
   }
 
-  .cm-modal-backdrop {
-    display: none !important;
-  }
-
+  .cm-modal-backdrop,
   .cm-modal-close {
     display: none !important;
   }
-}
 
-@page {
-  margin: 0.25in;
-}
-
-@media print {
   html,
   body {
     margin: 0;
     padding: 0;
+  }
+
+  @page {
+    margin: 0.25in;
   }
 }
 
