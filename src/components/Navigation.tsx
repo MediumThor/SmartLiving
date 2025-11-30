@@ -110,9 +110,6 @@ const Navigation = () => {
           </ul>
         </div>
       </nav>
-      {isMenuOpen && (
-        <div className="menu-backdrop" onClick={closeMenu}></div>
-      )}
     </>
   );
 };

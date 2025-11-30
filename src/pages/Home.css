@@ -399,6 +399,10 @@
 }
 
 @media (max-width: 968px) {
+  .hero-logo {
+    margin-top: 0; /* Reset negative margin on tablet/mobile */
+  }
+
   .hero-logo-img {
     max-height: 110px; /* 10% bigger: 100px * 1.1 = 110px */
   }
@@ -421,6 +425,11 @@
   .hero-image {
     height: 50vh;
     min-height: 400px;
+  }
+
+  .hero-logo {
+    margin-top: 0; /* Reset negative margin on mobile */
+    margin-bottom: 1rem; /* Add some spacing */
   }
 
   .hero-logo-img {

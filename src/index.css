@@ -26,6 +26,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background-color: #ffffff;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 a {
@@ -103,6 +105,8 @@ p {
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 /* Professional animations */
