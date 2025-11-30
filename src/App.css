@@ -8,4 +8,11 @@
 .main-content {
   flex: 1;
   background-color: #ffffff;
+  padding-top: 115px; /* Account for fixed header height */
+}
+
+@media (max-width: 968px) {
+  .main-content {
+    padding-top: 92px; /* Account for fixed header height on mobile */
+  }
 }
