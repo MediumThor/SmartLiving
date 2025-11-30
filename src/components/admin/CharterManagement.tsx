@@ -13,7 +13,7 @@ interface CharterInquiry {
   partySize: number;
   message: string;
   createdAt: any;
-  status: 'new' | 'contacted' | 'form-sent' | 'completed';
+  status: 'new' | 'contacted' | 'attn' | 'form-sent' | 'completed';
 }
 
 interface CharterRegistration {
@@ -26,6 +26,7 @@ interface CharterRegistration {
   createdAt: any;
   updatedAt: any;
   customerLinkPath?: string;
+  customerLink?: string;
   adminSummary?: string;
 }
 
@@ -366,34 +367,55 @@ const CharterManagement = () => {
     }
   };
 
-  const handleMarkInquirySeen = async (inq: CharterInquiry) => {
-    if (inq.status === 'contacted') return;
+  const handleStatusChange = async (inq: CharterInquiry) => {
+    let newStatus: 'contacted' | 'attn' = 'contacted';
+    
+    // Cycle: new → contacted, contacted → attn, attn → contacted
+    if (inq.status === 'new' || !inq.status) {
+      newStatus = 'contacted';
+    } else if (inq.status === 'contacted') {
+      newStatus = 'attn';
+    } else if (inq.status === 'attn') {
+      newStatus = 'contacted';
+    } else {
+      // Don't change status for form-sent or completed
+      return;
+    }
+    
     try {
       await setDoc(
         doc(db, 'charterInquiries', inq.id),
-        { status: 'contacted' },
+        { status: newStatus },
         { merge: true }
       );
       setInquiries(prev =>
-        prev.map(i => (i.id === inq.id ? { ...i, status: 'contacted' } : i))
+        prev.map(i => (i.id === inq.id ? { ...i, status: newStatus } : i))
       );
     } catch (error) {
-      console.error('Error marking inquiry as seen:', error);
-      alert('Failed to mark inquiry as seen.');
+      console.error('Error updating inquiry status:', error);
+      alert('Failed to update inquiry status.');
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    const statusMap: { [key: string]: { label: string; class: string } } = {
-      'new': { label: 'New', class: 'status-new' },
-      'contacted': { label: 'Seen', class: 'status-contacted' },
-      'form-sent': { label: 'Form Sent', class: 'status-sent' },
-      'completed': { label: 'Completed', class: 'status-completed' },
-      'draft': { label: 'Draft', class: 'status-draft' },
-      'sent': { label: 'Sent', class: 'status-sent' }
-    };
-    const statusInfo = statusMap[status] || { label: status, class: 'status-default' };
-    return <span className={`status-badge ${statusInfo.class}`}>{statusInfo.label}</span>;
+  const getStatusLabel = (status?: string) => {
+    if (!status || status === 'new') return 'New';
+    if (status === 'contacted') return 'Seen';
+    if (status === 'attn') return 'Attn';
+    if (status === 'form-sent') return 'Form Sent';
+    if (status === 'completed') return 'Completed';
+    if (status === 'draft') return 'Draft';
+    if (status === 'sent') return 'Sent';
+    return status;
+  };
+
+  const getStatusClass = (status?: string) => {
+    if (!status || status === 'new') return 'status-new';
+    if (status === 'contacted') return 'status-contacted';
+    if (status === 'attn') return 'status-attn';
+    if (status === 'form-sent') return 'status-sent';
+    if (status === 'completed') return 'status-completed';
+    if (status === 'draft') return 'status-draft';
+    return 'status-default';
   };
 
   if (loading) {
@@ -450,10 +472,11 @@ const CharterManagement = () => {
                     </div>
                     <button
                       type="button"
-                      className="status-badge-button"
-                      onClick={() => handleMarkInquirySeen(inquiry)}
+                      className={`status-badge-button ${getStatusClass(inquiry.status)}`}
+                      onClick={() => handleStatusChange(inquiry)}
+                      disabled={inquiry.status === 'form-sent' || inquiry.status === 'completed'}
                     >
-                      {getStatusBadge(inquiry.status)}
+                      {getStatusLabel(inquiry.status)}
                     </button>
                   </div>
                   <div className="inquiry-details">
@@ -516,7 +539,9 @@ const CharterManagement = () => {
                         <h3>Registration Form</h3>
                         <p className="registration-email">{reg.guestEmail || 'No email set'}</p>
                       </div>
-                      {getStatusBadge(effectiveStatus)}
+                      <span className={`status-badge-button ${getStatusClass(effectiveStatus)}`} style={{ pointerEvents: 'none' }}>
+                        {getStatusLabel(effectiveStatus)}
+                      </span>
                     </div>
                     <div className="registration-details">
                       <p>
@@ -538,9 +563,17 @@ const CharterManagement = () => {
                           {reg.lockedFields.chartererName && (
                             <p><strong>Guest:</strong> {reg.lockedFields.chartererName}</p>
                           )}
-                          {reg.customerLinkPath && (
+                          {(reg.customerLink || reg.customerLinkPath) && (
                             <p style={{ fontSize: '0.85rem', color: '#555' }}>
-                              <strong>Customer Link:</strong> {reg.customerLinkPath}
+                              <strong>Customer Link:</strong>{' '}
+                              <a 
+                                href={reg.customerLink || `https://www.briankendzor.com${reg.customerLinkPath}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ color: '#1a73e8', textDecoration: 'underline' }}
+                              >
+                                {reg.customerLink || `https://www.briankendzor.com${reg.customerLinkPath}`}
+                              </a>
                             </p>
                           )}
                         </div>
@@ -858,8 +891,18 @@ const CharterManagement = () => {
                         {hasGuestData && reg.guestData.fullName && (
                           <p><strong>Guest Name (submitted):</strong> {reg.guestData.fullName}</p>
                         )}
-                        {reg.customerLinkPath && (
-                          <p><strong>Customer Link Path:</strong> {reg.customerLinkPath}</p>
+                        {(reg.customerLink || reg.customerLinkPath) && (
+                          <p>
+                            <strong>Customer Link:</strong>{' '}
+                            <a 
+                              href={reg.customerLink || `https://www.briankendzor.com${reg.customerLinkPath}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ color: '#1a73e8', textDecoration: 'underline' }}
+                            >
+                              {reg.customerLink || `https://www.briankendzor.com${reg.customerLinkPath}`}
+                            </a>
+                          </p>
                         )}
                         <div className="cm-modal-actions">
                           <button

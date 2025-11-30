@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Navigation.css';
 
@@ -6,18 +6,34 @@ const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [sailingDropdownOpen, setSailingDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLLIElement>(null);
 
   const navItems = [
     { path: '/', label: 'Welcome' },
     { path: '/about', label: 'About Me' },
-    { path: '/sailing', label: 'Sailing' },
-    { path: '/charters', label: 'Charters' },
     { path: '/leadership', label: 'Leadership' },
     { path: '/wellness', label: 'Wellness' },
-    { path: '/connect', label: "Let's Connect" },
     { path: '/blog', label: 'Blog & Stories' },
-    { path: '/resources', label: 'Resources' },
   ];
+
+  const sailingSubItems = [
+    { path: '/sailing', label: 'Sailing' },
+    { path: '/charters', label: 'Charters' },
+    { path: '/lessons', label: 'Lessons' },
+    { path: '/deliveries', label: 'Deliveries' },
+  ];
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setSailingDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -65,6 +81,32 @@ const Navigation = () => {
                 </Link>
               </li>
             ))}
+            <li 
+              ref={dropdownRef}
+              className="nav-dropdown"
+              onMouseEnter={() => !window.matchMedia('(max-width: 968px)').matches && setSailingDropdownOpen(true)}
+              onMouseLeave={() => !window.matchMedia('(max-width: 968px)').matches && setSailingDropdownOpen(false)}
+            >
+              <span 
+                className={`nav-dropdown-toggle ${['/sailing', '/charters', '/lessons', '/deliveries'].includes(location.pathname) ? 'active' : ''}`}
+                onClick={() => window.matchMedia('(max-width: 968px)').matches && setSailingDropdownOpen(!sailingDropdownOpen)}
+              >
+                Sailing
+              </span>
+              <ul className={`nav-dropdown-menu ${sailingDropdownOpen ? 'open' : ''}`}>
+                {sailingSubItems.map((item) => (
+                  <li key={item.path}>
+                    <Link
+                      to={item.path}
+                      className={location.pathname === item.path ? 'active' : ''}
+                      onClick={closeMenu}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
           </ul>
         </div>
       </nav>

@@ -2,6 +2,49 @@
   width: 100%;
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.section-header h2 {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.section-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sort-dropdown {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background-color: white;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.sort-dropdown:hover {
+  border-color: #1a73e8;
+}
+
+.sort-dropdown:focus {
+  outline: none;
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+}
+
 .view-tabs {
   display: flex;
   gap: 0.5rem;
@@ -104,19 +147,15 @@
   flex-wrap: wrap;
 }
 
-.status-badge {
+.status-badge-button {
   padding: 0.25rem 0.75rem;
-  border-radius: 12px;
+  border-radius: 4px;
   font-size: 0.85rem;
   font-weight: 500;
   white-space: nowrap;
-}
-
-.status-badge-button {
-  background: transparent;
   border: none;
-  padding: 0;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .status-badge-button:disabled {
@@ -126,11 +165,20 @@
 .status-new {
   background-color: #dbeafe;
   color: #1e40af;
+  border-radius: 4px;
 }
 
 .status-contacted {
+  background-color: #d1fae5;
+  color: #065f46;
+  border-radius: 4px;
+}
+
+.status-attn {
   background-color: #fef3c7;
   color: #92400e;
+  border-radius: 4px;
+  font-weight: 600;
 }
 
 .status-sent {

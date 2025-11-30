@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './Page.css';
 
 const Sailing = () => {
@@ -49,37 +50,67 @@ const Sailing = () => {
                 alt="Sailing Freedom" 
               />
             </div>
-            <h2>The Freedom of the Open Water</h2>
-            <p>
-              There's something uniquely liberating about being on the water, harnessing the 
-              wind, and navigating by skill and intuition.
-            </p>
+            <div className="column-card-content">
+              <h2>The Freedom of the Open Water</h2>
+              <p>
+                There's something uniquely liberating about being on the water, harnessing the 
+                wind, and navigating by skill and intuition.
+              </p>
+              <p style={{ marginTop: '1rem' }}>
+                Experience the ultimate sailing adventure with our Caribbean sailing charters. 
+                Join us for hands-on sailing experiences, explore beautiful destinations, and 
+                become part of a real crew sailing through some of the most beautiful waters 
+                in the world.
+              </p>
+            </div>
+            <div className="column-card-button">
+              <Link to="/charters" className="charters-cta-button">
+                Explore Charters
+              </Link>
+            </div>
           </div>
           <div className="column-card">
             <div className="column-image">
               <img 
-                src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                alt="Sailing Lessons" 
+                src="/ASA.png" 
+                alt="ASA Certified Instructor" 
+                style={{ objectFit: 'contain', backgroundColor: '#f8f9fa' }}
               />
             </div>
-            <h2>Lessons from the Sea</h2>
-            <p>
-              Sailing teaches you to read conditions, adapt to change, and work as part of a team. 
-              These lessons translate directly to life on land.
-            </p>
+            <div className="column-card-content">
+              <h2>Lessons</h2>
+              <p>
+                Learn to sail with personalized instruction from an ASA certified instructor. 
+                Whether you're a complete beginner or looking to refine your skills, I offer 
+                hands-on lessons that build confidence and competence on the water.
+              </p>
+            </div>
+            <div className="column-card-button">
+              <Link to="/lessons" className="charters-cta-button">
+                Learn More
+              </Link>
+            </div>
           </div>
           <div className="column-card">
             <div className="column-image">
               <img 
                 src="https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                alt="Sailing Adventure" 
+                alt="Boat Deliveries" 
               />
             </div>
-            <h2>Adventures and Experiences</h2>
-            <p>
-              From coastal cruises to regatta racing, each sailing experience offers new challenges 
-              and rewards.
-            </p>
+            <div className="column-card-content">
+              <h2>Deliveries</h2>
+              <p>
+                Professional boat delivery services for sailboats and powerboats. Whether you're 
+                moving your vessel to a new home port, need transport for a charter, or require 
+                delivery for a purchase, I provide safe, reliable, and experienced delivery services.
+              </p>
+            </div>
+            <div className="column-card-button">
+              <Link to="/deliveries" className="charters-cta-button">
+                Learn More
+              </Link>
+            </div>
           </div>
         </div>
 

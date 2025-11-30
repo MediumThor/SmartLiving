@@ -86,6 +86,30 @@
   border-bottom-color: #1a73e8;
 }
 
+.tab-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.notification-badge {
+  background-color: #dc3545;
+  color: white;
+  border-radius: 12px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 20px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.notification-badge-attn {
+  background-color: #fbbf24;
+  color: #92400e;
+  border: 2px solid #f59e0b;
+}
+
 .dashboard-content {
   background: white;
   border-radius: 8px;

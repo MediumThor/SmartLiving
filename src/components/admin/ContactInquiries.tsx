@@ -11,12 +11,13 @@ interface ContactMessage {
   subject: string;
   message: string;
   createdAt: any;
-  status?: 'new' | 'read';
+  status?: 'new' | 'read' | 'attn';
 }
 
 const ContactInquiries = () => {
   const [contacts, setContacts] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filterBy, setFilterBy] = useState<string>('all');
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -40,6 +41,22 @@ const ContactInquiries = () => {
     fetchContacts();
   }, []);
 
+  // Get unique subjects from all contacts
+  const uniqueSubjects = Array.from(new Set(contacts.map(c => c.subject).filter(Boolean))).sort();
+
+  // Filter and sort contacts
+  const filteredContacts = [...contacts]
+    .filter(contact => {
+      if (filterBy === 'all') return true;
+      return contact.subject === filterBy;
+    })
+    .sort((a, b) => {
+      // Always sort by date (newest first)
+      const aDate = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
+      const bDate = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
+      return bDate - aDate; // Descending order (newest first)
+    });
+
   const handleDeleteContact = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this inquiry?')) return;
     try {
@@ -51,21 +68,45 @@ const ContactInquiries = () => {
     }
   };
 
-  const handleMarkSeen = async (contact: ContactMessage) => {
-    if (contact.status === 'read') return;
+  const handleStatusChange = async (contact: ContactMessage) => {
+    let newStatus: 'read' | 'attn' = 'read';
+    
+    // Cycle: new → read, read → attn, attn → read
+    if (!contact.status || contact.status === 'new') {
+      newStatus = 'read';
+    } else if (contact.status === 'read') {
+      newStatus = 'attn';
+    } else if (contact.status === 'attn') {
+      newStatus = 'read';
+    }
+    
     try {
       await setDoc(
         doc(db, 'contactMessages', contact.id),
-        { status: 'read' },
+        { status: newStatus },
         { merge: true }
       );
       setContacts(prev =>
-        prev.map(c => (c.id === contact.id ? { ...c, status: 'read' } : c))
+        prev.map(c => (c.id === contact.id ? { ...c, status: newStatus } : c))
       );
     } catch (error) {
-      console.error('Error marking contact as seen:', error);
-      alert('Failed to mark contact as seen.');
+      console.error('Error updating contact status:', error);
+      alert('Failed to update contact status.');
     }
+  };
+
+  const getStatusLabel = (status?: string) => {
+    if (!status || status === 'new') return 'New';
+    if (status === 'read') return 'Seen';
+    if (status === 'attn') return 'Attn';
+    return 'New';
+  };
+
+  const getStatusClass = (status?: string) => {
+    if (!status || status === 'new') return 'status-new';
+    if (status === 'read') return 'status-contacted';
+    if (status === 'attn') return 'status-attn';
+    return 'status-new';
   };
 
   if (loading) {
@@ -76,6 +117,22 @@ const ContactInquiries = () => {
     <div className="charter-management">
       <div className="section-header">
         <h2>Contact Inquiries</h2>
+        <div className="section-header-controls">
+          <label htmlFor="filter-by" style={{ marginRight: '0.5rem', fontSize: '0.9rem', color: '#666' }}>
+            Filter by:
+          </label>
+          <select
+            id="filter-by"
+            value={filterBy}
+            onChange={(e) => setFilterBy(e.target.value)}
+            className="sort-dropdown"
+          >
+            <option value="all">All (by date)</option>
+            {uniqueSubjects.map(subject => (
+              <option key={subject} value={subject}>{subject}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="registrations-section">
@@ -83,24 +140,28 @@ const ContactInquiries = () => {
           <div className="empty-state">
             <p>No contact inquiries yet.</p>
           </div>
+        ) : filteredContacts.length === 0 ? (
+          <div className="empty-state">
+            <p>No inquiries found for the selected filter.</p>
+          </div>
         ) : (
           <div className="registrations-list">
-            {contacts.map(contact => (
+            {filteredContacts.map(contact => (
               <div key={contact.id} className="registration-card">
                 <div className="registration-header">
                   <div>
                     <h3>{contact.name || 'Unknown Contact'}</h3>
                     <p className="registration-email">{contact.email}</p>
                   </div>
-                  <button
-                    type="button"
-                    className="status-badge-button"
-                    onClick={() => handleMarkSeen(contact)}
-                  >
-                    <span className="status-badge status-new">
-                      {contact.status === 'read' ? 'Seen' : 'New'}
-                    </span>
-                  </button>
+                  <div className="status-badge-container">
+                    <button
+                      type="button"
+                      className={`status-badge-button ${getStatusClass(contact.status)}`}
+                      onClick={() => handleStatusChange(contact)}
+                    >
+                      {getStatusLabel(contact.status)}
+                    </button>
+                  </div>
                 </div>
                 <div className="registration-details">
                   <p>

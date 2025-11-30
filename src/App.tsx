@@ -8,6 +8,8 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Sailing from './pages/Sailing';
 import Charters from './pages/Charters';
+import Lessons from './pages/Lessons';
+import Deliveries from './pages/Deliveries';
 import Leadership from './pages/Leadership';
 import Wellness from './pages/Wellness';
 import Connect from './pages/Connect';
@@ -57,6 +59,8 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/sailing" element={<Sailing />} />
               <Route path="/charters" element={<Charters />} />
+              <Route path="/lessons" element={<Lessons />} />
+              <Route path="/deliveries" element={<Deliveries />} />
               <Route path="/leadership" element={<Leadership />} />
               <Route path="/wellness" element={<Wellness />} />
               <Route path="/connect" element={<Connect />} />

@@ -7,12 +7,14 @@ import './CharterFormEditor.css';
 
 interface CharterFormData {
   // Charter Details
-  charterDate: string;
-  startTime: string;
+  charterStartDate: string;
+  charterStartTime: string;
+  charterEndDate: string;
+  charterEndTime: string;
   duration: string;
   charterType: string;
   partySize: number;
-  pickupLocation: string;
+  location: string;
 
   // Lead Guest
   fullName: string;
@@ -45,10 +47,6 @@ interface CharterFormData {
   sleepAboard: boolean;
   sleepFromTime: string;
   sleepFromDate: string;
-  charterFromTime: string;
-  charterFromDate: string;
-  charterToTime: string;
-  charterToDate: string;
   totalNights: number;
   numInParty: number;
   paxNotes: string;
@@ -80,12 +78,14 @@ interface CharterFormData {
 // These are stored in lockedFields and rendered read-only on the guest side.
 const CAPTAIN_LOCKED_FIELDS = [
   // Charter details
-  'charterDate',
-  'startTime',
+  'charterStartDate',
+  'charterStartTime',
+  'charterEndDate',
+  'charterEndTime',
   'duration',
   'charterType',
   'partySize',
-  'pickupLocation',
+  'location',
 
   // Lead guest / contract header (as set by the owner)
   'fullName',
@@ -103,10 +103,6 @@ const CAPTAIN_LOCKED_FIELDS = [
   'sleepAboard',
   'sleepFromTime',
   'sleepFromDate',
-  'charterFromTime',
-  'charterFromDate',
-  'charterToTime',
-  'charterToDate',
   'totalNights',
   'numInParty',
   'paxNotes',
@@ -135,12 +131,14 @@ const CharterFormEditor = () => {
   const isEditing = !!id;
 
   const [formData, setFormData] = useState<CharterFormData>({
-    charterDate: '',
-    startTime: '',
+    charterStartDate: '',
+    charterStartTime: '',
+    charterEndDate: '',
+    charterEndTime: '',
     duration: '',
     charterType: '',
     partySize: 1,
-    pickupLocation: '',
+    location: '',
     fullName: '',
     preferredName: '',
     email: '',
@@ -163,10 +161,6 @@ const CharterFormEditor = () => {
     sleepAboard: false,
     sleepFromTime: '',
     sleepFromDate: '',
-    charterFromTime: '12:00',
-    charterFromDate: '',
-    charterToTime: '12:00',
-    charterToDate: '',
     totalNights: 0,
     numInParty: 0,
     paxNotes: '',
@@ -205,13 +199,51 @@ const CharterFormEditor = () => {
     }
   }, [id, inquiryId, isEditing]);
 
+  // Initialize Google Places Autocomplete for address and location fields
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (window as any).google) {
+      // Initialize address autocomplete
+      const addressInput = document.getElementById('address-input') as HTMLInputElement;
+      if (addressInput) {
+        const addressAutocomplete = new (window as any).google.maps.places.Autocomplete(addressInput, {
+          types: ['address'],
+          componentRestrictions: { country: ['us', 'vg', 'vi'] } // US, British Virgin Islands, US Virgin Islands
+        });
+        addressAutocomplete.addListener('place_changed', () => {
+          const place = addressAutocomplete.getPlace();
+          if (place.formatted_address) {
+            handleChange('address', place.formatted_address);
+          }
+        });
+      }
+
+      // Initialize location autocomplete
+      const locationInput = document.getElementById('location-input') as HTMLInputElement;
+      if (locationInput) {
+        const locationAutocomplete = new (window as any).google.maps.places.Autocomplete(locationInput, {
+          types: ['establishment', 'geocode'],
+          componentRestrictions: { country: ['us', 'vg', 'vi'] }
+        });
+        locationAutocomplete.addListener('place_changed', () => {
+          const place = locationAutocomplete.getPlace();
+          if (place.formatted_address) {
+            handleChange('location', place.formatted_address);
+          } else if (place.name) {
+            handleChange('location', place.name);
+          }
+        });
+      }
+    }
+  }, [loading]);
+
   useEffect(() => {
     calculateTotals();
-    calculateNights();
+    calculateDuration();
   }, [formData.charterFee, formData.provisioning, formData.nationalParksFee, 
       formData.cruisingPermit, formData.fuelSurcharge, formData.visarDonation,
       formData.hotel, formData.instructorFee, formData.depositDue,
-      formData.charterFromDate, formData.charterToDate]);
+      formData.charterStartDate, formData.charterStartTime,
+      formData.charterEndDate, formData.charterEndTime]);
 
   const loadInquiry = async () => {
     try {
@@ -225,7 +257,7 @@ const CharterFormEditor = () => {
           phone: data.phone || '',
           fullName: customerName,
           chartererName: customerName, // Auto-populate charterer name from inquiry
-          charterDate: data.charterDate || '',
+          charterStartDate: data.charterDate || '',
           partySize: data.partySize || 1
         }));
       }
@@ -261,13 +293,36 @@ const CharterFormEditor = () => {
     }
   };
 
-  const calculateNights = () => {
-    if (formData.charterFromDate && formData.charterToDate) {
-      const from = new Date(formData.charterFromDate);
-      const to = new Date(formData.charterToDate);
-      const diff = Math.round((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24));
-      if (!isNaN(diff) && diff >= 0) {
-        setFormData(prev => ({ ...prev, totalNights: diff }));
+  const calculateDuration = () => {
+    if (formData.charterStartDate && formData.charterEndDate) {
+      const start = new Date(`${formData.charterStartDate}T${formData.charterStartTime || '00:00'}`);
+      const end = new Date(`${formData.charterEndDate}T${formData.charterEndTime || '00:00'}`);
+      const diffMs = end.getTime() - start.getTime();
+      
+      if (!isNaN(diffMs) && diffMs >= 0) {
+        const diffDays = diffMs / (1000 * 60 * 60 * 24);
+        const diffHours = diffMs / (1000 * 60 * 60);
+        
+        let durationText = '';
+        if (diffDays >= 1) {
+          const days = Math.floor(diffDays);
+          const hours = Math.round((diffDays - days) * 24);
+          durationText = days > 0 ? `${days} day${days !== 1 ? 's' : ''}` : '';
+          if (hours > 0 && days === 0) {
+            durationText = `${hours} hour${hours !== 1 ? 's' : ''}`;
+          } else if (hours > 0) {
+            durationText += ` ${hours} hour${hours !== 1 ? 's' : ''}`;
+          }
+        } else {
+          const hours = Math.round(diffHours);
+          durationText = `${hours} hour${hours !== 1 ? 's' : ''}`;
+        }
+        
+        setFormData(prev => ({ 
+          ...prev, 
+          duration: durationText,
+          totalNights: Math.ceil(diffDays)
+        }));
       }
     }
   };
@@ -441,12 +496,13 @@ const CharterFormEditor = () => {
       // Build and log the customer link so it's stored in Firestore for later reference
       if (formId) {
         const customerPath = `/charter-form/${formId}`;
-        const customerLink = `${window.location.origin}${customerPath}`;
+        const productionDomain = 'https://www.briankendzor.com';
+        const customerLink = `${productionDomain}${customerPath}`;
 
-        // Persist the link path on the registration document for admin reference
+        // Persist the full customer link on the registration document for admin reference
         await setDoc(
           doc(db, 'charterRegistrations', formId),
-          { customerLinkPath: customerPath },
+          { customerLinkPath: customerPath, customerLink: customerLink },
           { merge: true }
         );
       
@@ -544,29 +600,49 @@ const CharterFormEditor = () => {
           <legend>Charter Details</legend>
           <div className="form-grid">
             <div className="form-group">
-              <label>Charter Date *</label>
+              <label>Charter Start Date *</label>
               <input
                 type="date"
-                value={formData.charterDate}
-                onChange={(e) => handleChange('charterDate', e.target.value)}
+                value={formData.charterStartDate}
+                onChange={(e) => handleChange('charterStartDate', e.target.value)}
                 required
               />
             </div>
             <div className="form-group">
-              <label>Start Time</label>
+              <label>Charter Start Time *</label>
               <input
                 type="time"
-                value={formData.startTime}
-                onChange={(e) => handleChange('startTime', e.target.value)}
+                value={formData.charterStartTime}
+                onChange={(e) => handleChange('charterStartTime', e.target.value)}
+                required
               />
             </div>
             <div className="form-group">
-              <label>Duration</label>
+              <label>Charter End Date *</label>
+              <input
+                type="date"
+                value={formData.charterEndDate}
+                onChange={(e) => handleChange('charterEndDate', e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Charter End Time *</label>
+              <input
+                type="time"
+                value={formData.charterEndTime}
+                onChange={(e) => handleChange('charterEndTime', e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Duration (auto-calculated)</label>
               <input
                 type="text"
                 value={formData.duration}
-                onChange={(e) => handleChange('duration', e.target.value)}
-                placeholder="e.g., 1 day, 2.5 days"
+                readOnly
+                className="readonly"
+                placeholder="Will be calculated automatically"
               />
             </div>
             <div className="form-group">
@@ -597,12 +673,14 @@ const CharterFormEditor = () => {
               />
             </div>
             <div className="form-group full-width">
-              <label>Pickup / Meeting Location</label>
+              <label>Location *</label>
               <input
                 type="text"
-                value={formData.pickupLocation}
-                onChange={(e) => handleChange('pickupLocation', e.target.value)}
-                placeholder="Marina name, dock number, etc."
+                id="location-input"
+                value={formData.location}
+                onChange={(e) => handleChange('location', e.target.value)}
+                placeholder="Marina name, dock number, address, etc."
+                required
               />
             </div>
           </div>
@@ -651,8 +729,10 @@ const CharterFormEditor = () => {
               <label>Mailing Address</label>
               <input
                 type="text"
+                id="address-input"
                 value={formData.address}
                 onChange={(e) => handleChange('address', e.target.value)}
+                placeholder="Start typing your address..."
               />
             </div>
           </div>
@@ -707,24 +787,6 @@ const CharterFormEditor = () => {
                 value={formData.yachtName}
                 onChange={(e) => handleChange('yachtName', e.target.value)}
                 placeholder="e.g., Paire De Jaques"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Charter From Date *</label>
-              <input
-                type="date"
-                value={formData.charterFromDate}
-                onChange={(e) => handleChange('charterFromDate', e.target.value)}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Charter To Date *</label>
-              <input
-                type="date"
-                value={formData.charterToDate}
-                onChange={(e) => handleChange('charterToDate', e.target.value)}
                 required
               />
             </div>

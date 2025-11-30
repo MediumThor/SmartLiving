@@ -59,20 +59,9 @@ const ContactForm = () => {
 
   return (
     <div className="contact-form-container">
-      <h2>CONNECT WITH ME</h2>
       <p className="form-description">
         I am excited to connect with you. Fill out the contact form and I'll reach out as soon as I can.
       </p>
-      <div className="contact-info-top">
-        <p>
-          <a href="mailto:healthywealthyandwise@briankendzor.com">
-            healthywealthyandwise@briankendzor.com
-          </a>
-        </p>
-        <p>
-          <a href="tel:414-522-1918">414-522-1918</a>
-        </p>
-      </div>
       
       <form onSubmit={handleSubmit} className="contact-form">
         <div className="form-group">
@@ -124,6 +113,8 @@ const ContactForm = () => {
           >
             <option value="General Question">General Question</option>
             <option value="Sailing Charter Inquiry">Sailing Charter Inquiry</option>
+            <option value="Sailing Lessons">Sailing Lessons</option>
+            <option value="Boat Deliveries">Boat Deliveries</option>
             <option value="Leadership & Coaching">Leadership & Coaching</option>
             <option value="Wellness & Smart Living">Wellness & Smart Living</option>
             <option value="Speaking / Workshops">Speaking / Workshops</option>
@@ -139,7 +130,7 @@ const ContactForm = () => {
             value={formData.message}
             onChange={handleChange}
             required
-            rows={6}
+            rows={5}
             placeholder="Your message..."
           />
         </div>

@@ -62,13 +62,20 @@
   margin-bottom: 0.75rem;
 }
 
-.hero-content h1 {
-  font-size: 4.5rem;
+.hero-logo {
   margin-bottom: 1.5rem;
-  color: white;
-  font-weight: 800;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  letter-spacing: -0.02em;
+  margin-top: -10vh; /* Move logo 20% higher (10vh ≈ 20% of typical viewport) */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-logo-img {
+  max-width: 100%;
+  height: auto;
+  width: auto;
+  max-height: 132px; /* 10% bigger: 120px * 1.1 = 132px */
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .hero-description {
@@ -91,25 +98,28 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.85rem 1.8rem;
+  padding: clamp(0.75rem, 1.5vw, 0.85rem) clamp(1.5rem, 3vw, 1.8rem);
   border-radius: 999px;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: clamp(0.85rem, 1.8vw, 0.95rem);
   text-decoration: none;
   border: 1px solid transparent;
   transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: fit-content;
+  width: auto;
+  box-sizing: border-box;
 }
 
 .hero-button.primary {
-  background-color: #1a73e8;
+  background-color: rgba(255, 255, 255, 0.08);
   color: white;
-  border-color: #1a73e8;
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .hero-button.primary:hover {
-  background-color: #1557b0;
-  border-color: #1557b0;
-  box-shadow: 0 8px 20px rgba(26, 115, 232, 0.35);
+  background-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 6px 16px rgba(127, 205, 205, 0.4);
   transform: translateY(-1px);
 }
 
@@ -121,8 +131,43 @@
 
 .hero-button.secondary:hover {
   background-color: rgba(255, 255, 255, 0.16);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 16px rgba(127, 205, 205, 0.4);
   transform: translateY(-1px);
+}
+
+@media (max-width: 968px) {
+  .hero-button {
+    padding: clamp(0.7rem, 2vw, 0.8rem) clamp(1.3rem, 3.5vw, 1.6rem);
+    font-size: clamp(0.8rem, 2.2vw, 0.9rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-button {
+    padding: clamp(0.65rem, 2.5vw, 0.75rem) clamp(1.2rem, 4vw, 1.5rem);
+    font-size: clamp(0.75rem, 2.8vw, 0.85rem);
+    white-space: normal;
+    word-wrap: break-word;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .hero-button {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero-button {
+    padding: clamp(0.6rem, 3vw, 0.7rem) clamp(1rem, 4.5vw, 1.3rem);
+    font-size: clamp(0.7rem, 3.2vw, 0.8rem);
+  }
 }
 
 /* CTA Section */
@@ -154,6 +199,8 @@
   border: 1px solid #e8e8e8;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .cta-card::before {
@@ -163,7 +210,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #1a73e8, #1557b0);
+  background: linear-gradient(90deg, #7FCDCD, #6BB3B3);
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
@@ -175,7 +222,7 @@
 .cta-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
-  border-color: #1a73e8;
+  border-color: #7FCDCD;
 }
 
 .cta-icon {
@@ -193,39 +240,92 @@
 
 .cta-card p {
   color: #666;
-  margin-bottom: 2rem;
+  margin-bottom: auto;
   line-height: 1.7;
   font-size: 1rem;
 }
 
 .cta-button {
-  padding: 8px 18px;
-  background-color: #1a73e8;
-  color: white;
+  display: inline-block;
+  padding: clamp(0.91rem, 1.56vw, 0.975rem) clamp(1.56rem, 3.25vw, 1.95rem);
+  background-color: #7FCDCD !important;
+  color: white !important;
   border: none;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 6px;
+  font-size: clamp(0.56rem, 1.12vw, 0.72rem);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  text-decoration: none !important;
+  text-align: center;
+  white-space: nowrap;
+  box-sizing: border-box;
+  min-width: fit-content;
   width: auto;
-  max-width: 180px;
-  white-space: normal;
+  max-width: 100%;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  margin-top: auto;
 }
 
 .cta-button:hover {
-  background-color: #1557b0;
+  background-color: #6BB3B3 !important;
+  color: white !important;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+  box-shadow: 0 4px 12px rgba(127, 205, 205, 0.4);
 }
 
 .cta-button-small {
-  padding: 6px 14px;
-  font-size: 11px;
-  max-width: 130px;
-  text-align: center;
+  padding: clamp(0.78rem, 1.43vw, 0.845rem) clamp(1.3rem, 2.86vw, 1.625rem);
+  font-size: clamp(0.52rem, 1.04vw, 0.64rem);
+}
+
+@media (max-width: 968px) {
+  .cta-button {
+    padding: clamp(0.845rem, 2.6vw, 0.91rem) clamp(1.43rem, 3.9vw, 1.69rem);
+    font-size: clamp(0.52rem, 1.44vw, 0.68rem);
+  }
+  
+  .cta-button-small {
+    padding: clamp(0.715rem, 2.34vw, 0.78rem) clamp(1.235rem, 3.64vw, 1.43rem);
+    font-size: clamp(0.48rem, 1.28vw, 0.6rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .cta-button {
+    padding: clamp(0.78rem, 3.25vw, 0.845rem) clamp(1.3rem, 4.55vw, 1.56rem);
+    font-size: clamp(0.52rem, 1.76vw, 0.64rem);
+    white-space: normal;
+    word-wrap: break-word;
+    width: auto;
+    min-width: 120px;
+  }
+  
+  .cta-button-small {
+    padding: clamp(0.715rem, 2.86vw, 0.78rem) clamp(1.17rem, 4.16vw, 1.3rem);
+    font-size: clamp(0.48rem, 1.6vw, 0.56rem);
+    min-width: 100px;
+  }
+}
+
+@media (max-width: 400px) {
+  .cta-button {
+    padding: clamp(0.715rem, 3.9vw, 0.78rem) clamp(1.17rem, 5.2vw, 1.3rem);
+    font-size: clamp(0.48rem, 2.24vw, 0.6rem);
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+  }
+  
+  .cta-button-small {
+    padding: clamp(0.65rem, 3.64vw, 0.715rem) clamp(1.04rem, 4.94vw, 1.17rem);
+    font-size: clamp(0.44rem, 2.08vw, 0.52rem);
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 /* Social Section */
@@ -299,8 +399,8 @@
 }
 
 @media (max-width: 968px) {
-  .hero-content h1 {
-    font-size: 3rem;
+  .hero-logo-img {
+    max-height: 110px; /* 10% bigger: 100px * 1.1 = 110px */
   }
 
   .hero-description {
@@ -323,8 +423,8 @@
     min-height: 400px;
   }
 
-  .hero-content h1 {
-    font-size: 2.5rem;
+  .hero-logo-img {
+    max-height: 88px; /* 10% bigger: 80px * 1.1 = 88px */
   }
 
   .hero-description {

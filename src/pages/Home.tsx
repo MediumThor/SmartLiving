@@ -79,13 +79,22 @@ const Home = () => {
           >
             <div className="image-overlay">
               <div className="hero-content">
-                <p className="hero-eyebrow">Smart Living • Sailing • Leadership • Wellness</p>
-                <h1>WELCOME</h1>
+                <div className="hero-logo">
+                  <img src="/logo.avif" alt="Smart Living Logo" className="hero-logo-img" />
+                </div>
                 <p className="hero-description">
                   Intentional living on and off the water. Explore charters, leadership coaching, and 
                   wellness experiences designed to help you live fully and thoughtfully.
                 </p>
                 <div className="hero-actions">
+                  <button
+                    onClick={() => {
+                      document.getElementById('connect')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }}
+                    className="hero-button primary"
+                  >
+                    Connect
+                  </button>
                   <Link to="/charters" className="hero-button primary">
                     Explore Charters
                   </Link>
@@ -115,13 +124,13 @@ const Home = () => {
         <div className="cta-container">
           <div className="cta-card">
             <span className="cta-icon">⛵</span>
-            <h2>Sailing Experiences</h2>
+            <h2>Sailing</h2>
             <p>
               Join us on the water for hands-on sailing adventures, private instruction, and immersive 
               charters tailored to your crew.
             </p>
             <Link to="/sailing" className="cta-button">
-              Discover Sailing
+             Sailing
             </Link>
           </div>
           <div className="cta-card">
@@ -143,7 +152,7 @@ const Home = () => {
               healthy, wealthy, and wise.
             </p>
             <Link to="/wellness" className="cta-button cta-button-small">
-              Visit Wellness
+             Wellness
             </Link>
           </div>
         </div>
@@ -151,19 +160,7 @@ const Home = () => {
 
   
 
-      {/* Social Links Section */}
-      <section className="social-section">
-        <div className="social-container">
-          <a href="#" target="_blank" rel="noopener noreferrer" className="social-link">
-            <span className="social-icon">📘</span>
-            <span>Facebook</span>
-          </a>
-          <a href="#" target="_blank" rel="noopener noreferrer" className="social-link">
-            <span className="social-icon">🐦</span>
-            <span>Twitter</span>
-          </a>
-        </div>
-      </section>
+   
 
       {/* Contact Section */}
       <section className="contact-section" id="connect">

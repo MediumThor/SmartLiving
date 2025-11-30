@@ -58,6 +58,36 @@ service cloud.firestore {
                      (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['guestData', 'status', 'updatedAt'])); // Customer can only update guestData
       allow delete: if request.auth != null;
     }
+    
+    // Contact messages - public create, admin read/write
+    match /contactMessages/{messageId} {
+      allow create: if true;
+      allow read, write: if request.auth != null;
+    }
+    
+    // Lesson inquiries - public create, admin read/write
+    match /lessonInquiries/{inquiryId} {
+      allow create: if true;
+      allow read, write: if request.auth != null;
+    }
+    
+    // Slideshow images - public read, admin write
+    match /slideshowImages/{imageId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Home slideshow images - public read, admin write
+    match /homeSlideshowImages/{imageId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Headshots - public read, admin write
+    match /headshots/{headshotId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
   }
 }
 ```
@@ -113,6 +143,11 @@ npm install
 - `pageContent` - Page text content (heroTitle, section1Title, etc.)
 - `charterInquiries` - Public charter inquiries from customers
 - `charterRegistrations` - Charter registration forms (lockedFields, guestData, status)
+- `contactMessages` - General contact form submissions
+- `lessonInquiries` - Lesson inquiry form submissions
+- `slideshowImages` - Images for Charters page slideshow
+- `homeSlideshowImages` - Images for Home page slideshow
+- `headshots` - Headshot images for About Me page
 
 ## Access Admin Panel
 

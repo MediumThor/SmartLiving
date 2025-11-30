@@ -72,6 +72,12 @@
   gap: 0.5rem;
 }
 
+.social-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
 .social-links a:hover {
   background-color: #1a73e8;
   border-color: #1a73e8;

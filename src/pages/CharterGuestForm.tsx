@@ -22,6 +22,25 @@ const CharterGuestForm = () => {
     loadForm();
   }, [id]);
 
+  // Initialize Google Places Autocomplete for address field
+  useEffect(() => {
+    if (!loading && typeof window !== 'undefined' && (window as any).google) {
+      const addressInput = document.getElementById('guest-address-input') as HTMLInputElement;
+      if (addressInput) {
+        const addressAutocomplete = new (window as any).google.maps.places.Autocomplete(addressInput, {
+          types: ['address'],
+          componentRestrictions: { country: ['us', 'vg', 'vi'] }
+        });
+        addressAutocomplete.addListener('place_changed', () => {
+          const place = addressAutocomplete.getPlace();
+          if (place.formatted_address) {
+            handleChange('address', place.formatted_address);
+          }
+        });
+      }
+    }
+  }, [loading]);
+
   // If opened with ?print=1, auto-trigger browser print once the form is loaded
   useEffect(() => {
     const shouldPrint = searchParams.get('print') === '1';
@@ -102,8 +121,12 @@ const CharterGuestForm = () => {
             ? formData.guests.map((g: any) => (typeof g === 'string' ? g.trim() : '')).filter(Boolean)
             : [],
           charterType: formData.charterType || lockedFields.charterType || '',
-          charterDate: formData.charterDate || lockedFields.charterDate || lockedFields.charterFromDate || '',
-          startTime: formData.startTime || lockedFields.startTime || lockedFields.charterFromTime || '',
+          charterStartDate: formData.charterStartDate || lockedFields.charterStartDate || '',
+          charterStartTime: formData.charterStartTime || lockedFields.charterStartTime || '',
+          charterEndDate: formData.charterEndDate || lockedFields.charterEndDate || '',
+          charterEndTime: formData.charterEndTime || lockedFields.charterEndTime || '',
+          duration: formData.duration || lockedFields.duration || '',
+          location: formData.location || lockedFields.location || '',
           partySize: formData.partySize || lockedFields.partySize || 1
         },
         status: 'completed',
@@ -155,23 +178,52 @@ const CharterGuestForm = () => {
           <legend>Charter Details</legend>
           <div className="form-grid">
             <div className="form-group">
-              <label>Charter Date *</label>
+              <label>Charter Start Date *</label>
               <input
                 type="date"
-                value={lockedFields.charterDate || lockedFields.charterFromDate || formData.charterDate || ''}
-                onChange={(e) => handleChange('charterDate', e.target.value)}
-                disabled={!!(lockedFields.charterDate || lockedFields.charterFromDate)}
+                value={lockedFields.charterStartDate || formData.charterStartDate || ''}
+                onChange={(e) => handleChange('charterStartDate', e.target.value)}
+                disabled={!!lockedFields.charterStartDate}
                 required
               />
             </div>
             <div className="form-group">
-              <label>Start Time *</label>
+              <label>Charter Start Time *</label>
               <input
                 type="time"
-                value={lockedFields.startTime || lockedFields.charterFromTime || formData.startTime || ''}
-                onChange={(e) => handleChange('startTime', e.target.value)}
-                disabled={!!(lockedFields.startTime || lockedFields.charterFromTime)}
+                value={lockedFields.charterStartTime || formData.charterStartTime || ''}
+                onChange={(e) => handleChange('charterStartTime', e.target.value)}
+                disabled={!!lockedFields.charterStartTime}
                 required
+              />
+            </div>
+            <div className="form-group">
+              <label>Charter End Date *</label>
+              <input
+                type="date"
+                value={lockedFields.charterEndDate || formData.charterEndDate || ''}
+                onChange={(e) => handleChange('charterEndDate', e.target.value)}
+                disabled={!!lockedFields.charterEndDate}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Charter End Time *</label>
+              <input
+                type="time"
+                value={lockedFields.charterEndTime || formData.charterEndTime || ''}
+                onChange={(e) => handleChange('charterEndTime', e.target.value)}
+                disabled={!!lockedFields.charterEndTime}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Duration</label>
+              <input
+                type="text"
+                value={lockedFields.duration || formData.duration || ''}
+                disabled
+                className="readonly"
               />
             </div>
             <div className="form-group">
@@ -200,6 +252,15 @@ const CharterGuestForm = () => {
                 disabled={!!lockedFields.partySize}
                 min="1"
                 max="14"
+                required
+              />
+            </div>
+            <div className="form-group full-width">
+              <label>Location *</label>
+              <input
+                type="text"
+                value={lockedFields.location || formData.location || ''}
+                disabled={!!lockedFields.location}
                 required
               />
             </div>
@@ -238,12 +299,14 @@ const CharterGuestForm = () => {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className="form-group full-width">
               <label>Mailing Address</label>
               <input
                 type="text"
+                id="guest-address-input"
                 value={formData.address || ''}
                 onChange={(e) => handleChange('address', e.target.value)}
+                placeholder="Start typing your address..."
               />
             </div>
           </div>
@@ -279,18 +342,6 @@ const CharterGuestForm = () => {
                 <div className="form-group">
                   <label>Yacht Name</label>
                   <input type="text" value={lockedFields.yachtName} disabled />
-                </div>
-              )}
-              {lockedFields.charterFromDate && (
-                <div className="form-group">
-                  <label>Charter From Date</label>
-                  <input type="date" value={lockedFields.charterFromDate} disabled />
-                </div>
-              )}
-              {lockedFields.charterToDate && (
-                <div className="form-group">
-                  <label>Charter To Date</label>
-                  <input type="date" value={lockedFields.charterToDate} disabled />
                 </div>
               )}
               {lockedFields.charterFee && (
