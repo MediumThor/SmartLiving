@@ -423,8 +423,16 @@
 
 @media (max-width: 640px) {
   .hero-image {
-    height: 50vh;
-    min-height: 400px;
+    height: 55vh;
+    min-height: 450px;
+  }
+
+  .hero-content {
+    padding-bottom: 1rem;
+  }
+
+  .hero-actions {
+    margin-top: 1.5rem;
   }
 
   .hero-logo {

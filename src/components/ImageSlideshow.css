@@ -16,6 +16,7 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 2rem;
 }
 
 .slideshow {
@@ -120,6 +121,10 @@
 }
 
 @media (max-width: 968px) {
+  .slideshow-wrapper {
+    padding: 0 1.5rem;
+  }
+
   .slideshow {
     height: 400px;
   }
@@ -140,6 +145,10 @@
 }
 
 @media (max-width: 640px) {
+  .slideshow-wrapper {
+    padding: 0 1rem;
+  }
+
   .slideshow {
     height: 300px;
   }
