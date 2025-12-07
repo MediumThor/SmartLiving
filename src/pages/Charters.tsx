@@ -60,40 +60,32 @@ const Charters = () => {
 
   const itinerary = [
     {
-      day: 'Day 0-1',
-      title: 'ARRIVAL',
-      date: 'MARCH 21-22',
-      description: 'Arrive at the marina. You\'ll find the yacht docked and ready for your arrival. Those interested may join in on a delivery sail to get comfortable aboard before the adventure begins. Spend the night at the marina.',
+      day: 'Day 0 - 1',
+      description: 'Arrival in at Marina. Embark on yacht and get settled in. Inventory provisions with Captain and stow. Review all accommodations onboard. Dinner out and discuss what all crew want to see/do so Captain can choose the proper anchorages for everyone to have their best experience.',
     },
     {
-      day: 'Day 2',
-      title: 'TRAINING DAY',
-      date: 'MARCH 23, 2026',
-      description: 'Get familiar with the yacht\'s systems, sails, and crew. Practice sail handling, navigation, and teamwork in preparation for the week ahead.',
+      day: 'Day 1 - 2',
+      description: 'Breakfast onboard or ashore. Opportunity to visit the market for specialty food items needed, adult beverages and any other needs that are not in the provisions. Set sail late morning for Cooper island. Moore in picturesque cove for lunch, snorkeling, paddle boarding, etc. Depart and set sail for Marina Cay. / Scrub Island, secure overnight mooring, swimming, snorkeling, paddle boarding, etc. Dingy ashore for dinner, shopping, and sailing nightlife.',
     },
     {
-      day: 'Day 3',
-      title: 'ISLAND HOPPING',
-      date: 'MARCH 24, 2026',
-      description: 'Set sail to your first destination. Enjoy scenic sailing, anchor in a beautiful bay, and experience the freedom of life on the water.',
+      day: 'Day 2 - 3',
+      description: 'Depart for south Virgin Gorda to visit The Baths. Lunch onboard, then sail to north Virgin Gorda. Secure overnight mooring, swimming, snorkeling, paddle boarding, etc. Study for ASA students. Dingy ashore for dinner, shopping, and sailing nightlife.',
     },
     {
-      day: 'Day 4',
-      title: 'EXPLORATION DAY',
-      date: 'MARCH 25, 2026',
-      description: 'A full day of exploration. Visit pristine beaches, snorkel in crystal-clear waters, and experience the local culture and cuisine.',
+      day: 'Day 3 - 4',
+      description: 'Breakfast onboard. Depart for sail to Anagada Island. Lunch onboard or ashore. Secure overnight mooring, swimming, snorkeling, paddle boarding, etc. Study for ASA students. Dingy ashore for touring Island, shopping, dinner, and sailing nightlife.',
     },
     {
-      day: 'Day 5',
-      title: 'LAY DAY',
-      date: 'MARCH 26, 2026',
-      description: 'Relax, explore the area, or enjoy the beach. Take time to unwind and soak in the experience before continuing the journey.',
+      day: 'Day 4 - 5',
+      description: 'Breakfast onboard, swimming, snorkeling, paddle boarding, etc. Depart for sail to Jost Van Dyke. Secure overnight mooring, swimming, snorkeling, paddle boarding, etc. Study for ASA students. Dingy ashore for touring Island, shopping, dinner, and sailing nightlife.',
     },
     {
-      day: 'Days 6-8',
-      title: 'SAILING ADVENTURE',
-      date: 'MARCH 27-29, 2026',
-      description: 'Three days of exhilarating sailing through beautiful waters. Experience the thrill of sailing, enjoy stunning sunsets, and create lasting memories.',
+      day: 'Day 5 - 6',
+      description: 'Breakfast aboard, Secure overnight mooring, swimming, snorkeling, paddle boarding, etc. Depart for Norman Island. Secure overnight mooring, swimming, snorkeling, paddle boarding, etc. Study for ASA students. Dingy ashore for touring Island, shopping, dinner, and sailing nightlife.',
+    },
+    {
+      day: 'Day 6',
+      description: 'Breakfast aboard, swimming, snorkeling, paddle boarding, etc. Study/Testing for ASA students. Set sail for Village Cay Marina. Dock the yacht and disembark.',
     },
   ];
 
@@ -110,11 +102,12 @@ const Charters = () => {
         >
           <div className="charters-hero-overlay">
             <div className="charters-hero-content">
-              <h1>Caribbean Sailing Charters</h1>
-              <h2>Experience the Adventure of a Lifetime</h2>
+              <h1>Sailing Charters</h1>
+              <h2>Great Lakes, Caribbean, Sea of Cortex, Mediterranean Sea</h2>
+
               <div className="charters-hero-details">
-                <span>• March 22nd - 29th, 2026</span>
-                <span>• 8 Days | 7 Nights</span>
+                <span>Experience the Adventure of a Lifetime</span>
+              
               </div>
             </div>
           </div>
@@ -168,8 +161,10 @@ const Charters = () => {
             <div className="pricing-card">
               <div className="pricing-badge">NEW</div>
               <h3 className="pricing-title">ALL INCLUSIVE PRICE PER PERSON</h3>
-              <div className="pricing-amount">$2,750 USD</div>
+              <div className="pricing-amount">$2,400 USD</div>
               <div className="pricing-details">
+                                <p>Double Occupancy</p>
+
                 <p><strong>40% DUE UPON BOOKING</strong></p>
                 <p>Final Payment Due 60 Days Prior to Departure</p>
               </div>
@@ -180,22 +175,18 @@ const Charters = () => {
         {/* Accommodations Section */}
         <section className="charters-section">
           <div className="section-container">
-            <h2 className="section-title">ACCOMMODATIONS</h2>
+            <h2 className="section-title">Accommodations</h2>
             <p className="section-description">
-              All sailors may <strong>sleep aboard</strong> the yacht in shared bunks (up to 14 berths). 
-              If you prefer more comfort, you're welcome to <strong>book your own hotel room</strong> at 
-              the marina or nearby accommodations (at your own expense).
+              All sailors sleep aboard the yacht in luxurious Queen cabins. Extremely comfortable beds, ample storage lockers, private head & shower. Settle and sleep aboard the night prior to your charter start.
             </p>
-            <ul className="feature-list">
-              <li>8 Days / 7 Nights Aboard the Yacht</li>
-              <li>Lunch is included on board</li>
-              <li>All onboard accommodations (optional)</li>
-              <li>Professional instruction and coaching</li>
-              <li>Use of yacht and all sailing gear</li>
+            <ul className="feature-list feature-list-no-check" style={{ textAlign: 'center' }}>
+              <li>6 Days / 6 Nights Aboard the Yacht</li>
+              <li>Breakfast & Lunch is included on board</li>
+              <li>All onboard accommodations</li>
+              <li>Professional instruction and coaching (optional)</li>
             </ul>
             <p className="section-note">
-              Breakfast, dinners, drinks, and nightlife are on your own — enjoy the local flavor 
-              of the vibrant sailing scene!
+              Dinners out, drinks, and nightlife are on your own — enjoy the local flavor of the vibrant sailing scene!
             </p>
           </div>
         </section>
@@ -205,14 +196,13 @@ const Charters = () => {
           <div className="section-container">
             <h2 className="section-title">CREW & EXPERIENCE</h2>
             <p className="section-description">
-              You'll sail alongside at least two professional instructors/crew, with additional 
-              support depending on the team's experience level. Everyone is encouraged to participate 
-              — from trimming and navigation to helming and tactics.
+              You'll sail alongside a USCG Captain & ASA professional instructors. Everyone is encouraged to participate — from trimming and navigation to helming and tactics.
             </p>
             <p className="section-description">
-              <strong>No sailing experience?</strong> No problem — a mix of new and experienced 
-              sailors makes the best crew. Our professional team will guide you through every aspect 
-              of the journey.
+              <strong>No sailing experience?</strong> No problem — a mix of new and experienced sailors makes the best crew. Our professional team will guide you through every aspect of the journey.
+            </p>
+            <p className="section-description">
+              Don't feel like sailing, No problem here either, Just sit back and relax, take in the sights and soak up the sun.
             </p>
           </div>
         </section>
@@ -244,7 +234,7 @@ const Charters = () => {
               </div>
               <div className="feature-item">
                 <div className="feature-icon">🌊</div>
-                <h3>Full Sail Inventory</h3>
+                <h3>Sail Inventory</h3>
                 <p>Complete sail inventory including spinnakers and racing gear</p>
               </div>
               <div className="feature-item">
@@ -267,10 +257,12 @@ const Charters = () => {
                 <div key={index} className="itinerary-item">
                   <div className="itinerary-header">
                     <div className="itinerary-day">{item.day}</div>
-                    <div className="itinerary-title-date">
-                      <h3>{item.title}</h3>
-                      <span className="itinerary-date">{item.date}</span>
-                    </div>
+                    {item.title && (
+                      <div className="itinerary-title-date">
+                        <h3>{item.title}</h3>
+                        {item.date && <span className="itinerary-date">{item.date}</span>}
+                      </div>
+                    )}
                   </div>
                   <p className="itinerary-description">{item.description}</p>
                 </div>
@@ -279,8 +271,8 @@ const Charters = () => {
             <p className="itinerary-note">
               <em>
                 <strong>Please Note.</strong> This itinerary is meant to serve as an example, however, 
-                it is important to note that the actual itinerary is subject to change due to weather 
-                conditions or circumstances beyond our control.
+                it is important to note that the actual itinerary is subject to change due to guest preferences, 
+                weather conditions or circumstances beyond our control.
               </em>
             </p>
           </div>
@@ -289,39 +281,35 @@ const Charters = () => {
         {/* FAQs Section */}
         <section className="charters-section">
           <div className="section-container">
-            <h2 className="section-title">FAQs</h2>
+            <h2 className="section-title">DEPOSITS / CANCELLATIONS & FAQ'S</h2>
             <div className="faq-container">
               <div className="faq-item">
                 <h3 className="faq-question">Deposit schedule / Cancellation policy</h3>
                 <div className="faq-answer">
-                  <p><strong>DEPOSIT DUE UPON BOOKING:</strong> $1,100</p>
-                  <p><strong>FINAL BALANCE DUE:</strong> $1,650 due 60 days prior to departure</p>
+                  <p><strong>DEPOSIT DUE UPON BOOKING:</strong> 50%</p>
+                  <p><strong>FINAL BALANCE DUE:</strong> 60 days prior to departure</p>
                   <ul>
-                    <li><strong>CANCELLATION 60+ DAYS PRIOR:</strong> Refund of all monies paid minus 50% of the initial deposit.</li>
+                    <li><strong>CANCELLATION 60+ DAYS PRIOR:</strong> Written notice of intent to cancel or reschedule. Refund of all monies paid minus 50% of the initial deposit.</li>
                     <li><strong>CANCELLATION BETWEEN 30 – 60 DAYS:</strong> Refund of all monies paid minus the full deposit.</li>
                     <li><strong>CANCELLATION WITHIN THE FINAL 30 DAYS:</strong> Non-Cancellable/Non-Refundable.</li>
                   </ul>
                 </div>
               </div>
               <div className="faq-item">
-                <h3 className="faq-question">How many crew members can join?</h3>
-                <p className="faq-answer">We typically host 12 sailors, but can accommodate up to 14 depending on the mix of skills and experience.</p>
+                <h3 className="faq-question">How many guest can go?</h3>
+                <p className="faq-answer">Our catamarans are 3 & 4 cabin configuration. I cabin is reserved for the crew and we book the other 2 or 3 double occupancy. So 4 - 6 guests.</p>
               </div>
               <div className="faq-item">
-                <h3 className="faq-question">Can beginners participate?</h3>
-                <p className="faq-answer">Absolutely. The best teams include a mix of experienced sailors and enthusiastic beginners.</p>
+                <h3 className="faq-question">Can I book as a single?</h3>
+                <p className="faq-answer">Yes, when you book as a single, you need either pay an additional fee, (aprox 70% of double occupancy fees), or you can share a cabin with another single. We have worked out arrangements for several single configurations. Contact me before booking as a single.</p>
               </div>
               <div className="faq-item">
-                <h3 className="faq-question">Do I have to sleep onboard?</h3>
-                <p className="faq-answer">No — while all sailors have a bunk aboard, you may choose to stay at a hotel at the marina or nearby.</p>
-              </div>
-              <div className="faq-item">
-                <h3 className="faq-question">What are the physical demands?</h3>
-                <p className="faq-answer">This is an active experience. Teamwork and participation are part of the fun, but we accommodate all fitness levels.</p>
+                <h3 className="faq-question">Do I need to sail the boat and what are the physical demands?</h3>
+                <p className="faq-answer">This is an active experience. Teamwork and participation are part of the fun, but we accommodate all fitness levels. No, you are not require to help sail unless you are taking a class during the charter.</p>
               </div>
               <div className="faq-item">
                 <h3 className="faq-question">Are meals included?</h3>
-                <p className="faq-answer">Lunch is provided on board. Dinners, nightlife, and drinks are at your own cost.</p>
+                <p className="faq-answer">Breakfast, Lunch, and drinking water is provided on board. Dinners, nightlife, and drinks are at your own cost.</p>
               </div>
             </div>
           </div>

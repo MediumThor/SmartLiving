@@ -425,6 +425,15 @@
   box-shadow: 0 8px 24px rgba(26, 115, 232, 0.4);
 }
 
+/* Feature list without check marks */
+.feature-list-no-check li::before {
+  content: none;
+}
+
+.feature-list-no-check li {
+  padding-left: 0;
+}
+
 /* Responsive */
 @media (max-width: 968px) {
   .charters-hero-image {

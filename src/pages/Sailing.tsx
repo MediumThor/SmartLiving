@@ -37,8 +37,7 @@ const Sailing = () => {
       <div className="page-content">
         <div className="content-section">
           <p className="lead">
-            Sailing is one of my great passions. The water has taught me invaluable lessons 
-            about patience, teamwork, and the importance of being present in the moment.
+          Sailing is one of my great passions. The water has taught me invaluable lessons about patience, teamwork, and the importance of being present in the moment. Keeping my mental health at an even keel too.
           </p>
         </div>
 
@@ -57,10 +56,16 @@ const Sailing = () => {
                 wind, and navigating by skill and intuition.
               </p>
               <p style={{ marginTop: '1rem' }}>
-                Experience the ultimate sailing adventure with our Caribbean sailing charters. 
-                Join us for hands-on sailing experiences, explore beautiful destinations, and 
-                become part of a real crew sailing through some of the most beautiful waters 
-                in the world.
+                There’s a special kind of freedom that comes from being on open water—feeling the wind fill the sails, reading the waves, and letting skill and intuition guide your course.
+Step aboard for the ultimate sailing adventure. 
+Our charters offer immersive, hands-on sailing experiences that take you to breathtaking destinations. Be part of a true working crew, or relax and soak in some sunshine.
+
+From the Great Lakes to the Caribbean Sea, the Sea of Cortez, the Mediterranean, and beyond—your next journey starts here.
+              </p>
+
+              <p style={{ marginTop: '1rem' }}>
+        
+From the Great Lakes to the Caribbean Sea, the Sea of Cortez, the Mediterranean, and beyond—your next journey starts here.
               </p>
             </div>
             <div className="column-card-button">
@@ -101,9 +106,8 @@ const Sailing = () => {
             <div className="column-card-content">
               <h2>Deliveries</h2>
               <p>
-                Professional boat delivery services for sailboats and powerboats. Whether you're 
-                moving your vessel to a new home port, need transport for a charter, or require 
-                delivery for a purchase, I provide safe, reliable, and experienced delivery services.
+             Professional, insured boat delivery services for both sailboats and powerboats. Whether you're relocating to a new home port, transporting a vessel for charter, or arranging delivery after a purchase, I provide safe, reliable, and experienced service from start to finish.
+
               </p>
             </div>
             <div className="column-card-button">
@@ -117,9 +121,8 @@ const Sailing = () => {
         <div className="content-section">
           <h2>Sailing and Smart Living</h2>
           <p>
-            Sailing embodies many principles of Smart Living: it requires discipline and 
-            preparation, offers physical and mental wellness benefits, demands leadership 
-            and teamwork, and provides a sense of freedom and adventure.
+           Sailing embodies many principles of Smart Living: it requires discipline and preparation, strengthens both physical and mental well-being, fosters leadership and teamwork, and delivers an unparalleled sense of freedom and adventure. Time on the water has been shown to ease stress, sharpen focus, and create a calming reset for the mind.
+I’ll be sharing more sailing stories, insights, and experiences on my blog. If you’re curious about sailing or have questions, or a story to share, please reach out through the contact form.
           </p>
         </div>
 

@@ -37,19 +37,37 @@ const Wellness = () => {
       <div className="page-content">
         <div className="content-section">
           <p className="lead">
-            I believe in investing in health to avoid health issues rather than waiting until you're dealing with real health challenges.
+            We believe the most powerful approach to wellness is a proactive one—investing in our health before challenges arise. Acting early almost always leads to better outcomes.
           </p>
-        <p>
-            At SMART LIVING, we invite you to shop with us online and our 100% USA manufacture-direct store. Supporting US manufacturers means supporting American jobs, families and our US economy. It also means fresh, safe & healthy in your home. And, as you'll find out, NO one cares more about their customer than we do at The Wellness Company.
+          <p>
+            That's why, at SMART LIVING, we partner exclusively with top-tier companies that prioritize customer well-being over shareholder profits. One of the most exceptional partners we recommend is The Wellness Company—a remarkable shopping club with a structure similar to Costco or Amazon, but with one crucial difference: their unwavering focus on customer health and safety. With a proven 40-year track record, their commitment speaks louder than any marketing claim.
+          </p>
+          <p>
+            My family have been loyal members for more than a decade, and our own health and wellness results speak for themselves.
         </p>
         <p>
-            <strong>Not Sure if it's Right for You?</strong> Take a quick Survey at the Bottom of This Page
+            When we introduce this club to friends, family, and new acquaintances, we focus on three simple questions:
           </p>
+          <ol style={{ paddingLeft: '1.5rem' }}>
+            <li>What is the club all about?</li>
+            <li>Why is it so much safer and healthier than traditional shopping options?</li>
+            <li>Is it the right fit for you?</li>
+          </ol>
+          <p>
+            Below you'll find some key highlights. On the contact form, you'll also have the option to:
+          </p>
+          <ol style={{ paddingLeft: '1.5rem' }}>
+            <li>Request a short survey to determine whether the club is a good match for your family—and receive $100 in free products if you qualify.</li>
+            <li>Schedule an overview of the club in whichever format fits your schedule best.</li>
+          </ol>
         </div>
 
+  
+
         <div className="content-section">
-          <h2>What We Have to Offer</h2>
-          <div className="three-column-section">
+          <h2 style={{ textAlign: 'center' }}>Our Product Isles</h2>
+
+            <div className="three-column-section">
             <div className="column-card">
               <div className="column-image">
                 <img 
@@ -91,10 +109,6 @@ const Wellness = () => {
               </ul>
             </div>
           </div>
-        </div>
-
-        <div className="content-section">
-          <h2>Our Product Categories</h2>
           <div className="three-column-section">
             <div className="column-card">
               <div className="column-image">
@@ -117,8 +131,7 @@ const Wellness = () => {
               </div>
               <h2>NUTRITION & WEIGHT LOSS</h2>
               <p>
-                Cutting edge of science & the best of nature combined to give you the best vitamins, weight loss and sports nutrition, premium coffees, teas and specialty drinks.
-              </p>
+    Where cutting-edge science meets the purest elements of nature. This is next-level sports nutrition—engineered to amplify every ounce of your effort. Backed by a weight-loss philosophy that helps reset your metabolism and supports transformation at the cellular level, it’s designed to help your body perform and evolve at its highest potential.              </p>
             </div>
             <div className="column-card">
               <div className="column-image">
@@ -129,7 +142,8 @@ const Wellness = () => {
               </div>
               <h2>SAFER HOUSEHOLDS</h2>
               <p>
-                Home fragrances, environmentally friendly, safer cleaners for your household, dish & laundry cleaners. All significantly better, safer and less than retail brands.
+The environments in which we live affect almost every other area of our wellness. Keeping your home toxin-free and reducing your negative impact on the environment is critical to a healthy, wellness-centered life. 
+Most household cleaning brands use harsh chemicals to eat away dirt and stains. Unfortunately, these chemicals can be hazardous to your family’s health. They can damage your lungs and get onto your skin, often leaving behind residue that lasts long after you’re finished cleaning.
               </p>
             </div>
           </div>
@@ -218,16 +232,16 @@ const Wellness = () => {
         </div>
 
         <div className="content-section">
-          <h2>MARKETPLACE ADVANTAGES</h2>
+          <h2 style={{ textAlign: 'center' }}>MARKETPLACE ADVANTAGES</h2>
           <p>
             While our store has over 400 consumable products, we can't produce everything you need. Many other services and online stores have negotiated discounts for our customers, our Marketplace has savings for anything you can think of, just for being our loyal shopper.
           </p>
         </div>
 
         <div className="content-section">
-          <h2>Take Our Survey</h2>
+          <h2 style={{ textAlign: 'center' }}>Take Our Survey</h2>
           <p>
-            Wondering if you use the products we sell or just how much you can save off your current budget on everyday things you buy from our store? Just take our survey below—you may qualify for <strong>$100 in FREE products</strong>.
+            Wondering if you use the products we sell or just how much you can save off your current budget on everyday things you buy from our store? Just take our survey may qualify for <strong>$100 in FREE products</strong>. Clicking the button bellow will take you to a request form for the survey. In the drop-down menu please select "Product survey". 
           </p>
           <p style={{ textAlign: 'center', marginTop: '2rem' }}>
             <Link to="/connect" className="charters-cta-button">
@@ -237,12 +251,12 @@ const Wellness = () => {
         </div>
 
         <div className="content-section">
-          <h2>Let's Connect</h2>
+          <h2 style={{ textAlign: 'center' }}>Let's Connect</h2>
           <p style={{ textAlign: 'center' }}>
             <Link to="/connect" className="charters-cta-button" style={{ marginRight: '1rem' }}>
               GO TO CONTACT PAGE
             </Link>
-            <Link to="/connect" className="charters-cta-button">
+            <Link to="https://tidycal.com/smartlivingtoday/smartlivingtoday" className="charters-cta-button">
               SIGN UP FOR AN UPCOMING INFORMATIONAL WEBINAR
             </Link>
           </p>
