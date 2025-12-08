@@ -5,6 +5,13 @@ import ImageSlideshow from '../components/ImageSlideshow';
 import CharterInquiryForm from '../components/CharterInquiryForm';
 import './Charters.css';
 
+interface ItineraryItem {
+  day: string;
+  title?: string;
+  date?: string;
+  description: string;
+}
+
 const Charters = () => {
   useEffect(() => {
     const handleScroll = () => {
@@ -58,7 +65,7 @@ const Charters = () => {
     fetchSlides();
   }, []);
 
-  const itinerary = [
+  const itinerary: ItineraryItem[] = [
     {
       day: 'Day 0 - 1',
       description: 'Arrival in at Marina. Embark on yacht and get settled in. Inventory provisions with Captain and stow. Review all accommodations onboard. Dinner out and discuss what all crew want to see/do so Captain can choose the proper anchorages for everyone to have their best experience.',
