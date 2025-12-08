@@ -104,7 +104,7 @@ const Charters = () => {
           className="charters-hero-image parallax" 
           data-speed="0.3"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80)'
+            backgroundImage: 'url(https://i.imgur.com/Ulacb57.jpeg)'
           }}
         >
           <div className="charters-hero-overlay">

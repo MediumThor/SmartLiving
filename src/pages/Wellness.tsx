@@ -25,19 +25,20 @@ const Wellness = () => {
           className="parallax-hero-image parallax" 
           data-speed="0.4"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80)'
+            backgroundImage: 'url(https://i.imgur.com/38ZuYoq.jpeg)'
           }}
         >
-          <div className="parallax-overlay">
-            <h1>A WHOLISTIC APPROACH TO WELLNESS</h1>
+                  <div className="parallax-overlay">
           </div>
+          
         </div>
       </section>
 
       <div className="page-content">
+
         <div className="content-section">
           <p className="lead">
-            We believe the most powerful approach to wellness is a proactive one—investing in our health before challenges arise. Acting early almost always leads to better outcomes.
+            We believe the most powerful, wholistic approach to wellness is a proactive one—investing in our health before challenges arise. Acting early almost always leads to better outcomes.
           </p>
           <p>
             That's why, at SMART LIVING, we partner exclusively with top-tier companies that prioritize customer well-being over shareholder profits. One of the most exceptional partners we recommend is The Wellness Company—a remarkable shopping club with a structure similar to Costco or Amazon, but with one crucial difference: their unwavering focus on customer health and safety. With a proven 40-year track record, their commitment speaks louder than any marketing claim.
@@ -64,56 +65,23 @@ const Wellness = () => {
 
   
 
-        <div className="content-section">
-          <h2 style={{ textAlign: 'center' }}>Our Product Isles</h2>
+  
 
-            <div className="three-column-section">
-            <div className="column-card">
-              <div className="column-image">
-                <img 
-                  src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                  alt="Control Your Time" 
-                />
-              </div>
-              <h2>CONTROL YOUR TIME = FREEDOM</h2>
-              <p>
-                Most people lack the time to accomplish what they want with their lives. Time freedom means you control your life and decide where you spend your time. For me, it allows me to have control and put my family first. We define control as having enough resources to be able to choose not only how we spend our time, but whom we spend our time with. Where we live, what schools our children attend, and where we vacation. It means deciding when you work, where you work, and whom you work with. It all boils down to having the resources to do what you want when you want to do it. 'Repeat Income' can be that resource.
-              </p>
-            </div>
-            <div className="column-card">
-              <div className="column-image">
-                <img 
-                  src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                  alt="Reliability" 
-                />
-              </div>
-              <h2>RELIABILITY</h2>
-              <p>
-                Reliable income. Partnering with a 38-year-old, debt-free company means I can rely on consistent support. I know the work I do today will continue to provide for me long into the future, even if I decide not to work for a while.
-              </p>
-            </div>
-            <div className="column-card">
-              <div className="column-image">
-                <img 
-                  src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                  alt="Sustainability" 
-                />
-              </div>
-              <h2>SUSTAINABILITY</h2>
-              <ul className="feature-list">
-                <li>Recession-resistant</li>
-                <li>Consumables already being purchased by everyone</li>
-                <li>Competitively priced</li>
-                <li>An untraditional way to compete with traditional business</li>
-                <li>Environmentally responsible</li>
-              </ul>
-            </div>
-          </div>
+
+
+
+
+
+
+
+        <div className="content-section">
+            <h2 style={{ textAlign: 'center' }}>Our Product Isles</h2>
+
           <div className="three-column-section">
             <div className="column-card">
               <div className="column-image">
                 <img 
-                  src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                  src="https://i.imgur.com/ssIepvv.jpeg" 
                   alt="Special Dietary Needs" 
                 />
               </div>
@@ -147,9 +115,6 @@ Most household cleaning brands use harsh chemicals to eat away dirt and stains. 
               </p>
             </div>
           </div>
-        </div>
-
-        <div className="content-section">
           <div className="three-column-section">
             <div className="column-card">
               <div className="column-image">
@@ -178,7 +143,7 @@ Most household cleaning brands use harsh chemicals to eat away dirt and stains. 
             <div className="column-card">
               <div className="column-image">
                 <img 
-                  src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                  src="https://i.imgur.com/YkKBbad.jpeg" 
                   alt="Medicine Cabinet" 
                 />
               </div>
@@ -195,7 +160,7 @@ Most household cleaning brands use harsh chemicals to eat away dirt and stains. 
             <div className="column-card">
               <div className="column-image">
                 <img 
-                  src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                  src="https://i.imgur.com/1AEE4in.jpeg" 
                   alt="Coffee, Tea & Drinks" 
                 />
               </div>
@@ -207,7 +172,7 @@ Most household cleaning brands use harsh chemicals to eat away dirt and stains. 
             <div className="column-card">
               <div className="column-image">
                 <img 
-                  src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                  src="https://i.imgur.com/ssIepvv.jpeg" 
                   alt="Healthy Snacking" 
                 />
               </div>
@@ -219,7 +184,7 @@ Most household cleaning brands use harsh chemicals to eat away dirt and stains. 
             <div className="column-card">
               <div className="column-image">
                 <img 
-                  src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                  src="https://i.imgur.com/T3WuHF3.jpeg" 
                   alt="Beef" 
                 />
               </div>
@@ -229,6 +194,53 @@ Most household cleaning brands use harsh chemicals to eat away dirt and stains. 
               </p>
             </div>
           </div>
+        </div>
+
+              <div className="content-section">
+          <h2 style={{ textAlign: 'center' }}>What We Have to Offer</h2>
+
+            <div className="three-column-section">
+            <div className="column-card">
+              <div className="column-image">
+                <img 
+                  src="https://i.imgur.com/faiLNKB.jpeg" 
+                  alt="Control Your Time" 
+                />
+              </div>
+              <h2>CONTROL YOUR TIME = FREEDOM</h2>
+              <p>
+Most people don’t have the time freedom they want. Time freedom means having the resources to choose how — and with whom — you spend your time. It’s the ability to put family first, choose where you live, where your kids go to school, when and where you work, and what your days look like. In short, it’s doing what you want, when you want. Repeat Income can make that possible.              </p>            </div>
+            <div className="column-card">
+              <div className="column-image">
+                <img 
+                  src="https://i.imgur.com/qVzgw0V.jpeg" 
+                  alt="Reliability" 
+                />
+              </div>
+              <h2>RELIABILITY</h2>
+              <p>
+                Reliable income. Partnering with a 38-year-old, debt-free company means I can rely on consistent support. I know the work I do today will continue to provide for me long into the future, even if I decide not to work for a while.
+              </p>
+            </div>
+            <div className="column-card">
+              <div className="column-image">
+                <img 
+                  src="https://i.imgur.com/vWNHSAu.jpeg" 
+                  alt="Sustainability" 
+                />
+              </div>
+              <h2>SUSTAINABILITY</h2>
+              <ul className="feature-list">
+                <li>Recession-resistant</li>
+                <li>Consumables already being purchased by everyone</li>
+                <li>Competitively priced</li>
+                <li>An untraditional way to compete with traditional business</li>
+                <li>Environmentally responsible</li>
+              </ul>
+            </div>
+          </div>
+
+                  
         </div>
 
         <div className="content-section">
