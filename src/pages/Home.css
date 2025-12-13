@@ -228,6 +228,15 @@
 .cta-icon {
   font-size: 3rem;
   margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a73e8;
+}
+
+.cta-icon svg {
+  width: 3rem;
+  height: 3rem;
   display: block;
 }
 

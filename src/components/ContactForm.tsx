@@ -115,7 +115,7 @@ const ContactForm = () => {
             <option value="Sailing Charter Inquiry">Sailing Charter Inquiry</option>
             <option value="Sailing Lessons">Sailing Lessons</option>
             <option value="Boat Deliveries">Boat Deliveries</option>
-            <option value="Request Survey">Request Survey</option>
+            <option value="Request Survey">Request Wellness Survey</option>
             <option value="Leadership & Coaching">Leadership & Coaching</option>
             <option value="Wellness & Smart Living">Wellness & Smart Living</option>
             <option value="Speaking / Workshops">Speaking / Workshops</option>

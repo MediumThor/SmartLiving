@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { LuSailboat } from 'react-icons/lu';
 import ContactForm from '../components/ContactForm';
 import ImageSlideshow from '../components/ImageSlideshow';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
@@ -123,29 +124,40 @@ const Home = () => {
       <section className="cta-section">
         <div className="cta-container">
           <div className="cta-card">
-            <span className="cta-icon">⛵</span>
+            <span className="cta-icon">
+              <LuSailboat size={32} />
+            </span>
             <h2>Sailing</h2>
             <p>
-              Join us on the water for hands-on sailing adventures, private instruction, and immersive 
-              charters tailored to your crew.
+              Join me on the water for hands-on sailing adventures, group instruction on our boat, private instruction on your boat, or immersive charters tailored to your crew.
             </p>
             <Link to="/sailing" className="cta-button">
              Sailing
             </Link>
           </div>
           <div className="cta-card">
-            <span className="cta-icon">👥</span>
+            <span className="cta-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </span>
             <h2>Leadership & Teams</h2>
             <p>
-              Translate lessons from the helm into the boardroom. Build resilient teams and practical, 
-              values-based leadership.
+              Translate lessons from the helm into the workplace. Build resilient teams and practical, values-based leadership.
             </p>
             <Link to="/leadership" className="cta-button cta-button-small">
                Leadership
             </Link>
           </div>
           <div className="cta-card">
-            <span className="cta-icon">🌿</span>
+            <span className="cta-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                <path d="M2 12h20"/>
+              </svg>
+            </span>
             <h2>Wellness & Growth</h2>
             <p>
               Align your health, relationships, and finances with what matters most so you can live 

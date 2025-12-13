@@ -452,3 +452,119 @@
   }
 }
 
+/* CTA Section Styles for Resources Page */
+.cta-section {
+  padding: 6rem 2rem;
+  background: #ffffff;
+}
+
+.cta-section .cta-container {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem;
+}
+
+.cta-card {
+  background: white;
+  padding: 3rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid #e8e8e8;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cta-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #7FCDCD, #6BB3B3);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.cta-card:hover::before {
+  transform: scaleX(1);
+}
+
+.cta-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  border-color: #7FCDCD;
+}
+
+.cta-icon {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a73e8;
+}
+
+.cta-icon svg {
+  width: 3rem;
+  height: 3rem;
+  display: block;
+}
+
+.cta-card h2 {
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.cta-card p {
+  color: #666;
+  margin-bottom: auto;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: clamp(0.91rem, 1.56vw, 0.975rem) clamp(1.56rem, 3.25vw, 1.95rem);
+  background-color: #7FCDCD !important;
+  color: white !important;
+  border: none;
+  border-radius: 6px;
+  font-size: clamp(0.56rem, 1.12vw, 0.72rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-decoration: none !important;
+  text-align: center;
+  white-space: nowrap;
+  box-sizing: border-box;
+  min-width: fit-content;
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  margin-top: auto;
+}
+
+.cta-button:hover {
+  background-color: #6BB3B3 !important;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(127, 205, 205, 0.4);
+}
+

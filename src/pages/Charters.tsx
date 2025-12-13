@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { LuSailboat } from 'react-icons/lu';
 import { db } from '../config/firebase';
 import ImageSlideshow from '../components/ImageSlideshow';
 import CharterInquiryForm from '../components/CharterInquiryForm';
@@ -10,6 +11,7 @@ interface ItineraryItem {
   title?: string;
   date?: string;
   description: string;
+  image?: string;
 }
 
 const Charters = () => {
@@ -67,32 +69,34 @@ const Charters = () => {
 
   const itinerary: ItineraryItem[] = [
     {
-      day: 'Day 0 - 1',
-      description: 'Arrival in at Marina. Embark on yacht and get settled in. Inventory provisions with Captain and stow. Review all accommodations onboard. Dinner out and discuss what all crew want to see/do so Captain can choose the proper anchorages for everyone to have their best experience.',
+      day: 'Day 1',
+      title: 'Marina Cay',
+      description: 'Following an afternoon of big boat tacking, crew over boards, maneuvering under power, sail trim, and eyeball navigation, we find our anchorage on the eastern end of Tortola. There are three choices like the one pictured here, Marina Cay. It (like all of your stops) is idyllic with a fringing barrier reef for snorkeling or just staring at calm, clear water where the bottom looks six feet away, but could be fifty.',
+      image: 'https://i.imgur.com/lnm8XNK.jpeg',
     },
     {
-      day: 'Day 1 - 2',
-      description: 'Breakfast onboard or ashore. Opportunity to visit the market for specialty food items needed, adult beverages and any other needs that are not in the provisions. Set sail late morning for Cooper island. Moore in picturesque cove for lunch, snorkeling, paddle boarding, etc. Depart and set sail for Marina Cay. / Scrub Island, secure overnight mooring, swimming, snorkeling, paddle boarding, etc. Dingy ashore for dinner, shopping, and sailing nightlife.',
+      day: 'Day 2',
+      title: 'North Sound, Virgin Gorda',
+      description: 'Tuesday you will sail up to Leverick Bay located in North Sound on Virgin Gorda. Head ashore for some of the best water sports in the world or stroll through this world class resort, or stay on the boat and watch the sun go down.',
+      image: 'https://i.imgur.com/KnAtYVg.png',
     },
     {
-      day: 'Day 2 - 3',
-      description: 'Depart for south Virgin Gorda to visit The Baths. Lunch onboard, then sail to north Virgin Gorda. Secure overnight mooring, swimming, snorkeling, paddle boarding, etc. Study for ASA students. Dingy ashore for dinner, shopping, and sailing nightlife.',
+      day: 'Day 3',
+      title: 'Anegada',
+      description: 'Anegada is actually a sand bar on top of a reef. Its mean elevation is six or seven feet which requires solid navigational skills. Always worth the sail, Anegada is almost completely circled by reef and is surrounded by white beach. After snorkeling the reefs, long walks on the barren beach, or relaxing in a hammock under sea grape trees, you\'ll have dinner ashore at a fabulous restaurant on the beach.',
+      image: 'https://i.imgur.com/u7XAaho.jpeg',
     },
     {
-      day: 'Day 3 - 4',
-      description: 'Breakfast onboard. Depart for sail to Anagada Island. Lunch onboard or ashore. Secure overnight mooring, swimming, snorkeling, paddle boarding, etc. Study for ASA students. Dingy ashore for touring Island, shopping, dinner, and sailing nightlife.',
+      day: 'Day 4',
+      title: 'Cane Garden Bay',
+      description: 'After a long broad reach, you will sail into Cane Garden Bay. A picture book anchorage with palm trees spotting a white sandy beach, CGB is a small beach community that one will find difficult to leave the next day.',
+      image: 'https://i.imgur.com/aiuezey.jpeg',
     },
     {
-      day: 'Day 4 - 5',
-      description: 'Breakfast onboard, swimming, snorkeling, paddle boarding, etc. Depart for sail to Jost Van Dyke. Secure overnight mooring, swimming, snorkeling, paddle boarding, etc. Study for ASA students. Dingy ashore for touring Island, shopping, dinner, and sailing nightlife.',
-    },
-    {
-      day: 'Day 5 - 6',
-      description: 'Breakfast aboard, Secure overnight mooring, swimming, snorkeling, paddle boarding, etc. Depart for Norman Island. Secure overnight mooring, swimming, snorkeling, paddle boarding, etc. Study for ASA students. Dingy ashore for touring Island, shopping, dinner, and sailing nightlife.',
-    },
-    {
-      day: 'Day 6',
-      description: 'Breakfast aboard, swimming, snorkeling, paddle boarding, etc. Study/Testing for ASA students. Set sail for Village Cay Marina. Dock the yacht and disembark.',
+      day: 'Day 5',
+      title: 'Norman Island',
+      description: 'The snorkeling here is tremendous, and the harbor is always flat and breezy. Whether you enjoy dancing it up on the "Willie T" (a floating bar known by countless visiting boaters) or sitting back on the boat, Norman Island will be on your list of islands to return to.',
+      image: 'https://i.imgur.com/ekk7QIL.jpeg',
     },
   ];
 
@@ -168,12 +172,13 @@ const Charters = () => {
             <div className="pricing-card">
               <div className="pricing-badge">NEW</div>
               <h3 className="pricing-title">ALL INCLUSIVE PRICE PER PERSON</h3>
+                            <h3 className="pricing-title">starting at</h3>
+
               <div className="pricing-amount">$2,400 USD</div>
               <div className="pricing-details">
                                 <p>Double Occupancy</p>
 
-                <p><strong>40% DUE UPON BOOKING</strong></p>
-                <p>Final Payment Due 60 Days Prior to Departure</p>
+            
               </div>
             </div>
           </div>
@@ -220,32 +225,60 @@ const Charters = () => {
             <h2 className="section-title">KEY FEATURES</h2>
             <div className="features-grid">
               <div className="feature-item">
-                <div className="feature-icon">⛵</div>
+                <div className="feature-icon">
+                  <LuSailboat size={32} />
+                </div>
                 <h3>Performance Sailing Yacht</h3>
                 <p>Experience sailing on a professionally maintained performance yacht</p>
               </div>
               <div className="feature-item">
-                <div className="feature-icon">🎓</div>
+                <div className="feature-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                  </svg>
+                </div>
                 <h3>Professional Instruction</h3>
                 <p>Learn from experienced sailors and professional instructors</p>
               </div>
               <div className="feature-item">
-                <div className="feature-icon">👥</div>
+                <div className="feature-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                </div>
                 <h3>Hands-On Experience</h3>
                 <p>Be part of the crew, not just a passenger</p>
               </div>
               <div className="feature-item">
-                <div className="feature-icon">🏝️</div>
+                <div className="feature-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                </div>
                 <h3>Beautiful Destinations</h3>
                 <p>Sail through some of the world's most beautiful waters</p>
               </div>
               <div className="feature-item">
-                <div className="feature-icon">🌊</div>
+                <div className="feature-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 12h18M6 8l-3 4 3 4M18 8l3 4-3 4"/>
+                    <path d="M3 8v8M21 8v8"/>
+                  </svg>
+                </div>
                 <h3>Sail Inventory</h3>
                 <p>Complete sail inventory including spinnakers and racing gear</p>
               </div>
               <div className="feature-item">
-                <div className="feature-icon">😊</div>
+                <div className="feature-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/>
+                  </svg>
+                </div>
                 <h3>Supportive Environment</h3>
                 <p>Relaxed atmosphere perfect for learning and adventure</p>
               </div>
@@ -256,22 +289,29 @@ const Charters = () => {
       
 
         {/* Sample Itinerary Section */}
-        <section className="charters-section alt-bg">
+        <section className="charters-section itinerary-bg">
           <div className="section-container">
             <h2 className="section-title">SAMPLE ITINERARY</h2>
             <div className="itinerary-container">
               {itinerary.map((item, index) => (
-                <div key={index} className="itinerary-item">
-                  <div className="itinerary-header">
-                    <div className="itinerary-day">{item.day}</div>
-                    {item.title && (
-                      <div className="itinerary-title-date">
-                        <h3>{item.title}</h3>
-                        {item.date && <span className="itinerary-date">{item.date}</span>}
-                      </div>
-                    )}
+                <div key={index} className={`itinerary-item ${index % 2 === 0 ? 'image-left' : 'image-right'}`}>
+                  {item.image && (
+                    <div className="itinerary-image">
+                      <img src={item.image} alt={item.title || item.day} />
+                    </div>
+                  )}
+                  <div className="itinerary-content">
+                    <div className="itinerary-header">
+                      <div className="itinerary-day">{item.day}</div>
+                      {item.title && (
+                        <div className="itinerary-title-date">
+                          <h3>{item.title}</h3>
+                          {item.date && <span className="itinerary-date">{item.date}</span>}
+                        </div>
+                      )}
+                    </div>
+                    <p className="itinerary-description">{item.description}</p>
                   </div>
-                  <p className="itinerary-description">{item.description}</p>
                 </div>
               ))}
             </div>

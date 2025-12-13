@@ -1,8 +1,23 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Page.css';
 
 const Sailing = () => {
+  const [expandedCards, setExpandedCards] = useState<{ [key: string]: boolean }>({});
+
+  const toggleCard = (cardId: string) => {
+    setExpandedCards(prev => ({
+      ...prev,
+      [cardId]: !prev[cardId]
+    }));
+  };
+
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength).trim() + '...';
+  };
+
+  const TRUNCATE_LENGTH = 300;
   useEffect(() => {
     const handleScroll = () => {
       const scrolled = window.pageYOffset;
@@ -45,28 +60,40 @@ const Sailing = () => {
           <div className="column-card">
             <div className="column-image">
               <img 
-                src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                src="https://i.imgur.com/DKe457R.jpeg" 
                 alt="Sailing Freedom" 
               />
             </div>
             <div className="column-card-content">
               <h2>The Freedom of the Open Water</h2>
-              <p>
-                There's something uniquely liberating about being on the water, harnessing the 
-                wind, and navigating by skill and intuition.
-              </p>
-              <p style={{ marginTop: '1rem' }}>
-                There’s a special kind of freedom that comes from being on open water—feeling the wind fill the sails, reading the waves, and letting skill and intuition guide your course.
-Step aboard for the ultimate sailing adventure. 
-Our charters offer immersive, hands-on sailing experiences that take you to breathtaking destinations. Be part of a true working crew, or relax and soak in some sunshine.
-
-From the Great Lakes to the Caribbean Sea, the Sea of Cortez, the Mediterranean, and beyond—your next journey starts here.
-              </p>
-
-              <p style={{ marginTop: '1rem' }}>
-        
-From the Great Lakes to the Caribbean Sea, the Sea of Cortez, the Mediterranean, and beyond—your next journey starts here.
-              </p>
+              {(() => {
+                const fullText = "There's something uniquely liberating about being on the water, harnessing the wind, and navigating by skill and intuition. There's a special kind of freedom that comes from being on open water—feeling the wind fill the sails, reading the waves, and letting skill and intuition guide your course. Step aboard for the ultimate sailing adventure. Our charters offer immersive, hands-on sailing experiences that take you to breathtaking destinations. Be part of a true working crew, or relax and soak in some sunshine. From the Great Lakes to the Caribbean Sea, the Sea of Cortez, the Mediterranean, and beyond—your next journey starts here.";
+                const isExpanded = expandedCards['freedom'];
+                const displayText = isExpanded ? fullText : truncateText(fullText, TRUNCATE_LENGTH);
+                
+                return (
+                  <>
+                    <p>{displayText}</p>
+                    {fullText.length > TRUNCATE_LENGTH && (
+                      <button 
+                        onClick={() => toggleCard('freedom')}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#1a73e8',
+                          cursor: 'pointer',
+                          textDecoration: 'underline',
+                          padding: '0.5rem 0',
+                          marginTop: '0.5rem',
+                          fontSize: '0.9rem'
+                        }}
+                      >
+                        {isExpanded ? 'See Less' : 'See More'}
+                      </button>
+                    )}
+                  </>
+                );
+              })()}
             </div>
             <div className="column-card-button">
               <Link to="/charters" className="charters-cta-button">
@@ -84,11 +111,34 @@ From the Great Lakes to the Caribbean Sea, the Sea of Cortez, the Mediterranean,
             </div>
             <div className="column-card-content">
               <h2>Lessons</h2>
-              <p>
-                Learn to sail with personalized instruction from an ASA certified instructor. 
-                Whether you're a complete beginner or looking to refine your skills, I offer 
-                hands-on lessons that build confidence and competence on the water.
-              </p>
+              {(() => {
+                const fullText = "Learn to sail with personalized instruction from an ASA certified instructor. Whether you're a complete beginner or looking to refine your skills, I offer hands-on lessons that build confidence and competence on the water.";
+                const isExpanded = expandedCards['lessons'];
+                const displayText = isExpanded ? fullText : truncateText(fullText, TRUNCATE_LENGTH);
+                
+                return (
+                  <>
+                    <p>{displayText}</p>
+                    {fullText.length > TRUNCATE_LENGTH && (
+                      <button 
+                        onClick={() => toggleCard('lessons')}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#1a73e8',
+                          cursor: 'pointer',
+                          textDecoration: 'underline',
+                          padding: '0.5rem 0',
+                          marginTop: '0.5rem',
+                          fontSize: '0.9rem'
+                        }}
+                      >
+                        {isExpanded ? 'See Less' : 'See More'}
+                      </button>
+                    )}
+                  </>
+                );
+              })()}
             </div>
             <div className="column-card-button">
               <Link to="/lessons" className="charters-cta-button">
@@ -99,7 +149,7 @@ From the Great Lakes to the Caribbean Sea, the Sea of Cortez, the Mediterranean,
           <div className="column-card">
             <div className="column-image">
               <img 
-                src="https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                src="https://i.imgur.com/tT2dazp.jpeg" 
                 alt="Boat Deliveries" 
               />
             </div>
